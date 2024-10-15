@@ -31,4 +31,5 @@ public class Review extends BaseEntity {
     int rating; // 별점
 
     // 테스트용 주석
+    // 테스트용 주석2
 }
