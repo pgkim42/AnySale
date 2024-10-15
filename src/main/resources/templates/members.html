@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 목록</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>회원 목록</h1>
+
+<!-- 회원 목록을 Thymeleaf로 서버 사이드 렌더링 -->
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>이름</th>
+    <th>이메일</th>
+    <th>전화번호</th>
+    <th>역할</th>
+    <th>평점</th>
+    <th>삭제</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="member : ${members}">
+    <td th:text="${member.id}"></td>
+    <td th:text="${member.name}"></td>
+    <td th:text="${member.email}"></td>
+    <td th:text="${member.phone}"></td>
+    <td th:text="${member.role}"></td>
+    <td th:text="${member.score}"></td>
+    <td><button th:attr="data-id=${member.id}" onclick="deleteMember(this)">삭제</button></td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- 회원 추가 폼 -->
+<h2>새로운 회원 추가</h2>
+<form id="newMemberForm">
+  <input type="text" id="id" placeholder="ID" required><br>
+  <input type="text" id="name" placeholder="이름" required><br>
+  <input type="email" id="email" placeholder="이메일" required><br>
+  <input type="text" id="phone" placeholder="전화번호" required><br>
+  <input type="text" id="role" placeholder="역할" required><br>
+  <input type="number" id="score" placeholder="평점" required min="0" max="5"><br>
+  <!-- 비밀번호 입력란 추가 -->
+  <input type="password" id="password" placeholder="비밀번호" required><br>
+
+  <button type="button" onclick="createMember()">회원 추가</button>
+</form>
+
+<script>
+  // 회원 추가하기
+  function createMember() {
+    const newMember = {
+      id: document.getElementById('id').value,
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      role: document.getElementById('role').value,
+      score: document.getElementById('score').value,
+      password: document.getElementById('password').value  // 비밀번호 필드 추가
+    };
+
+    axios.post('/api/members', newMember)
+            .then(response => {
+              alert('회원이 추가되었습니다.');
+              location.reload();  // 성공 시 페이지 리로드
+            })
+            .catch(error => {
+              console.error('회원 추가 중 오류 발생:', error);
+              alert('회원 추가 중 오류 발생: ' + error.message);
+            });
+  }
+
+  // 회원 삭제하기
+  function deleteMember(button) {
+    const memberId = button.getAttribute('data-id');
+
+    axios.delete(`/api/members/${memberId}`)
+            .then(response => {
+              alert('회원이 삭제되었습니다.');
+              location.reload();  // 삭제 후 페이지 리로드
+            })
+            .catch(error => {
+              console.error('회원 삭제 중 오류 발생:', error);
+            });
+  }
+</script>
+
+</body>
+</html>
