@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 
 public class ReviewDTO {
 
-    int review_no; // 리뷰 고유ID(게시글 번호)
+    int reviewNo; // 리뷰 고유ID(게시글 번호)
 
-    String buyer_id; // 회원 테이블의 FK(구매자)
+    String buyerId; // 회원 테이블의 FK(구매자)
 
-    String seller_id; // 회원 테이블의 FK(판매자)
+    String sellerId; // 회원 테이블의 FK(판매자)
 
-    String comment; // 리뷰내용
+    String comment; // 리뷰내용S
 
     int rating; // 별점
 
-    LocalDateTime review_date; // 리뷰 작성일
+    LocalDateTime reviewDate; // 리뷰 작성일
 
 }

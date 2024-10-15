@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 게시판</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>리뷰 게시판</h1>
+
+    <!-- 리뷰 작성 폼 -->
+    <h2>리뷰 작성</h2>
+    <form id="reviewForm">
+        <div class="form-group">
+            <label for="buyerId">구매자 ID</label>
+            <input type="text" class="form-control" id="buyerId" required>
+        </div>
+        <div class="form-group">
+            <label for="sellerId">판매자 ID</label>
+            <input type="text" class="form-control" id="sellerId" required>
+        </div>
+        <div class="form-group">
+            <label for="comment">리뷰 내용</label>
+            <textarea class="form-control" id="comment" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="rating">별점</label>
+            <select class="form-control" id="rating" required>
+                <option value="">선택하세요</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">리뷰 등록</button>
+    </form>
+
+    <!-- 리뷰 리스트 -->
+    <h2 class="mt-5">등록된 리뷰</h2>
+    <div id="reviewList" class="mt-3">
+        <ul class="list-group">
+            <!-- 리뷰 항목이 여기 들어갑니다 -->
+        </ul>
+    </div>
+</div>
+
+<script>
+    // 리뷰 제출 처리
+    document.getElementById('reviewForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 폼 제출 기본 동작 방지
+
+        const buyerId = document.getElementById('buyerId').value;
+        const sellerId = document.getElementById('sellerId').value;
+        const comment = document.getElementById('comment').value;
+        const rating = document.getElementById('rating').value;
+
+        const reviewData = {
+            buyerId: buyerId,
+            sellerId: sellerId,
+            comment: comment,
+            rating: parseInt(rating)
+        };
+
+        // 리뷰 등록 API 호출
+        fetch('/review/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reviewData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                // 새로운 리뷰가 등록되면 리스트에 추가
+                addReviewToList(data, reviewData);
+                // 폼 초기화
+                document.getElementById('reviewForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    // 리뷰를 리스트에 추가하는 함수
+    function addReviewToList(reviewNo, reviewData) {
+        const reviewList = document.getElementById('reviewList').querySelector('ul');
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.innerHTML = `
+            <strong>${reviewData.buyerId}</strong> (${reviewData.rating}점)<br>
+            ${reviewData.comment} <br>
+
+        `;
+        reviewList.appendChild(listItem);
+    }
+</script>
+
+</body>
+</html>

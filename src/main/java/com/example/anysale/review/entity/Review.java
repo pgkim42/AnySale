@@ -16,13 +16,13 @@ public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int review_no; // 리뷰 고유no(게시글 번호)
+    int reviewNo; // 리뷰 고유no(게시글 번호)
 
     @Column(length = 50, nullable = false)
-    String buyer_id; // 회원 테이블의 FK(구매자)
+    String buyerId; // 회원 테이블의 FK(구매자)
 
     @Column(length = 50, nullable = false)
-    String seller_id; // 회원 테이블의 FK(판매자)
+    String sellerId; // 회원 테이블의 FK(판매자)
 
     @Column(length = 50, nullable = false)
     String comment; // 리뷰 내용
