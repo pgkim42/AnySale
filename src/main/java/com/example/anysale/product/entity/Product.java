@@ -43,10 +43,13 @@ public class Product {
     private LocalDateTime modDate;
 
     @Column(nullable = false)
-    private String location;
+    private LocalDateTime dealDate;
 
     @Column(nullable = false)
     private String status;
+
+    @Column(nullable = false)
+    private String location;
 
     @Column(nullable = false)
     private String userId;
