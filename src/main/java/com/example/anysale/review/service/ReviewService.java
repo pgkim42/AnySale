@@ -4,6 +4,8 @@ import com.example.anysale.review.dto.ReviewDTO;
 import com.example.anysale.review.entity.Review;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface ReviewService {
 
@@ -17,6 +19,7 @@ public interface ReviewService {
                 .sellerId(dto.getSellerId())
                 .reviewNo(dto.getReviewNo())
                 .comment(dto.getComment())
+                .rating(dto.getRating())
                 .build();
 
         return entity;
@@ -31,9 +34,12 @@ public interface ReviewService {
                 .reviewNo(entity.getReviewNo())
                 .comment(entity.getComment())
                 .reviewDate(entity.getCreateDate())
+                .rating(entity.getRating())
                 .build();
 
         return dto;
     }
+
+    List<ReviewDTO> getList();
 
 }

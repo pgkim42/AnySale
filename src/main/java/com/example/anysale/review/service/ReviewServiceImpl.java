@@ -6,6 +6,10 @@ import com.example.anysale.review.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
@@ -24,5 +28,16 @@ public class ReviewServiceImpl implements ReviewService {
         System.out.println(entity);
         return newNo;
 
+    }
+
+    @Override
+    public List<ReviewDTO> getList() {
+        List<Review> reviews = reviewRepository.findAll();
+        List<ReviewDTO> list = new ArrayList<>();
+        list = reviews.stream()
+                .map(entity -> entityToDto(entity))
+                .collect(Collectors.toList());
+
+        return list;
     }
 }
