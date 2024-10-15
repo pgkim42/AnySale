@@ -30,7 +30,4 @@ public class Review extends BaseEntity {
     @Column(length = 50, nullable = false)
     int rating; // 별점
 
-    // 테스트용 주석
-    // 테스트용 주석2
-    // 테스트용 주석3
 }
