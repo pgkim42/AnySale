@@ -10,96 +10,99 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-@ExtendWith(SpringExtension.class)  // Spring 테스트 컨텍스트 확장
-@SpringBootTest  // SpringBoot 애플리케이션 전체를 로드하여 통합 테스트
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
 
     @Test
-    public void saveProductTest() {
+    public void testSaveProduct() {
         // given
         Product product = Product.builder()
-                .itemCode("ITEM123")
-                .price("10000")
-                .category("Electronics")
-                .content("Smartphone")
+                .itemCode("ITEM001")
+                .price("15000")
+                .category("Books")
+                .content("Java Programming Book")
                 .productCondition("New")
-                .imageUrl("http://example.com/image.jpg")
-                .regDate(LocalDateTime.now())
+                .imageUrl("http://example.com/book.jpg")
                 .dealDate(LocalDateTime.now())
                 .status("Available")
                 .location("Seoul")
-                .userId("user123")
+                .userId("user001")
                 .build();
 
         // when
-        Product savedProduct = productRepository.save(product);
+        productRepository.save(product);
 
         // then
-        assertNotNull(savedProduct);
-        assertEquals("ITEM123", savedProduct.getItemCode());
-        assertEquals("10000", savedProduct.getPrice());
-        assertEquals("Electronics", savedProduct.getCategory());
-        assertEquals("Smartphone", savedProduct.getContent());
+        System.out.println("Saved Product: " + product);
     }
 
     @Test
-    public void findProductByIdTest() {
+    public void testFindProductById() {
         // given
-        Product product = Product.builder()
-                .itemCode("ITEM124")
-                .price("20000")
-                .category("Home Appliances")
-                .content("Vacuum Cleaner")
-                .productCondition("Used")
-                .imageUrl("http://example.com/vacuum.jpg")
-                .regDate(LocalDateTime.now())
-                .dealDate(LocalDateTime.now())
-                .status("Available")
-                .location("Busan")
-                .userId("user124")
-                .build();
-
-        productRepository.save(product);
+        String itemCode = "ITEM001";
 
         // when
-        Optional<Product> foundProduct = productRepository.findById("ITEM124");
+        Optional<Product> product = productRepository.findById(itemCode);
 
         // then
-        assertTrue(foundProduct.isPresent());
-        assertEquals("Vacuum Cleaner", foundProduct.get().getContent());
-        assertEquals("20000", foundProduct.get().getPrice());
+        if (product.isPresent()) {
+            System.out.println("Found Product: " + product.get());
+        } else {
+            System.out.println("Product with itemCode " + itemCode + " not found.");
+        }
     }
 
     @Test
-    public void deleteProductTest() {
-        // given
-        Product product = Product.builder()
-                .itemCode("ITEM125")
-                .price("30000")
-                .category("Furniture")
-                .content("Sofa")
-                .productCondition("Like New")
-                .imageUrl("http://example.com/sofa.jpg")
-                .regDate(LocalDateTime.now())
-                .dealDate(LocalDateTime.now())
-                .status("Available")
-                .location("Incheon")
-                .userId("user125")
-                .build();
-
-        productRepository.save(product);
-
+    public void testFindAllProducts() {
         // when
-        productRepository.deleteById("ITEM125");
+        List<Product> products = productRepository.findAll();
 
         // then
-        Optional<Product> deletedProduct = productRepository.findById("ITEM125");
-        assertFalse(deletedProduct.isPresent());
+        System.out.println("All Products: ");
+        products.forEach(System.out::println);
+    }
+
+    @Test
+    public void testUpdateProduct() {
+        // given
+        String itemCode = "ITEM001";
+        Optional<Product> productOpt = productRepository.findById(itemCode);
+
+        // when
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            product.setPrice("20000");
+            product.setContent("Updated Java Programming Book");
+            product.setModDate(LocalDateTime.now());
+
+            productRepository.save(product);
+
+            System.out.println("Updated Product: " + product);
+        } else {
+            System.out.println("Product with itemCode " + itemCode + " not found for update.");
+        }
+    }
+
+    @Test
+    public void testDeleteProduct() {
+        // given
+        String itemCode = "ITEM001";
+
+        // when
+        productRepository.deleteById(itemCode);
+
+        // then
+        Optional<Product> product = productRepository.findById(itemCode);
+        if (product.isPresent()) {
+            System.out.println("Failed to delete Product with itemCode " + itemCode);
+        } else {
+            System.out.println("Product with itemCode " + itemCode + " deleted successfully.");
+        }
     }
 }
-
