@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- 헤더 부분 추가 -->
+<th:block th:replace="layout/fragments/header :: headerFragment"></th:block>
+
+<body>
+<!-- 상품 추가 폼 -->
+<div class="container">
+    <h1>상품 추가하기</h1>
+    <form id="productForm">
+        <div class="mb-3">
+            <label for="price" class="form-label">가격</label>
+            <input type="text" class="form-control" id="price" placeholder="가격을 입력하세요">
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">카테고리</label>
+            <select class="form-control" id="category">
+                <option value="의류">의류</option>
+                <option value="도서">도서</option>
+                <option value="전자제품">전자제품</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" id="content" placeholder="상품 내용을 입력하세요"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="productCondition" class="form-label">상품 상태</label>
+            <select class="form-control" id="productCondition">
+                <option value="최상">최상</option>
+                <option value="상">상</option>
+                <option value="중">중</option>
+                <option value="하">하</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="imageUrl" class="form-label">이미지 URL</label>
+            <input type="text" class="form-control" id="imageUrl" value="http://via.placeholder.com/480x320">
+        </div>
+        <div class="mb-3">
+            <label for="dealDate" class="form-label">거래 날짜</label>
+            <input type="datetime-local" class="form-control" id="dealDate">
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">위치</label>
+            <input type="text" class="form-control" id="location" placeholder="상품 위치를 입력하세요">
+        </div>
+        <div class="mb-3">
+            <label for="userId" class="form-label">사용자 ID</label>
+            <input type="text" class="form-control" id="userId" placeholder="사용자 ID를 입력하세요">
+        </div>
+        <button type="submit" class="btn btn-primary">추가하기</button>
+    </form>
+</div>
+
+<!-- Footer 부분 추가 -->
+<th:block th:replace="layout/fragments/footer :: footerFragment"></th:block>
+
+<!-- 자바스크립트 추가 -->
+<script>
+    window.onload = function () {
+        // 오늘 날짜에 1일을 더한 값을 구하는 함수
+        const dealDateInput = document.getElementById('dealDate');
+        if (dealDateInput) { // dealDateInput이 null이 아닌지 확인
+            const today = new Date();
+
+            // 오늘 날짜에 하루를 더함
+            today.setDate(today.getDate() + 1);
+
+            // 'YYYY-MM-DDTHH:MM' 형식으로 포맷팅
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');  // 월은 0부터 시작하므로 +1
+            const day = String(today.getDate()).padStart(2, '0');
+            const hours = String(today.getHours()).padStart(2, '0');
+            const minutes = String(today.getMinutes()).padStart(2, '0');
+
+            // 'YYYY-MM-DDTHH:MM' 형식으로 값 설정
+            const defaultDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+            dealDateInput.value = defaultDate;
+        } else {
+            console.error('dealDateInput을 찾을 수 없습니다.');
+        }
+    };
+
+
+    document.getElementById('productForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // 기본 폼 제출을 막습니다.
+
+        const productDTO = {
+            price: document.getElementById('price').value,
+            category: document.getElementById('category').value,
+            content: document.getElementById('content').value,
+            productCondition: document.getElementById('productCondition').value,
+            imageUrl: document.getElementById('imageUrl').value,
+            dealDate: document.getElementById('dealDate').value,
+            location: document.getElementById('location').value,
+            userId: document.getElementById('userId').value
+        };
+
+        console.log(productDTO); // productDTO를 콘솔에 출력
+
+        // fetch API를 사용해 JSON 형식으로 데이터를 전송
+        fetch('/api/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productDTO) // JSON 문자열로 변환하여 전송
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                window.location.href = '/products'; // 성공 후 제품 목록 페이지로 이동
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+</body>
+
+</html>

@@ -103,12 +103,12 @@ public class ProductControllerTest {
     public void testSaveProduct() throws Exception {
         // given
         ProductDTO productDTO = ProductDTO.builder()
-                .itemCode("P001")
+                .itemCode("P003")
                 .price("10000")
                 .category("Electronics")
-                .content("Test Product")
+                .content("Test Product 3")
                 .productCondition("New")
-                .imageUrl("https://example.com/image.jpg")
+                .imageUrl("http://via.placeholder.com/640x480")
                 .dealDate(LocalDateTime.now())
                 .status("Available")
                 .location("Seoul")
@@ -122,7 +122,7 @@ public class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.itemCode").value("P001"));
+                .andExpect(jsonPath("$.itemCode").value("P003"));
     }
 
     @Test
