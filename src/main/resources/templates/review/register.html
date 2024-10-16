@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 게시판</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .star {
+            appearance: none;
+            padding: 1px;
+        }
+
+        .star::after {
+            content: '☆';
+            color: orange;
+            font-size: 30px;
+            cursor: pointer;
+
+        }
+
+        .star:hover::after{
+            content: '★';
+            color: orange;
+        }
+
+        .star:has(~ .star:hover)::after {
+            content: '★';
+            color: orange;
+        }
+
+        .star:checked::after,
+        .star:has(~ .star:checked)::after {
+            content: '★';
+            color: orange;
+        }
+
+        /* 호버중일때 뒤의 별들을 끄기 a ~ b */
+        .star:hover ~ .star::after {
+            content: '☆';
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>리뷰 게시판</h1>
+
+    <!-- 리뷰 작성 폼 -->
+    <h2>리뷰 작성</h2>
+    <form id="reviewForm" action="/review/register" method="POST">
+        <div class="form-group">
+            <label for="buyerId">구매자 ID</label>
+            <input type="text" class="form-control" id="buyerId" name="buyerId" required>
+        </div>
+        <div class="form-group">
+            <label for="sellerId">판매자 ID</label>
+            <input type="text" class="form-control" id="sellerId" name="sellerId" required>
+        </div>
+        <div class="form-group">
+            <label for="comment">리뷰 내용</label>
+            <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="rating">별점</label>
+            <div class="star-rating" id="rating">
+                <input type="radio" class="star" name="rating" value="1">
+                <input type="radio" class="star" name="rating" value="2">
+                <input type="radio" class="star" name="rating" value="3">
+                <input type="radio" class="star" name="rating" value="4">
+                <input type="radio" class="star" name="rating" value="5">
+            </div>
+        </div>
+
+        <script>
+            const stars = document.querySelectorAll('.star');
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    // 현재 체크된 별점이 변경되면, 다른 별점 체크를 해제
+                    stars.forEach(s => {
+                        s.checked = false; // 모든 별 체크 해제
+                    });
+
+                    star.checked = true; // 클릭한 별 체크
+                });
+            });
+        </script>
+        <button type="submit" class="btn btn-primary">리뷰 등록</button>
+        <button type="button" class="btn btn-primary" id="viewReviews">리뷰 목록</button>
+
+    </form>
+</div>
+
+<script>
+    document.getElementById('viewReviews').addEventListener('click', function() {
+        window.location.href = '/review/list'; // 리뷰 목록으로 이동
+    });
+</script>
+
+</body>
+</html>
