@@ -55,4 +55,11 @@ public class ReviewController {
 
     }
 
+    @GetMapping("/seller/{sellerId}")
+    public String getReviewIdList(@PathVariable String sellerId, Model model) {
+        List<ReviewDTO> sellerList = reviewService.getReviewIdList(sellerId);
+        model.addAttribute("list", sellerList);
+        return "review/seller";
+    }
+
 }

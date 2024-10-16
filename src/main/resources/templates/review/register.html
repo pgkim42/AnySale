@@ -40,11 +40,20 @@
         .star:hover ~ .star::after {
             content: '☆';
         }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1030; /* 다른 콘텐츠 위에 위치하게 하기 위해 z-index 사용 */
+        }
     </style>
 </head>
-<body>
+<th:block th:replace="layout/fragments/header :: headerFragment">
+</th:block>
 
-<div class="container mt-5">
+<div class="container my-5">
     <h1>리뷰 게시판</h1>
 
     <!-- 리뷰 작성 폼 -->
@@ -99,6 +108,8 @@
         window.location.href = '/review/list'; // 리뷰 목록으로 이동
     });
 </script>
-
+<!-- Footer-->
+<th:block th:replace="layout/fragments/footer :: footerFragment">
+</th:block>
 </body>
 </html>

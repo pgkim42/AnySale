@@ -44,4 +44,6 @@ public interface ReviewService {
 
     void remove(int no);
 
+    List<ReviewDTO> getReviewIdList(String sellerId);
+
 }

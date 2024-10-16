@@ -51,4 +51,17 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
     }
+
+    @Override
+    public List<ReviewDTO> getReviewIdList(String sellerId) {
+        List<Review> list = reviewRepository.findBySellerId(sellerId);
+        List<ReviewDTO> listDto = new ArrayList<>();
+
+        for (Review review : list) {
+            ReviewDTO dto = entityToDto(review);
+            listDto.add(dto);
+
+        }
+        return listDto;
+    }
 }
