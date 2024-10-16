@@ -1,6 +1,6 @@
 package com.example.anysale.likeList;
 
-import com.example.anysale.likeList.entity.LikeListEntity;
+import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.repository.LikeListRepository;
 import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.repository.MemberRepository;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @SpringBootTest
 public class LikeListRepositoryTest {
@@ -54,8 +53,8 @@ public class LikeListRepositoryTest {
         .build();
     productRepository.save(product);
 
-    LikeListEntity likeListEntity = LikeListEntity.builder().member(member).product(product).regDate(LocalDateTime.now()).build();
-    likeListRepository.save(likeListEntity);
+    LikeList likeList = LikeList.builder().member(member).product(product).regDate(LocalDateTime.now()).build();
+    likeListRepository.save(likeList);
 
   }
 

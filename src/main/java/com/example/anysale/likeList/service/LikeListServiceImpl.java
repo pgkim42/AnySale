@@ -1,7 +1,7 @@
 package com.example.anysale.likeList.service;
 
 import com.example.anysale.likeList.dto.LikeListDTO;
-import com.example.anysale.likeList.entity.LikeListEntity;
+import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.repository.LikeListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,8 @@ public class LikeListServiceImpl implements LikeListService {
   }
 
   @Override
-  public LikeListEntity addLikeList(LikeListEntity likeListEntity) {
-    return likeListRepository.save(likeListEntity);
+  public LikeList addLikeList(LikeList likeList) {
+    return likeListRepository.save(likeList);
   }
 
 
@@ -36,8 +36,8 @@ public class LikeListServiceImpl implements LikeListService {
   }
 
   @Override
-  public LikeListEntity removeLikeList(Long likeListId) {
-    Optional<LikeListEntity> likeListEntity = likeListRepository.findById(likeListId);
+  public LikeList removeLikeList(Long likeListId) {
+    Optional<LikeList> likeListEntity = likeListRepository.findById(likeListId);
     likeListEntity.ifPresent(likeListRepository::delete);
     return null;
   }

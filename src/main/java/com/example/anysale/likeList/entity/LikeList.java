@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LikeListEntity extends BaseEntity {
+public class LikeList extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +28,6 @@ public class LikeListEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "member", referencedColumnName = "id")
   private Member member;
-
-  private LocalDateTime regDate;
 
 
 }
