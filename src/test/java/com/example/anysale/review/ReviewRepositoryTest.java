@@ -19,17 +19,17 @@ public class ReviewRepositoryTest {
     void 리뷰등록() {
 
         Review review = Review.builder()
-                .review_no(0)
-                .buyer_id("정성민")
-                .seller_id("김평기")
+                .reviewNo(0)
+                .buyerId("정성민")
+                .sellerId("김평기")
                 .comment("쿨거래 감사합니다.")
                 .rating(5)
                 .build();
 
         Review review2 = Review.builder()
-                .review_no(0)
-                .buyer_id("심태훈")
-                .seller_id("김인수")
+                .reviewNo(0)
+                .buyerId("심태훈")
+                .sellerId("김인수")
                 .comment("쿨거래 감사합니다2.")
                 .rating(1)
                 .build();

@@ -42,4 +42,6 @@ public interface ReviewService {
 
     List<ReviewDTO> getList();
 
+    void remove(int no);
+
 }

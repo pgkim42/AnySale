@@ -47,4 +47,12 @@ public class ReviewController {
         return "review/list";
     }
 
+    @PostMapping("/remove")
+    public String remove(@RequestParam("no") int no){
+
+        reviewService.remove(no);
+        return "redirect:/review/list";
+
+    }
+
 }

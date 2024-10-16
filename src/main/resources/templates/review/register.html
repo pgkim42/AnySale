@@ -89,8 +89,16 @@
             });
         </script>
         <button type="submit" class="btn btn-primary">리뷰 등록</button>
+        <button type="button" class="btn btn-primary" id="viewReviews">리뷰 목록</button>
+
     </form>
 </div>
+
+<script>
+    document.getElementById('viewReviews').addEventListener('click', function() {
+        window.location.href = '/review/list'; // 리뷰 목록으로 이동
+    });
+</script>
 
 </body>
 </html>

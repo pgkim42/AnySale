@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,5 +40,15 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
 
         return list;
+    }
+
+    @Override
+    public void remove(int no) {
+
+        Optional<Review> findNo = reviewRepository.findById(no);
+        if (findNo.isPresent()) {
+            reviewRepository.deleteById(no);
+        }
+
     }
 }
