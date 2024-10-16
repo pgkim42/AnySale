@@ -5,6 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리뷰 게시판</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .star {
+            appearance: none;
+            padding: 1px;
+        }
+
+        .star::after {
+            content: '☆';
+            color: orange;
+            font-size: 30px;
+            cursor: pointer;
+
+        }
+
+        .star:hover::after{
+            content: '★';
+            color: orange;
+        }
+
+        .star:has(~ .star:hover)::after {
+            content: '★';
+            color: orange;
+        }
+
+        .star:checked::after,
+        .star:has(~ .star:checked)::after {
+            content: '★';
+            color: orange;
+        }
+
+        /* 호버중일때 뒤의 별들을 끄기 a ~ b */
+        .star:hover ~ .star::after {
+            content: '☆';
+        }
+    </style>
 </head>
 <body>
 
@@ -26,17 +62,32 @@
             <label for="comment">리뷰 내용</label>
             <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
         </div>
+
         <div class="form-group">
             <label for="rating">별점</label>
-            <select class="form-control" id="rating" name="rating" required>
-                <option value="">선택하세요</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
+            <div class="star-rating" id="rating">
+                <input type="radio" class="star" name="rating" value="1">
+                <input type="radio" class="star" name="rating" value="2">
+                <input type="radio" class="star" name="rating" value="3">
+                <input type="radio" class="star" name="rating" value="4">
+                <input type="radio" class="star" name="rating" value="5">
+            </div>
         </div>
+
+        <script>
+            const stars = document.querySelectorAll('.star');
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    // 현재 체크된 별점이 변경되면, 다른 별점 체크를 해제
+                    stars.forEach(s => {
+                        s.checked = false; // 모든 별 체크 해제
+                    });
+
+                    star.checked = true; // 클릭한 별 체크
+                });
+            });
+        </script>
         <button type="submit" class="btn btn-primary">리뷰 등록</button>
     </form>
 </div>

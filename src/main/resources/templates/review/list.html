@@ -18,8 +18,13 @@
             <!-- 등록된 리뷰 항목이 동적으로 추가됩니다. -->
             <th:block th:each="review : ${list}">
                 <li class="list-group-item">
-                    <strong th:text="${review.buyerId}">구매자ID</strong> (<span th:text="${review.rating}">별점</span>점)<br>
+                    <strong th:text="${review.buyerId}">구매자ID</strong>
+<!--                    (<span th:text="${review.rating}">별점</span>점)<br>-->
                     <span th:text="${review.comment}">리뷰 내용</span>
+                    <div>
+                        <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>
+<!--                        <span th:each="i : ${#numbers.sequence(review.rating + 1, 5)}">☆</span>-->
+                    </div>
                 </li>
             </th:block>
         </ul>
