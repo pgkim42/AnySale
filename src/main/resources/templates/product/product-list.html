@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="layout/fragments/header :: headerFragment">
+</th:block>
+
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">중고거래 매물</h1>
+            <p class="lead fw-normal text-white-50 mb-0">지금 올라온 매물들을 둘러보세요.</p>
+        </div>
+    </div>
+</header>
+
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <!-- Thymeleaf 루프를 사용하여 제품 목록을 동적으로 생성 -->
+            <div class="col mb-5" th:each="product : ${products}">
+                <div class="card h-100">
+                    <!-- Product image -->
+                    <img class="card-img-top" th:src="@{${product.imageUrl}}" alt="..." />
+                    <!-- Product details -->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name -->
+                            <h5 class="fw-bolder" th:text="${product.content}">Product Name</h5>
+                            <!-- Product price -->
+                            <span th:text="${product.price}"></span>
+                        </div>
+                    </div>
+                    <!-- Product actions -->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" th:href="@{/products/detail/{itemCode}(itemCode=${product.itemCode})}">
+                                자세히 보기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer-->
+<th:block th:replace="layout/fragments/footer :: footerFragment">
+</th:block>
+
+</html>
