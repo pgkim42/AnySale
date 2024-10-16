@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="layout/fragments/header :: headerFragment">
+</th:block>
+
+<div class="container mt-5">
+    <h1 class="text-center">상품 상세 정보</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <img th:src="@{${productDTO.imageUrl}}" class="img-fluid" alt="Product Image">
+        </div>
+        <div class="col-md-6">
+            <h2 th:text="${productDTO.content}">상품 설명</h2>
+            <p><strong>가격: </strong> <span th:text="${productDTO.price}"></span></p>
+            <p><strong>카테고리: </strong> <span th:text="${productDTO.category}"></span></p>
+            <p><strong>상품 상태: </strong> <span th:text="${productDTO.productCondition}"></span></p>
+            <p><strong>거래 날짜: </strong> <span th:text="${productDTO.dealDate}"></span></p>
+            <p><strong>상태: </strong> <span th:text="${productDTO.status}"></span></p>
+            <p><strong>위치: </strong> <span th:text="${productDTO.location}"></span></p>
+            <p><strong>판매자: </strong> <span th:text="${productDTO.userId}"></span></p>
+
+            <a href="/products" class="btn btn-primary">목록으로 돌아가기</a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer-->
+<th:block th:replace="layout/fragments/footer :: footerFragment">
+</th:block>
+
+</html>

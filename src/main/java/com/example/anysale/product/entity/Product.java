@@ -1,5 +1,6 @@
 package com.example.anysale.product.entity;
 
+import com.example.anysale.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class Product {
+public class Product extends BaseEntity {
 
     @Id
     @Column(name = "item_code")
@@ -37,18 +38,18 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    @Column(nullable = false)
-    private LocalDateTime regDate;
-
-    private LocalDateTime modDate;
+    private LocalDateTime modDate;  // modDate는 필요할 경우 유지
 
     @Column(nullable = false)
-    private String location;
+    private LocalDateTime dealDate;
 
     @Column(nullable = false)
     private String status;
 
     @Column(nullable = false)
-    private String userId;
+    private String location;
 
+    @Column(nullable = false)
+    private String userId;
 }
+

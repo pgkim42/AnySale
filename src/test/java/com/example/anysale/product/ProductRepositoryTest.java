@@ -3,150 +3,106 @@ package com.example.anysale.product;
 import com.example.anysale.product.entity.Product;
 import com.example.anysale.product.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
 
     @Test
-    void saveProduct() {
+    public void testSaveProduct() {
+        // given
         Product product = Product.builder()
-                .itemCode("A001")
-                .category("Electronics")
-                .content("Test Product")
-                .imageUrl("test.jpg")
-                .location("Seoul")
-                .price("10000")
+                .itemCode("ITEM001")
+                .price("15000")
+                .category("Books")
+                .content("Java Programming Book")
                 .productCondition("New")
-                .regDate(java.time.LocalDateTime.now())
+                .imageUrl("http://example.com/book.jpg")
+                .dealDate(LocalDateTime.now())
                 .status("Available")
-                .userId("user1")
+                .location("Seoul")
+                .userId("user001")
                 .build();
 
+        // when
         productRepository.save(product);
+
+        // then
+        System.out.println("Saved Product: " + product);
     }
 
     @Test
-    void saveProducts2() {
-        List<Product> products = Arrays.asList(
-                Product.builder()
-                        .itemCode("A002")
-                        .category("Electronics")
-                        .content("Test Product 2")
-                        .imageUrl("test2.jpg")
-                        .location("Busan")
-                        .price("15000")
-                        .productCondition("Used")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user2")
-                        .build(),
-                Product.builder()
-                        .itemCode("A003")
-                        .category("Books")
-                        .content("Test Product 3")
-                        .imageUrl("test3.jpg")
-                        .location("Incheon")
-                        .price("5000")
-                        .productCondition("Like New")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user3")
-                        .build(),
-                Product.builder()
-                        .itemCode("A004")
-                        .category("Furniture")
-                        .content("Test Product 4")
-                        .imageUrl("test4.jpg")
-                        .location("Daegu")
-                        .price("30000")
-                        .productCondition("Used")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user4")
-                        .build(),
-                Product.builder()
-                        .itemCode("A005")
-                        .category("Clothing")
-                        .content("Test Product 5")
-                        .imageUrl("test5.jpg")
-                        .location("Daejeon")
-                        .price("8000")
-                        .productCondition("New")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user5")
-                        .build(),
-                Product.builder()
-                        .itemCode("A006")
-                        .category("Electronics")
-                        .content("Test Product 6")
-                        .imageUrl("test6.jpg")
-                        .location("Gwangju")
-                        .price("20000")
-                        .productCondition("Used")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user6")
-                        .build(),
-                Product.builder()
-                        .itemCode("A007")
-                        .category("Kitchen")
-                        .content("Test Product 7")
-                        .imageUrl("test7.jpg")
-                        .location("Ulsan")
-                        .price("12000")
-                        .productCondition("Like New")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user7")
-                        .build(),
-                Product.builder()
-                        .itemCode("A008")
-                        .category("Toys")
-                        .content("Test Product 8")
-                        .imageUrl("test8.jpg")
-                        .location("Sejong")
-                        .price("6000")
-                        .productCondition("New")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user8")
-                        .build(),
-                Product.builder()
-                        .itemCode("A009")
-                        .category("Books")
-                        .content("Test Product 9")
-                        .imageUrl("test9.jpg")
-                        .location("Gyeonggi")
-                        .price("4000")
-                        .productCondition("Used")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user9")
-                        .build(),
-                Product.builder()
-                        .itemCode("A010")
-                        .category("Furniture")
-                        .content("Test Product 10")
-                        .imageUrl("test10.jpg")
-                        .location("Gangwon")
-                        .price("50000")
-                        .productCondition("Used")
-                        .regDate(java.time.LocalDateTime.now())
-                        .status("Available")
-                        .userId("user10")
-                        .build()
-        );
+    public void testFindProductById() {
+        // given
+        String itemCode = "ITEM001";
 
-        productRepository.saveAll(products);
+        // when
+        Optional<Product> product = productRepository.findById(itemCode);
+
+        // then
+        if (product.isPresent()) {
+            System.out.println("Found Product: " + product.get());
+        } else {
+            System.out.println("Product with itemCode " + itemCode + " not found.");
+        }
     }
 
+    @Test
+    public void testFindAllProducts() {
+        // when
+        List<Product> products = productRepository.findAll();
+
+        // then
+        System.out.println("All Products: ");
+        products.forEach(System.out::println);
+    }
+
+    @Test
+    public void testUpdateProduct() {
+        // given
+        String itemCode = "ITEM001";
+        Optional<Product> productOpt = productRepository.findById(itemCode);
+
+        // when
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            product.setPrice("20000");
+            product.setContent("Updated Java Programming Book");
+            product.setModDate(LocalDateTime.now());
+
+            productRepository.save(product);
+
+            System.out.println("Updated Product: " + product);
+        } else {
+            System.out.println("Product with itemCode " + itemCode + " not found for update.");
+        }
+    }
+
+    @Test
+    public void testDeleteProduct() {
+        // given
+        String itemCode = "ITEM001";
+
+        // when
+        productRepository.deleteById(itemCode);
+
+        // then
+        Optional<Product> product = productRepository.findById(itemCode);
+        if (product.isPresent()) {
+            System.out.println("Failed to delete Product with itemCode " + itemCode);
+        } else {
+            System.out.println("Product with itemCode " + itemCode + " deleted successfully.");
+        }
+    }
 }
