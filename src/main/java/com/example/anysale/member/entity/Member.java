@@ -32,9 +32,9 @@ public class Member extends BaseEntity {
     @Column(name = "profile_photo_url", length = 255)
     private String profilePhotoUrl;
 
-    @Column(name = "role", length = 50, nullable = false)
+    @Column(name = "role", length = 50 )
     private String role;
 
-    @Column(name = "score", nullable = false)
+    @Column(name = "score")
     private Double score;
 }
