@@ -3,8 +3,27 @@
 <th:block th:replace="layout/fragments/header :: headerFragment">
 </th:block>
 
+<style>
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030; /* 다른 콘텐츠 위에 위치하게 하기 위해 z-index 사용 */
+    }
+</style>
+
 <div class="container mt-5">
     <h1>리뷰 리스트</h1>
+
+    <!--  검색 기능  -->
+    <div class="search-container">
+            <form th:action="@{/review/searchId}" method="get" class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="판매자ID 검색" required>
+                <button type="submit" class="btn btn-outline-secondary">검색</button>
+            </form>
+
+    </div>
 
     <div th:if="${message}" th:text="${message}"></div>
 
@@ -28,6 +47,10 @@
                 </li>
             </th:block>
         </ul>
+    </div>
+    <!-- 등록하기 버튼 -->
+    <div class="add-review-btn">
+        <a th:href="@{/review/register}" class="btn btn-primary">등록하기</a>
     </div>
 </div>
 <!-- Footer-->

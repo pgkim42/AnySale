@@ -64,4 +64,12 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return listDto;
     }
+
+    @Override
+    public List<Review> searchReviews(String search) {
+
+        return reviewRepository.findBySellerIdContaining(search);
+
+    }
+
 }

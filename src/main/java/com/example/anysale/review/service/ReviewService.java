@@ -2,6 +2,8 @@ package com.example.anysale.review.service;
 
 import com.example.anysale.review.dto.ReviewDTO;
 import com.example.anysale.review.entity.Review;
+import com.example.anysale.review.repository.ReviewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,5 +47,7 @@ public interface ReviewService {
     void remove(int no);
 
     List<ReviewDTO> getReviewIdList(String sellerId);
+
+    List<Review> searchReviews(String search);
 
 }

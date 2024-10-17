@@ -62,4 +62,19 @@ public class ReviewController {
         return "review/seller";
     }
 
+    @GetMapping("/searchId")
+    public String ReviewSearch(@RequestParam("search") String search, Model model) {
+        List<Review> reviewList = reviewService.searchReviews(search);
+
+        model.addAttribute("list", reviewList);
+
+        if(reviewList.isEmpty()) {
+            model.addAttribute("message", "검색결과가 없습니다.");
+        } else {
+            model.addAttribute("message", search + "검색 결과입니다.");
+        }
+
+        return "review/list";
+    }
+
 }
