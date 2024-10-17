@@ -34,6 +34,7 @@ public class ReviewController {
     @PostMapping("/register")
     public String register(@ModelAttribute ReviewDTO dto, RedirectAttributes redirectAttributes) {
         System.out.println("리뷰 등록 확인: " + dto);
+
         int newReviewNo = reviewService.register(dto);
         redirectAttributes.addFlashAttribute("message", "리뷰가 성공적으로 등록되었습니다.");
         return "redirect:/review/list";
@@ -58,20 +59,22 @@ public class ReviewController {
     @GetMapping("/seller/{sellerId}")
     public String getReviewIdList(@PathVariable String sellerId, Model model) {
         List<ReviewDTO> sellerList = reviewService.getReviewIdList(sellerId);
+        int reviewCount = sellerList.size();
         model.addAttribute("list", sellerList);
+        model.addAttribute("reviewCount", reviewCount);
         return "review/seller";
     }
 
-    @GetMapping("/searchId")
-    public String ReviewSearch(@RequestParam("search") String search, Model model) {
-        List<Review> reviewList = reviewService.searchReviews(search);
+    @GetMapping("/sellerId")
+    public String ReviewSearch(@RequestParam("sellerId") String sellerId, Model model) {
+        List<ReviewDTO> reviewList = reviewService.searchReviews(sellerId);
 
         model.addAttribute("list", reviewList);
 
         if(reviewList.isEmpty()) {
             model.addAttribute("message", "검색결과가 없습니다.");
         } else {
-            model.addAttribute("message", search + "검색 결과입니다.");
+            model.addAttribute("message", sellerId + "검색 결과입니다.");
         }
 
         return "review/list";

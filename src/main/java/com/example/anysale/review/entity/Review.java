@@ -28,6 +28,14 @@ public class Review extends BaseEntity {
     String comment; // 리뷰 내용
 
     @Column(length = 50, nullable = false)
+    String buyerAddress; // 구매자의 지역
+
+    @Column(length = 255, nullable = false)
+    String buyerProfile; // 구매자 프사 url
+
+    @Column(length = 50, nullable = false)
     int rating; // 별점
+
+
 
 }

@@ -19,7 +19,11 @@ public class ReviewDTO {
 
     String sellerId; // 회원 테이블의 FK(판매자)
 
-    String comment; // 리뷰내용S
+    String comment; // 리뷰내용
+
+    String buyerAddress; // 구매자의 지역
+
+    String buyerProfile; // 구매자 프사 URL
 
     int rating; // 별점
 

@@ -3,23 +3,48 @@
 <th:block th:replace="layout/fragments/header :: headerFragment">
 </th:block>
 
+<!--<style>-->
+<!--    footer {-->
+<!--        position: fixed;-->
+<!--        bottom: 0;-->
+<!--        left: 0;-->
+<!--        width: 100%;-->
+<!--        z-index: 1030; /* 다른 콘텐츠 위에 위치하게 하기 위해 z-index 사용 */-->
+<!--    }-->
+<!--</style>-->
+
 <style>
-    footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1030; /* 다른 콘텐츠 위에 위치하게 하기 위해 z-index 사용 */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* 전체 화면을 채우기 위해 최소 높이 설정 */
     }
+
+    .container {
+        flex: 1; /* 컨텐츠가 남은 공간을 채우도록 설정 */
+    }
+
+    footer {
+        background: #343a40; /* 다크 배경 색상 */
+        color: white;
+        text-align: center;
+        padding: 1rem; /* 패딩 추가 */
+        margin-top: 100px; /* 바디와 footer 간격 추가 */
+    }
+
 </style>
 
 <div class="container mt-5">
-    <h1>리뷰 리스트</h1>
-
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>리뷰리스트</h1>
+        <div class="add-review-btn">
+            <a th:href="@{/review/register}" class="btn btn-primary">등록하기</a>
+        </div>
+    </div>
     <!--  검색 기능  -->
     <div class="search-container">
-            <form th:action="@{/review/searchId}" method="get" class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="판매자ID 검색" required>
+            <form th:action="@{/review/sellerId}" method="get" class="input-group">
+                <input type="text" name="sellerId" class="form-control" placeholder="판매자ID 검색" required>
                 <button type="submit" class="btn btn-outline-secondary">검색</button>
             </form>
 
@@ -36,8 +61,10 @@
                     <h5>
                         <a th:href="@{/review/seller/{sellerId}(sellerId=${review.sellerId})}" th:text="'판매자 : ' + ${review.sellerId}">판매자</a>
                     </h5>
-                    <strong th:text="'구매자 : ' + ${review.buyerId}"></strong>
-                    <span th:text="${review.comment}">리뷰 내용</span>
+                    <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
+                    <strong th:text="${review.buyerId}"></strong>
+                    <span th:text="${review.buyerAddress}">지역</span>
+                    <br><span th:text="${review.comment}">리뷰 내용</span>
                     <div>
                         <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>
                     </div>
@@ -47,10 +74,6 @@
                 </li>
             </th:block>
         </ul>
-    </div>
-    <!-- 등록하기 버튼 -->
-    <div class="add-review-btn">
-        <a th:href="@{/review/register}" class="btn btn-primary">등록하기</a>
     </div>
 </div>
 <!-- Footer-->

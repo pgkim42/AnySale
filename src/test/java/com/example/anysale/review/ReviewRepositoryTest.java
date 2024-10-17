@@ -24,6 +24,8 @@ public class ReviewRepositoryTest {
                 .sellerId("김평기")
                 .comment("쿨거래 감사합니다.")
                 .rating(5)
+                .buyerAddress("부천 원미구")
+                .buyerProfile("https://picsum.photos/50")
                 .build();
 
         Review review2 = Review.builder()
@@ -32,6 +34,8 @@ public class ReviewRepositoryTest {
                 .sellerId("김인수")
                 .comment("쿨거래 감사합니다2.")
                 .rating(1)
+                .buyerAddress("서구 원당동")
+                .buyerProfile("https://picsum.photos/50")
                 .build();
 
         reviewRepository.save(review);

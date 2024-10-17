@@ -2,8 +2,6 @@ package com.example.anysale.review.service;
 
 import com.example.anysale.review.dto.ReviewDTO;
 import com.example.anysale.review.entity.Review;
-import com.example.anysale.review.repository.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +20,8 @@ public interface ReviewService {
                 .reviewNo(dto.getReviewNo())
                 .comment(dto.getComment())
                 .rating(dto.getRating())
+                .buyerAddress(dto.getBuyerAddress())
+                .buyerProfile(dto.getBuyerProfile())
                 .build();
 
         return entity;
@@ -37,6 +37,8 @@ public interface ReviewService {
                 .comment(entity.getComment())
                 .reviewDate(entity.getCreateDate())
                 .rating(entity.getRating())
+                .buyerAddress(entity.getBuyerAddress())
+                .buyerProfile(entity.getBuyerProfile())
                 .build();
 
         return dto;
@@ -48,6 +50,6 @@ public interface ReviewService {
 
     List<ReviewDTO> getReviewIdList(String sellerId);
 
-    List<Review> searchReviews(String search);
+    List<ReviewDTO> searchReviews(String search);
 
 }

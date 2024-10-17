@@ -41,12 +41,22 @@
             content: '☆';
         }
 
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* 전체 화면을 채우기 위해 최소 높이 설정 */
+        }
+
+        .container {
+            flex: 1; /* 컨텐츠가 남은 공간을 채우도록 설정 */
+        }
+
         footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1030; /* 다른 콘텐츠 위에 위치하게 하기 위해 z-index 사용 */
+            background: #343a40; /* 다크 배경 색상 */
+            color: white;
+            text-align: center;
+            padding: 1rem; /* 패딩 추가 */
+            margin-top: 100px; /* 바디와 footer 간격 추가 */
         }
     </style>
 </head>
@@ -54,10 +64,10 @@
 </th:block>
 
 <div class="container my-5">
-    <h1>리뷰 게시판</h1>
 
     <!-- 리뷰 작성 폼 -->
     <h2>리뷰 작성</h2>
+    <br>
     <form id="reviewForm" action="/review/register" method="POST">
         <div class="form-group">
             <label for="buyerId">구매자 ID</label>
@@ -71,6 +81,29 @@
             <label for="comment">리뷰 내용</label>
             <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
         </div>
+
+
+        <!-- 주소 선택 -->
+        <div class="form-group">
+            <label for="buyerAddressSelect">주소 선택</label>
+            <select id="buyerAddressSelect" name="buyerAddress" class="form-control" required>
+                <option value="">-- 선택 --</option>
+                <option value="서울 강남구">서울 강남구</option>
+                <option value="서울 종로구">서울 종로구</option>
+                <option value="부산 해운대구">부산 해운대구</option>
+                <option value="경기 수원시">경기 수원시</option>
+                <!-- 필요한 다른 옵션 추가 -->
+            </select>
+        </div>
+
+        <input type="hidden" name="buyerAddress" id="buyerAddress">
+
+        <div class="form-group">
+            <label for="comment">프로필</label>
+            <!-- url 수정해야함 박아놓음 -->
+            <textarea class="form-control" id="buyerProfile" name="buyerProfile" rows="1" required>https://picsum.photos/50</textarea>
+        </div>
+
 
         <div class="form-group">
             <label for="rating">별점</label>
@@ -107,6 +140,7 @@
     document.getElementById('viewReviews').addEventListener('click', function() {
         window.location.href = '/review/list'; // 리뷰 목록으로 이동
     });
+
 </script>
 <!-- Footer-->
 <th:block th:replace="layout/fragments/footer :: footerFragment">
