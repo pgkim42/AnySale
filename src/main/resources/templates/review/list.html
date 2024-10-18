@@ -67,7 +67,7 @@
             <!-- 등록된 리뷰 항목이 동적으로 추가됩니다. -->
             <th:block th:each="review : ${list}">
                 <li class="list-group-item">
-<!--                    <h5 th:text="'판매자 : ' + ${review.sellerId}">판매자: </h5>-->
+<!--                    <h5 th:text="'판매자 : ' + ${review.sellerId}">판매자:ㅇㅇㅇ </h5>-->
                     <h5>
                         <a th:href="@{/review/seller/{sellerId}(sellerId=${review.sellerId})}" class="seller-link" th:text="'판매자 : ' + ${review.sellerId}">판매자</a>
                     </h5>
