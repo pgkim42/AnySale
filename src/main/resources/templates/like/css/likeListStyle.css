@@ -73,6 +73,11 @@ h1 {
     margin: 0; /* 추가 여백 제거 */
 }
 
+.div-temp {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .like-button {
     background-color: transparent;
     border: none;
@@ -83,4 +88,17 @@ h1 {
 .like-button img {
     width: 35px;
     height: 35px;
+}
+
+.product-info {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.div-temp1{
+    flex: 5;
+}
+
+.div-temp2{
+    flex: 1;
 }

@@ -1,3 +1,4 @@
+/*
 package com.example.anysale.likeList.service;
 
 import com.example.anysale.likeList.dto.LikeListDTO;
@@ -6,6 +7,7 @@ import com.example.anysale.likeList.repository.LikeListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +28,8 @@ public class LikeListServiceImpl implements LikeListService {
 
 
   @Override
-  public List<LikeListDTO> getLikedItemsByUserId(String id, String itemCode) {
-    return likeListRepository.findLikedItemsByUserId(id, itemCode);
+  public List<LikeListDTO> getLikedItemsByUserId(String id, String itemCode, LocalDateTime wishDate) {
+    return likeListRepository.findLikedItemsByUserId(id, itemCode, wishDate);
   }
 
   @Override
@@ -42,3 +44,4 @@ public class LikeListServiceImpl implements LikeListService {
     return null;
   }
 }
+*/
