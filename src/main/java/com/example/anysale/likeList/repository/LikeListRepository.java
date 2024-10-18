@@ -22,12 +22,12 @@ public interface LikeListRepository extends JpaRepository<LikeList, Integer> {
   List<LikeList> findByMemberId(String memberId);
 
   // 특정 삼품을 찜한 사용자 조회
-  List<LikeList> findByItemCode(String itemCode);
+  List<LikeList> findByProduct_ItemCode(String itemCode);
 
   // 특정 회원이 찜한 특정 상품 조회(존재여부를 체크)
-  LikeList findByItemCodeAndMemberId(String itemCode, String memberId);
+  LikeList findByProduct_ItemCodeAndMember_Id(String itemCode, String memberId);
 
   // 찜 목록에서 상품 삭제
-  void deleteByItemCodeAndMemberId(String itemCode, String memberId);
+  void deleteByProduct_ItemCodeAndMember_Id(String itemCode, String memberId);
 
 }
