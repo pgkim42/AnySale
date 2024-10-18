@@ -9,6 +9,7 @@
     <ul>
         <li th:each="item : ${likeList}">
             상품코드: <span th:text="${item.itemCode}"></span><br>
+            아이디: <span th:text="${item.memberId}"></span><br>
             등록일: <span th:text="${item.regDate}"></span><br>
         </li>
     </ul>

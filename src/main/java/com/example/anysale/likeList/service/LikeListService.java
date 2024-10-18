@@ -13,5 +13,5 @@ public interface LikeListService {
 
   void removeLikeList(String id);
 
-  LikeList removeLikeList(Long likeListId);
+  LikeList removeLikeList(int likeListId);
 }

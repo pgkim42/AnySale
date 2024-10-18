@@ -9,7 +9,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_likeList")
+@Table(name = "likeList")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,15 +19,17 @@ public class LikeList extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;  //고유ID
+  private int id;  //고유ID
 
   @ManyToOne
-  @JoinColumn(name = "product", referencedColumnName = "item_code")
+//  @JoinColumn(name = "product_id", referencedColumnName = "item_code")
   private Product product;  //상품코드
 
   @ManyToOne
-  @JoinColumn(name = "member", referencedColumnName = "id")
+//  @JoinColumn(name = "member_id", referencedColumnName = "id")
   private Member member;
 
+//  @Column(nullable = false)
+//  private LocalDateTime regDate;  // 등록일
 
 }

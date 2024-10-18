@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import java.util.List;
 
 @RestController
-@RequestMapping("/likeList")
+@RequestMapping("/like")
 public class LikeListController {
 
   private final LikeListService likeListService;
@@ -40,7 +40,7 @@ public class LikeListController {
   }
 
   @DeleteMapping("/remove/{id}")
-  public ResponseEntity<LikeList> removeLikedItem(@PathVariable Long id) {
+  public ResponseEntity<LikeList> removeLikedItem(@PathVariable int id) {
     LikeList removedItem = likeListService.removeLikeList(id);
     return ResponseEntity.ok(removedItem);
   }

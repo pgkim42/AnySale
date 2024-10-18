@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class LikeListRepositoryTest {
 
   @Autowired
-  private LikeListRepository likeListRepository;
+  LikeListRepository likeListRepository;
 
   @Autowired
   MemberRepository memberRepository;
@@ -25,37 +25,57 @@ public class LikeListRepositoryTest {
   ProductRepository productRepository;
 
   @Test
-  void 등록() {
+  void member등록() {
     Member member = Member.builder()
-        .id("memberId2")
+        .id("user1")
         .password("securePassword")
         .name("John Doe")
-        .email("john.doe@example.com")
+        .email("john1.doe@example.com")
         .phone("123-456-7890")
         .profilePhotoUrl("http://example.com/photo.jpg")
-        .role("USER")
+        .role("USER1")
         .score(0.0)
         .build();
-    memberRepository.save(member);
 
+    memberRepository.save(member);
+  }
+
+  @Test
+  void product등록() {
     Product product = Product.builder()
-        .itemCode("ITEM1223")
-        .price("10000")
+        .itemCode("ITEM2024")
+        .price("20000")
         .category("Electronics")
         .content("Latest smartphone with advanced features.")
         .productCondition("New")
         .imageUrl("http://example.com/image.jpg")
-        .regDate(LocalDateTime.now())
+        .dealDate(LocalDateTime.now())
         .modDate(LocalDateTime.now())
-        .location("Seoul")
         .status("Available")
-        .userId("user123")
+        .location("Seoul")
+        .userId("user1")
         .build();
+
     productRepository.save(product);
+  }
 
-    LikeList likeList = LikeList.builder().member(member).product(product).regDate(LocalDateTime.now()).build();
+  @Test
+  void likelist등록() {
+
+    Member member = Member.builder()
+        .id("user1")
+        .build();
+
+    Product product = Product.builder()
+        .itemCode("ITEM2024")
+        .build();
+
+    LikeList likeList = LikeList.builder()
+        .member(member)
+        .product(product)
+        .build();
+
     likeListRepository.save(likeList);
-
   }
 
 }

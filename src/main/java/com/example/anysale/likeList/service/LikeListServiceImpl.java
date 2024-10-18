@@ -36,7 +36,7 @@ public class LikeListServiceImpl implements LikeListService {
   }
 
   @Override
-  public LikeList removeLikeList(Long likeListId) {
+  public LikeList removeLikeList(int likeListId) {
     Optional<LikeList> likeListEntity = likeListRepository.findById(likeListId);
     likeListEntity.ifPresent(likeListRepository::delete);
     return null;
