@@ -4,6 +4,8 @@ import com.example.anysale.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -33,9 +35,11 @@ public class Review extends BaseEntity {
     @Column(length = 255, nullable = false)
     String buyerProfile; // 구매자 프사 url
 
+    @ElementCollection
+    @Column(length = 255, nullable = true)
+    List<String> mannerCheck;
+
     @Column(length = 50, nullable = false)
     int rating; // 별점
-
-
 
 }

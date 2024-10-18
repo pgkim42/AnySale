@@ -54,11 +54,16 @@
 <div class="container mt-5">
     <h1>거래 후기 (<span th:text="${reviewCount}"></span>건)</h1>
 
+
     <div class="links mb-4">
-        <a class="link" href="/seller/items">판매물품</a>
-        <a class="link" href="/seller/reviews">거래후기</a>
-        <a class="link" href="/seller/manners">매너칭찬</a>
+        <a class="link" href="">판매물품</a>
+        <a class="link" href="">거래후기</a>
+
+<!--        <a th:href="@{/review/seller/{sellerId}(sellerId=${review.sellerId})}" class="link">거래후기</a>-->
+
+        <a class="link" href="">매너칭찬</a>
     </div>
+
 
     <div id="reviewList" class="mt-3">
         <ul class="list-group">

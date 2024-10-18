@@ -78,6 +78,20 @@
                         <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>
                     </div>
                     <span th:text="${review.comment}">리뷰 내용</span>
+                    <br>
+                    <br>
+
+                    <!-- 좋았던 부분 -->
+                    <div th:if="${review.mannerCheck}">
+                        <h5>좋았던 부분:</h5>
+                        <br>
+                        <ul>
+                            <th:block th:each="manner : ${review.mannerCheck}">
+                                <li th:text="${manner}"></li>
+                            </th:block>
+                        </ul>
+                    </div>
+
                     <form th:action="@{/review/remove(no=${review.reviewNo})}" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger btn-sm">삭제</button>
                     </form>

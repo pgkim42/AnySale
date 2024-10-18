@@ -3,6 +3,7 @@ package com.example.anysale.review.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +27,8 @@ public class ReviewDTO {
     String buyerProfile; // 구매자 프사 URL
 
     int rating; // 별점
+
+    List<String> mannerCheck; // 칭찬항목
 
     LocalDateTime reviewDate; // 리뷰 작성일
 

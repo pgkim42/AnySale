@@ -4,6 +4,8 @@ import com.example.anysale.review.dto.ReviewDTO;
 import com.example.anysale.review.entity.Review;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -22,6 +24,7 @@ public interface ReviewService {
                 .rating(dto.getRating())
                 .buyerAddress(dto.getBuyerAddress())
                 .buyerProfile(dto.getBuyerProfile())
+                .mannerCheck(dto.getMannerCheck())
                 .build();
 
         return entity;
@@ -39,6 +42,7 @@ public interface ReviewService {
                 .rating(entity.getRating())
                 .buyerAddress(entity.getBuyerAddress())
                 .buyerProfile(entity.getBuyerProfile())
+                .mannerCheck(entity.getMannerCheck())
                 .build();
 
         return dto;

@@ -56,15 +56,6 @@ public class ReviewController {
 
     }
 
-    @GetMapping("/seller/{sellerId}")
-    public String getReviewIdList(@PathVariable String sellerId, Model model) {
-        List<ReviewDTO> sellerList = reviewService.getReviewIdList(sellerId);
-        int reviewCount = sellerList.size();
-        model.addAttribute("list", sellerList);
-        model.addAttribute("reviewCount", reviewCount);
-        return "review/seller";
-    }
-
     @GetMapping("/sellerId")
     public String ReviewSearch(@RequestParam("sellerId") String sellerId, Model model) {
         List<ReviewDTO> reviewList = reviewService.searchReviews(sellerId);
@@ -78,6 +69,23 @@ public class ReviewController {
         }
 
         return "review/list";
+    }
+
+    @GetMapping("/seller/{sellerId}")
+    public String getReviewIdList(@PathVariable String sellerId, Model model) {
+        List<ReviewDTO> sellerList = reviewService.getReviewIdList(sellerId);
+        int reviewCount = sellerList.size();
+        model.addAttribute("list", sellerList);
+        model.addAttribute("reviewCount", reviewCount);
+        return "review/seller";
+    }
+
+    @GetMapping("/manner/{sellerId}")
+    public String mannerCheck(@PathVariable String sellerId, Model model) {
+        List<ReviewDTO> sellerList = reviewService.getReviewIdList(sellerId);
+        model.addAttribute("list",sellerList);
+        return "review/manner";
+
     }
 
 }
