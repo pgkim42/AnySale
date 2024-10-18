@@ -32,6 +32,16 @@
         margin-top: 100px; /* 바디와 footer 간격 추가 */
     }
 
+    /* 판매자 링크 스타일 */
+    .seller-link {
+        color: black; /* 기본 색상: 검은색 */
+        text-decoration: none; /* 밑줄 제거 */
+    }
+
+    .seller-link:hover {
+        color: orange; /* 호버 시 색상: 주황색 */
+    }
+
 </style>
 
 <div class="container mt-5">
@@ -59,15 +69,15 @@
                 <li class="list-group-item">
 <!--                    <h5 th:text="'판매자 : ' + ${review.sellerId}">판매자: </h5>-->
                     <h5>
-                        <a th:href="@{/review/seller/{sellerId}(sellerId=${review.sellerId})}" th:text="'판매자 : ' + ${review.sellerId}">판매자</a>
+                        <a th:href="@{/review/seller/{sellerId}(sellerId=${review.sellerId})}" class="seller-link" th:text="'판매자 : ' + ${review.sellerId}">판매자</a>
                     </h5>
                     <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
                     <strong th:text="${review.buyerId}"></strong>
                     <span th:text="${review.buyerAddress}">지역</span>
-                    <br><span th:text="${review.comment}">리뷰 내용</span>
                     <div>
                         <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>
                     </div>
+                    <span th:text="${review.comment}">리뷰 내용</span>
                     <form th:action="@{/review/remove(no=${review.reviewNo})}" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger btn-sm">삭제</button>
                     </form>

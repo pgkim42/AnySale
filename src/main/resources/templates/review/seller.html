@@ -68,10 +68,11 @@
 <!--                <h5 th:text="'판매자 : ' + ${review.sellerId}">판매자: </h5>-->
                     <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
                     <strong th:text="${review.buyerId}"></strong>
-                    <span th:text="${review.comment}">리뷰 내용</span>
+                    <span th:text="${review.buyerAddress}">지역</span><br>
                     <div>
                         <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>
                     </div>
+                    <span th:text="${review.comment}">리뷰 내용</span>
                 </li>
             </th:block>
         </ul>
