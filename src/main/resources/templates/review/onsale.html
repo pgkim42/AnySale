@@ -83,7 +83,7 @@
   </div>
 
   <div class="links mb-4">
-    <a th:href="@{/review/onsale(sellerId=${sellerId})}" class="link">판매물품</a>
+    <a th:href="@{/review/onsale(sellerId=${sellerId})}" class="link active-link">판매물품</a>
     <a th:href="@{/review/seller/{sellerId}(sellerId=${sellerId})}" class="link">거래후기 (<span th:text="${reviewCount}"></span>건)</a>
     <a th:href="@{/review/manner/{sellerId}(sellerId=${sellerId})}" class="link">매너칭찬</a>
   </div>
