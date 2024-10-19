@@ -26,6 +26,15 @@ public class Review extends BaseEntity {
     @Column(length = 50, nullable = false)
     String sellerId; // 회원 테이블의 FK(판매자)
 
+//    @Column(length = 50, nullable = false)
+//    String sellerMannerTemperature; // 판매자 매너온도
+//
+//    @Column(length = 255, nullable = false)
+//    String sellerProfile; // 판매자 프사 url
+//
+//    @Column(length = 50, nullable = false)
+//    String sellerReTransactionRate; // 재거래 희망률
+
     @Column(length = 50, nullable = false)
     String comment; // 리뷰 내용
 

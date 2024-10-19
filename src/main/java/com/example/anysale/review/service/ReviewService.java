@@ -1,12 +1,14 @@
 package com.example.anysale.review.service;
 
 import com.example.anysale.review.dto.ReviewDTO;
+import com.example.anysale.review.dto.ReviewMannerCheckDTO;
 import com.example.anysale.review.entity.Review;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface ReviewService {
@@ -43,6 +45,7 @@ public interface ReviewService {
                 .buyerAddress(entity.getBuyerAddress())
                 .buyerProfile(entity.getBuyerProfile())
                 .mannerCheck(entity.getMannerCheck())
+                .mannerCheckCount(entity.getMannerCheck().size()) // 매너 체크항목 카운트
                 .build();
 
         return dto;
@@ -52,8 +55,14 @@ public interface ReviewService {
 
     void remove(int no);
 
+    // 해당 ID의 리뷰 리스트 호출
     List<ReviewDTO> getReviewIdList(String sellerId);
 
+    // 리뷰 검색
     List<ReviewDTO> searchReviews(String search);
+
+
+    // 매너 체크 카운트 추가
+    Map<String, Integer> getMannerCountBySellerId(String sellerId);
 
 }

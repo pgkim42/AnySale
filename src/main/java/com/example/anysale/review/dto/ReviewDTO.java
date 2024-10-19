@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,6 +21,12 @@ public class ReviewDTO {
 
     String sellerId; // 회원 테이블의 FK(판매자)
 
+//    String sellerMannerTemperature; // 판매자 매너온도
+//
+//    String sellerProfile; // 판매자 프사 url
+//
+//    String sellerReTransactionRate; // 재거래 희망률
+
     String comment; // 리뷰내용
 
     String buyerAddress; // 구매자의 지역
@@ -31,5 +38,10 @@ public class ReviewDTO {
     List<String> mannerCheck; // 칭찬항목
 
     LocalDateTime reviewDate; // 리뷰 작성일
+
+
+    int mannerCheckCount; // 체크된 칭찬 항목
+
+    Map<String, Integer> mannerCounts; // 각 리뷰의 매너 카운트
 
 }

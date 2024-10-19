@@ -25,7 +25,7 @@
     }
 
     footer {
-        background: #343a40; /* 다크 배경 색상 */
+        background: #343a40; /* 다크 배경 조색상 */
         color: white;
         text-align: center;
         padding: 1rem; /* 패딩 추가 */
@@ -42,11 +42,17 @@
         color: orange; /* 호버 시 색상: 주황색 */
     }
 
+    /* 매너 칭찬 리스트 스타일 */
+    .manner-list {
+        list-style-type: none; /* 기본 리스트 아이콘 제거 */
+        padding-left: 0; /* 왼쪽 패딩 제거 */
+    }
+
 </style>
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center">
-        <h1>리뷰리스트</h1>
+        <h1>추천 리뷰</h1>
         <div class="add-review-btn">
             <a th:href="@{/review/register}" class="btn btn-primary">등록하기</a>
         </div>
@@ -69,7 +75,7 @@
                 <li class="list-group-item">
 <!--                    <h5 th:text="'판매자 : ' + ${review.sellerId}">판매자:ㅇㅇㅇ </h5>-->
                     <h5>
-                        <a th:href="@{/review/seller/{sellerId}(sellerId=${review.sellerId})}" class="seller-link" th:text="'판매자 : ' + ${review.sellerId}">판매자</a>
+                        <a th:href="@{/review/seller/{sellerId}(sellerId=${review.sellerId})}" class="seller-link" th:text="${review.sellerId}">판매자</a>
                     </h5>
                     <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
                     <strong th:text="${review.buyerId}"></strong>
@@ -82,15 +88,15 @@
                     <br>
 
                     <!-- 좋았던 부분 -->
-                    <div th:if="${review.mannerCheck}">
-                        <h5>좋았던 부분:</h5>
-                        <br>
-                        <ul>
-                            <th:block th:each="manner : ${review.mannerCheck}">
-                                <li th:text="${manner}"></li>
-                            </th:block>
-                        </ul>
-                    </div>
+<!--                    <div th:if="${review.mannerCheck}">-->
+<!--                        <h3>매너 칭찬:</h3>-->
+<!--                        <br>-->
+<!--                        <ul class="manner-list">-->
+<!--                            <th:block th:each="manner : ${review.mannerCheck}">-->
+<!--                                <li th:text="${manner}"></li>-->
+<!--                            </th:block>-->
+<!--                        </ul>-->
+<!--                    </div>-->
 
                     <form th:action="@{/review/remove(no=${review.reviewNo})}" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger btn-sm">삭제</button>
