@@ -68,6 +68,12 @@ public class MemberServiceImpl implements MemberService {
         return result.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 
+    // 회원 단일 조회 (ID값 반환)
+    @Override
+    public Optional<Member> getMemberById(String id) {
+        return memberRepository.findById(id);
+    }
+
 
 
 //    @Autowired
@@ -78,10 +84,7 @@ public class MemberServiceImpl implements MemberService {
 //        return memberRepository.findAll();
 //    }
 //
-//    @Override
-//    public Optional<Member> getMemberById(String id) {
-//        return memberRepository.findById(id);
-//    }
+
 //
 //    @Override
 //    public Member saveMember(Member member) {

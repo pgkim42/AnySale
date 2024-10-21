@@ -4,6 +4,7 @@ import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberService {
 
@@ -17,7 +18,8 @@ public interface MemberService {
     // 회원 삭제
     void deleteMember(String id);
 
-    // 회원 검색
+    // 회원 단일 검색
+    Optional<Member> getMemberById(String id);
 
 
     // 회원 정보 반환(마이페이지)

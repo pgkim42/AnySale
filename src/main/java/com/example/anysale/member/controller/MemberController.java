@@ -79,19 +79,27 @@ public class MemberController {
     }
 
     @PostMapping("/member/login")
-    public String login(@RequestParam String id, @RequestParam String password, Model model , HttpSession session) {
-        Member member = memberRepository.findById(id).orElse(null);
+    public String login(@RequestParam("id") String userId,
+                        @RequestParam("password") String password,
+                        Model model,
+                        HttpSession session) {
+        Member member = memberRepository.findById(userId).orElse(null);
 
         // 사용자 존재 여부 및 비밀번호 확인
         if (member != null && member.getPassword().equals(password)) {
-            session.setAttribute("userId", id); // 세션에 사용자 ID 저장
-            return "redirect:/member/myPage"; // 로그인 성공 시 리디렉션
+            session.setAttribute("userId", userId); // 세션에 사용자 ID 저장
+            return "redirect:/products"; // 로그인 성공 시 리디렉션
         }
-
 
         // 실패 시 오류 메시지 추가
         model.addAttribute("errorMessage", "ID 또는 비밀번호가 잘못되었습니다.");
         return "/member/login"; // 로그인 페이지로 돌아감
+    }
+
+    @GetMapping("/member/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/products";
     }
 
 

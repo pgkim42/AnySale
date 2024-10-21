@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:replace="layout/fragments/header :: headerFragment"></th:block>
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
 
 <div class="container mt-5">
     <h1 class="text-center">상품 상세 정보</h1>
@@ -41,8 +41,8 @@
                     <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
                     <p class="comment-date" th:text="${comment.createDate}">작성일자</p>
 
-                    <!-- testUser일 경우에만 삭제 버튼 표시 -->
-                    <div th:if="${comment.userId == 'testUser'}">
+                    <!-- 댓글을 작성한 작성자일 경우에만 삭제 버튼 표시 -->
+                    <div th:if="${comment.userId == userid}">
                         <form action="/api/comments/delete" method="post" style="display:inline;">
                             <input type="hidden" name="commentId" th:value="${comment.commentId}">
                             <input type="hidden" name="itemCode" th:value="${productDTO.itemCode}">
@@ -62,12 +62,14 @@
             <h3>댓글 작성</h3>
             <form id="commentForm">
                 <input type="hidden" name="itemCode" id="itemCode" th:value="${productDTO.itemCode}">
+
+
                 <div class="form-group">
                     <label for="content">댓글 내용</label>
                     <textarea id="content" name="content" class="form-control" rows="3" placeholder="댓글을 입력하세요..."
                               required></textarea>
                 </div>
-                <input type="hidden" name="userId" id="userId" value="testUser">
+                <input type="hidden" name="userId" id="userId" th:value="${userid}">
                 <button type="submit" class="btn btn-primary btn-block">댓글 작성</button>
             </form>
         </div>
@@ -75,6 +77,9 @@
 </div>
 
 <script>
+
+    const currentUserId = "[[${userid}]]";
+
     document.getElementById("commentForm").addEventListener("submit", function (event) {
         event.preventDefault();  // 폼의 기본 제출 동작을 막음
 
@@ -124,16 +129,17 @@
         newComment.classList.add("comment-card", "card", "mt-4");
 
         newComment.innerHTML = `
-        <div class="card-body">
+         <div class="card-body">
             <h5 class="comment-author">${comment.userId}</h5>
             <p class="comment-text">${comment.content}</p>
             <p class="comment-date">${new Date(comment.createDate).toLocaleString()}</p>
-            <div th:if="${comment.userId == 'testUser'}">
+            ${comment.userId === currentUserId ? `
                 <form action="/api/comments/delete" method="post" style="display:inline;">
                     <input type="hidden" name="commentId" value="${comment.commentId}">
                     <input type="hidden" name="itemCode" value="${comment.itemCode}">
                     <button type="submit" class="btn btn-danger btn-sm">삭제</button>
                 </form>
+            ` : ' '}
             </div>
         </div>
     `;
@@ -143,6 +149,6 @@
 
 </script>
 
-<th:block th:replace="layout/fragments/footer :: footerFragment"></th:block>
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
 
 </html>

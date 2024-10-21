@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <!-- 헤더 부분 추가 -->
-<th:block th:replace="layout/fragments/header :: headerFragment"></th:block>
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
 
 <body>
 <!-- 상품 추가 폼 -->
@@ -62,7 +62,7 @@
 </div>
 
 <!-- Footer 부분 추가 -->
-<th:block th:replace="layout/fragments/footer :: footerFragment"></th:block>
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
 
 <!-- 자바스크립트 추가 -->
 <script>

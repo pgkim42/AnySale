@@ -2,6 +2,7 @@ package com.example.anysale.comment.Controller;
 
 import com.example.anysale.comment.dto.CommentDTO;
 import com.example.anysale.comment.service.CommentService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,10 @@ public class CommentController {
 
     // 댓글 작성
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createComment(@RequestBody CommentDTO commentDTO) {
+    public ResponseEntity<Map<String, Object>> createComment(@RequestBody CommentDTO commentDTO, HttpSession session) {
+        String userId = (String) session.getAttribute("userId");    // 세션에서 사용자 ID 값 가져오기
+        commentDTO.setUserId(userId);   // 세션 사용자 ID 설정
+
         CommentDTO savedComment = commentService.createComment(commentDTO);
 
         // 응답에 성공 여부와 새로 작성된 댓글 데이터를 포함
