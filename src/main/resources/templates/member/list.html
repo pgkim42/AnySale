@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>회원 목록</title>
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-
 <body>
 <div>
     <!-- 회원 목록을 Thymeleaf로 서버 사이드 렌더링 -->
@@ -41,4 +37,6 @@
     </table>
 </div>
 </body>
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+
 </html>
