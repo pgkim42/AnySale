@@ -26,7 +26,11 @@
                     <!-- Product details -->
                     <div class="card-body p-4">
                         <div class="text-center">
-                            <!-- Product name -->
+                            <!-- Product title -->
+                            <h5 class="fw-bolder" th:text="${product.title}">Product Title</h5>
+                            <!-- Product category -->
+                            <p class="text-muted mb-0" th:text="${product.category}"></p>
+                            <!-- Product content -->
                             <h5 class="fw-bolder" th:text="${product.content}">Product Name</h5>
                             <!-- Product price -->
                             <span th:text="${product.price}"></span>

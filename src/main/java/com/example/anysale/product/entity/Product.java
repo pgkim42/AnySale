@@ -29,6 +29,9 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private String category;
 
+    @Column (nullable = false)
+    private String title;
+
     @Column(nullable = false)
     private String content;
 
@@ -37,8 +40,6 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private String imageUrl;
-
-    private LocalDateTime modDate;  // modDate는 필요할 경우 유지
 
     @Column(nullable = false)
     private LocalDateTime dealDate;

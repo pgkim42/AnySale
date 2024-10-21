@@ -24,6 +24,7 @@ public interface ProductService {
                 .itemCode(productDTO.getItemCode())
                 .price(productDTO.getPrice())
                 .category(productDTO.getCategory())
+                .title(productDTO.getTitle())
                 .content(productDTO.getContent())
                 .productCondition(productDTO.getProductCondition())
                 .imageUrl(productDTO.getImageUrl())
@@ -31,7 +32,6 @@ public interface ProductService {
                 .status(productDTO.getStatus())
                 .location(productDTO.getLocation())
                 .userId(productDTO.getUserId())  // userId를 반드시 매핑
-                .modDate(productDTO.getModDate())
                 .build();
     }
 
@@ -40,6 +40,7 @@ public interface ProductService {
                 .itemCode(product.getItemCode())
                 .price(product.getPrice())
                 .category(product.getCategory())
+                .title(product.getTitle())
                 .content(product.getContent())
                 .productCondition(product.getProductCondition())
                 .imageUrl(product.getImageUrl())
@@ -47,7 +48,6 @@ public interface ProductService {
                 .status(product.getStatus())
                 .location(product.getLocation())
                 .userId(product.getUserId())
-                .modDate(product.getModDate())  // 수정 날짜가 있으면 설정
                 .build();
     }
 
