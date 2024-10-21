@@ -46,6 +46,8 @@ public class LikeListRepositoryTest {
         .content("Latest smartphone with advanced features.")
         .productCondition("New")
         .imageUrl("http://example.com/image.jpg")
+        .regDate(LocalDateTime.now())
+        .modDate(LocalDateTime.now())
         .location("Seoul")
         .status("Available")
         .userId("user123")
