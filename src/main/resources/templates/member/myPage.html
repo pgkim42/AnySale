@@ -23,11 +23,18 @@
     </div>
   </div>
 
+
+
   <h5>회원 탈퇴</h5>
   <form action="/member/remove" method="post" onsubmit="return confirm('정말로 회원 탈퇴하시겠습니까?');">
     <input type="hidden" name="id" th:value="${member.id}" />
     <button type="submit" class="btn btn-danger">회원 탈퇴</button>
   </form>
+    br
+  <form>
+    <button type="submit" class="btn btn-danger"><a href="/products">Home</a></button>
+  </form>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
