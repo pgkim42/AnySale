@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:replace="layout/fragments/header :: headerFragment">
-</th:block>
+<th:block th:replace="layout/fragments/header :: headerFragment"></th:block>
 
 <div class="container mt-5">
     <h1 class="text-center">상품 상세 정보</h1>
@@ -11,22 +10,139 @@
             <img th:src="@{${productDTO.imageUrl}}" class="img-fluid" alt="Product Image">
         </div>
         <div class="col-md-6">
-            <h2 th:text="${productDTO.content}">상품 설명</h2>
-            <p><strong>가격: </strong> <span th:text="${productDTO.price}"></span></p>
-            <p><strong>카테고리: </strong> <span th:text="${productDTO.category}"></span></p>
-            <p><strong>상품 상태: </strong> <span th:text="${productDTO.productCondition}"></span></p>
-            <p><strong>거래 날짜: </strong> <span th:text="${productDTO.dealDate}"></span></p>
-            <p><strong>상태: </strong> <span th:text="${productDTO.status}"></span></p>
-            <p><strong>위치: </strong> <span th:text="${productDTO.location}"></span></p>
-            <p><strong>판매자: </strong> <span th:text="${productDTO.userId}"></span></p>
-
+            <h1 th:text="${productDTO.title}">상품 제목</h1>
+            <h3 th:text="${productDTO.content}">상품 설명</h3>
+            <p><strong>가격: </strong><span th:text="${productDTO.price}"></span></p>
+            <p><strong>카테고리: </strong><span th:text="${productDTO.category}"></span></p>
+            <p><strong>상품 상태: </strong><span th:text="${productDTO.productCondition}"></span></p>
+            <p><strong>거래 날짜: </strong><span th:text="${productDTO.dealDate}"></span></p>
+            <p><strong>상태: </strong><span th:text="${productDTO.status}"></span></p>
+            <p><strong>위치: </strong><span th:text="${productDTO.location}"></span></p>
+            <p><strong>판매자: </strong><span th:text="${productDTO.userId}"></span></p>
             <a href="/products" class="btn btn-primary">목록으로 돌아가기</a>
         </div>
     </div>
 </div>
 
-<!-- Footer-->
-<th:block th:replace="layout/fragments/footer :: footerFragment">
-</th:block>
+<!-- 댓글 목록 출력 -->
+<div class="container mt-5">
+    <h2>댓글</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- 댓글이 없을 때 메시지 표시 -->
+            <div th:if="${#lists.isEmpty(comments)}">
+                <p>댓글이 없습니다.</p>
+            </div>
+
+            <!-- 댓글 목록 출력 -->
+            <div th:each="comment : ${comments}" class="comment-card card mt-4">
+                <div class="card-body">
+                    <h5 class="comment-author" th:text="${comment.userId}">작성자</h5>
+                    <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
+                    <p class="comment-date" th:text="${comment.createDate}">작성일자</p>
+
+                    <!-- testUser일 경우에만 삭제 버튼 표시 -->
+                    <div th:if="${comment.userId == 'testUser'}">
+                        <form action="/api/comments/delete" method="post" style="display:inline;">
+                            <input type="hidden" name="commentId" th:value="${comment.commentId}">
+                            <input type="hidden" name="itemCode" th:value="${productDTO.itemCode}">
+                            <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 댓글 작성 폼 -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h3>댓글 작성</h3>
+            <form id="commentForm">
+                <input type="hidden" name="itemCode" id="itemCode" th:value="${productDTO.itemCode}">
+                <div class="form-group">
+                    <label for="content">댓글 내용</label>
+                    <textarea id="content" name="content" class="form-control" rows="3" placeholder="댓글을 입력하세요..."
+                              required></textarea>
+                </div>
+                <input type="hidden" name="userId" id="userId" value="testUser">
+                <button type="submit" class="btn btn-primary btn-block">댓글 작성</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("commentForm").addEventListener("submit", function (event) {
+        event.preventDefault();  // 폼의 기본 제출 동작을 막음
+
+        const content = document.getElementById("content").value;
+        const itemCode = document.getElementById("itemCode").value;
+        const userId = document.getElementById("userId").value;
+
+        // AJAX 요청
+        fetch("/api/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: content,
+                itemCode: itemCode,
+                userId: userId
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 댓글 목록에 새로운 댓글을 추가
+                    addCommentToList(data.comment);
+                    // 폼 초기화
+                    document.getElementById("content").value = "";
+                } else {
+                    alert("댓글 작성에 실패했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    });
+
+    // 새로운 댓글을 목록에 추가하는 함수
+    function addCommentToList(comment) {
+        // "댓글이 없습니다" 메시지가 있으면 삭제
+        const noCommentsMessage = document.querySelector(".col-md-8 p");
+        if (noCommentsMessage && noCommentsMessage.textContent === '댓글이 없습니다.') {
+            noCommentsMessage.remove();
+        }
+
+        const commentSection = document.querySelector(".col-md-8");  // 댓글을 추가할 섹션
+
+        const newComment = document.createElement("div");
+        newComment.classList.add("comment-card", "card", "mt-4");
+
+        newComment.innerHTML = `
+        <div class="card-body">
+            <h5 class="comment-author">${comment.userId}</h5>
+            <p class="comment-text">${comment.content}</p>
+            <p class="comment-date">${new Date(comment.createDate).toLocaleString()}</p>
+            <div th:if="${comment.userId == 'testUser'}">
+                <form action="/api/comments/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="commentId" value="${comment.commentId}">
+                    <input type="hidden" name="itemCode" value="${comment.itemCode}">
+                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                </form>
+            </div>
+        </div>
+    `;
+
+        commentSection.appendChild(newComment);
+    }
+
+</script>
+
+<th:block th:replace="layout/fragments/footer :: footerFragment"></th:block>
 
 </html>

@@ -28,6 +28,7 @@ public class ProductServiceTest {
                 .itemCode("P001")
                 .price("10000")
                 .category("Electronics")
+                .title("SmartPhone")
                 .content("Test Product")
                 .productCondition("New")
                 .imageUrl("https://example.com/image.jpg")
@@ -41,6 +42,7 @@ public class ProductServiceTest {
                 .itemCode("P002")
                 .price("20000")
                 .category("Electronics")
+                .title("Tablet")
                 .content("Test Product 2")
                 .productCondition("New")
                 .imageUrl("https://example.com/image.jpg")
@@ -94,7 +96,6 @@ public class ProductServiceTest {
             ProductDTO productDTO = productOpt.get();
             productDTO.setPrice("15000");  // 가격 수정
             productDTO.setContent("Updated Test Product");  // 내용 수정
-            productDTO.setModDate(LocalDateTime.now());
 
             // when
             ProductDTO updatedProduct = productService.updateProduct(itemCode, productDTO);
