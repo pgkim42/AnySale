@@ -32,4 +32,5 @@ public class LikeList extends BaseEntity {
   @Column(nullable = false)
   private LocalDateTime wishDate;  // 찜 등록일, 필수 값으로 null 불가
 
+  //test
 }
