@@ -1,6 +1,5 @@
 package com.example.anysale.likeList;
 
-import ch.qos.logback.core.CoreConstants;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.repository.LikeListRepository;
 import com.example.anysale.member.entity.Member;
@@ -98,11 +97,72 @@ public class LikeListRepositoryTest {
         .dealDate(LocalDateTime.now())
         .status("거래중")
         .location("인천광역시 구월동 546-75")
+        .userId("user1")
+        .build();
+
+    Product product3 = Product.builder()
+        .itemCode("ITEM002")
+        .price("5000")
+        .category("탈것")
+        .title("프리미엄 주환이")
+        .content("속도 장난아님. 승차감 좋아요!")
+        .productCondition("중고")
+        .imageUrl("http://example.com/photo.jpg")
+        .dealDate(LocalDateTime.now())
+        .status("거래중")
+        .location("인천광역시 구월동 546-75")
+        .userId("user1")
+        .build();
+
+    Product product4 = Product.builder()
+        .itemCode("ITEM001")
+        .price("5000")
+        .category("탈것")
+        .title("프리미엄 주환이")
+        .content("속도 장난아님. 승차감 좋아요!")
+        .productCondition("중고")
+        .imageUrl("http://example.com/photo.jpg")
+        .dealDate(LocalDateTime.now())
+        .status("거래중")
+        .location("인천광역시 구월동 546-75")
         .userId("user2")
         .build();
 
+    Product product5 = Product.builder()
+        .itemCode("ITEM0012")
+        .price("5000")
+        .category("탈것")
+        .title("프리미엄 주환이")
+        .content("속도 장난아님. 승차감 좋아요!")
+        .productCondition("중고")
+        .imageUrl("http://example.com/photo.jpg")
+        .dealDate(LocalDateTime.now())
+        .status("거래중")
+        .location("인천광역시 구월동 546-75")
+        .userId("user1")
+        .build();
+
+    Product product6 = Product.builder()
+        .itemCode("ITEM0016")
+        .price("5000")
+        .category("탈것")
+        .title("프리미엄 주환이")
+        .content("속도 장난아님. 승차감 좋아요!")
+        .productCondition("중고")
+        .imageUrl("http://example.com/photo.jpg")
+        .dealDate(LocalDateTime.now())
+        .status("거래중")
+        .location("인천광역시 구월동 546-75")
+        .userId("user2")
+        .build();
+
+
     productRepository.save(product);
     productRepository.save(product2);
+    productRepository.save(product3);
+    productRepository.save(product4);
+    productRepository.save(product5);
+    productRepository.save(product6);
   }
 
 
@@ -110,36 +170,66 @@ public class LikeListRepositoryTest {
   @Test
   void 찜상품등록() {
 
-    Member member = Member.builder()
+    Member member8 = Member.builder()
         .id("user1")
         .build();
 
-    Product product = Product.builder()
-        .itemCode("ITEM001")
+    Product product8 = Product.builder()
+        .itemCode("ITEM0012")
         .build();
 
-    LikeList likeList = LikeList.builder()
-        .member(member)
-        .product(product)
+    LikeList likeList4 = LikeList.builder()
+        .member(member8)
+        .product(product8)
         .wishDate(LocalDateTime.now())
         .build();
 
-    Member member1 = Member.builder()
+    Member member5 = Member.builder()
             .id("user2")
                 .build();
 
-    Product product1 = Product.builder()
-            .itemCode("ITEM002")
+    Product product5 = Product.builder()
+            .itemCode("ITEM0016")
                 .build();
 
-    LikeList likeList1 = LikeList.builder()
-            .member(member1)
-                .product(product1)
+    LikeList likeList5 = LikeList.builder()
+            .member(member5)
+                .product(product5)
                     .wishDate(LocalDateTime.now())
                         .build();
 
-    likeListRepository.save(likeList);
-    likeListRepository.save(likeList1);
+    Member member6 = Member.builder()
+        .id("user1")
+        .build();
+
+    Product product6 = Product.builder()
+        .itemCode("ITEM001")
+        .build();
+
+    LikeList likeList6 = LikeList.builder()
+        .member(member6)
+        .product(product6)
+        .wishDate(LocalDateTime.now())
+        .build();
+
+    Member member7 = Member.builder()
+            .id("user2")
+                .build();
+
+    Product product7 = Product.builder()
+            .itemCode("ITEM002")
+                .build();
+
+    LikeList likeList7 = LikeList.builder()
+            .member(member7)
+                .product(product7)
+                    .wishDate(LocalDateTime.now())
+                        .build();
+
+    likeListRepository.save(likeList4);
+    likeListRepository.save(likeList5);
+    likeListRepository.save(likeList6);
+    likeListRepository.save(likeList7);
   }
 
 

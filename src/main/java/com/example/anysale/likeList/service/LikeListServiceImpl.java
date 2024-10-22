@@ -1,4 +1,3 @@
-/*
 package com.example.anysale.likeList.service;
 
 import com.example.anysale.likeList.dto.LikeListDTO;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LikeListServiceImpl implements LikeListService {
@@ -21,27 +20,35 @@ public class LikeListServiceImpl implements LikeListService {
     this.likeListRepository = likeListRepository;
   }
 
+  // 찜 목록에 상품추가
   @Override
   public LikeList addLikeList(LikeList likeList) {
     return likeListRepository.save(likeList);
   }
 
-
+  // 회원의 찜목록 조회
   @Override
-  public List<LikeListDTO> getLikedItemsByUserId(String id, String itemCode, LocalDateTime wishDate) {
-    return likeListRepository.findLikedItemsByUserId(id, itemCode, wishDate);
+  public List<LikeListDTO> getLikeList(String memberId) {
+    List<LikeList> likeLists = likeListRepository.findByMemberId(memberId);
+    return likeLists.stream()
+        .map(likeList -> new LikeListDTO(likeList.getProduct().getItemCode(), likeList.getMember().getId()))
+        .collect(Collectors.toList());
   }
 
-  @Override
-  public void removeLikeList(String id) {
-
-  }
-
+  // 찜목록에서 특정상품 제거
   @Override
   public LikeList removeLikeList(int likeListId) {
-    Optional<LikeList> likeListEntity = likeListRepository.findById(likeListId);
-    likeListEntity.ifPresent(likeListRepository::delete);
-    return null;
+    LikeList likeList = likeListRepository.findById(likeListId).orElse(null);
+    if (likeList != null) {
+      likeListRepository.delete(likeList);
+    }
+    return likeList;
+  }
+
+  // 찜목록에서 모든 상품 제거
+  @Override
+  public void removeAllLikeList(String memberId) {
+    List<LikeList> likeLists = likeListRepository.findByMemberId(memberId);
+    likeLists.forEach(likeListRepository::delete);
   }
 }
-*/
