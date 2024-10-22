@@ -54,7 +54,7 @@
         </div>
         <div class="mb-3">
             <label for="userId" class="form-label">사용자 ID</label>
-            <input type="text" class="form-control" id="userId" placeholder="사용자 ID를 입력하세요" required>
+            <input type="text" class="form-control" id="userId"  th:value="${member.id}" readonly>
         </div>
         <button type="submit" class="btn btn-primary">추가하기</button>
     </form>

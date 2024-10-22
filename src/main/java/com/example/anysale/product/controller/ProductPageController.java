@@ -47,7 +47,13 @@ public class ProductPageController {
     }
 
     @GetMapping("/products/add")
-    public String showAddProductPage(Model model) {
+    public String showAddProductPage(Model model, HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        Member member = null;
+        if (userId != null) {
+            member = memberService.getMemberById(userId).orElse(null);
+        }
+        model.addAttribute("member", member);
         model.addAttribute("productDTO", new ProductDTO());
         return "product/product-add";
     }
@@ -59,7 +65,7 @@ public class ProductPageController {
     }
 
     @GetMapping("/products/detail/{itemCode}")
-    public String showProductDetailPage(Model model, @PathVariable String itemCode, HttpSession session) {
+    public String showProductDetailPage(Model model, @PathVariable("itemCode") String itemCode, HttpSession session ) {
         String userId = (String) session.getAttribute("userId");
 
         if(userId == null) {
@@ -80,4 +86,5 @@ public class ProductPageController {
         model.addAttribute("member", memberService.getMemberById(userId).orElse(null));
         return "product/product-detail";
     }
+
 }

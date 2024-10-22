@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>로그인</title>
-    <style>
-        .alert.alert-danger {
-            text-align: center !important;
-        }
-    </style>
-</head>
+<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <body class="bg-light">
 <div class="container">
     <div class="row justify-content-center mt-5">
@@ -18,7 +9,7 @@
             <h2 class="text-center">로그인</h2>
 
             <!-- 오류 메시지 표시 -->
-            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert" style="text-align: center !important">
                 <p th:text="${errorMessage}"></p>
             </div>
 
@@ -43,4 +34,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
+
 </html>
