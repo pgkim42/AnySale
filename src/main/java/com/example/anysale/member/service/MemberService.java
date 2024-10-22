@@ -12,7 +12,7 @@ public interface MemberService {
     Member registerMember(MemberDTO memberDTO);
 
     // 회원 정보 수정
-
+    void modifyMember(MemberDTO memberDTO);
 
 
     // 회원 삭제

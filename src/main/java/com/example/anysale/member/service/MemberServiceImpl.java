@@ -40,6 +40,23 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(member);
     }
 
+    // 회원 수정
+    @Override
+    public void modifyMember(MemberDTO memberDTO) {
+        // 전달 받은 DTO에서 id를 꺼내고, id가 DB에 있는지 확인
+        String id = memberDTO.getId();
+        Optional<Member> member = memberRepository.findById(id);
+        if (member.isPresent()) {
+            // 비밀번호, 이메일, 핸드폰 번호만 변경 가능.
+            member.get().setPassword(memberDTO.getPassword());
+            member.get().setEmail(memberDTO.getEmail());
+            member.get().setPhone(memberDTO.getPhone());
+
+            // DB 업데이트
+            memberRepository.save(member.get());
+        }
+    }
+
     // 회원 삭제
     @Override
     public void deleteMember(String id) {

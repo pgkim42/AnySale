@@ -29,6 +29,10 @@
     <form>
       <a class="btn btn-primary" href="/products">Home</a>
     </form>
+
+  <form>
+    <a th:href="@{/member/modify(id=${member.id})}" class="btn btn-secondary">수정</a>
+  </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
