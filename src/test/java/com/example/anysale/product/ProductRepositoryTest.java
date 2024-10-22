@@ -79,7 +79,6 @@ public class ProductRepositoryTest {
             Product product = productOpt.get();
             product.setPrice("20000");
             product.setContent("Updated Java Programming Book");
-            product.setModDate(LocalDateTime.now());
 
             productRepository.save(product);
 

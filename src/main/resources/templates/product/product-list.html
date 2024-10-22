@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:replace="layout/fragments/header :: headerFragment">
+<th:block th:replace="~{layout/fragments/header :: headerFragment}">
 </th:block>
 
 <!-- Header-->
@@ -26,7 +26,11 @@
                     <!-- Product details -->
                     <div class="card-body p-4">
                         <div class="text-center">
-                            <!-- Product name -->
+                            <!-- Product title -->
+                            <h5 class="fw-bolder" th:text="${product.title}">Product Title</h5>
+                            <!-- Product category -->
+                            <p class="text-muted mb-0" th:text="${product.category}"></p>
+                            <!-- Product content -->
                             <h5 class="fw-bolder" th:text="${product.content}">Product Name</h5>
                             <!-- Product price -->
                             <span th:text="${product.price}"></span>
@@ -47,7 +51,6 @@
 </section>
 
 <!-- Footer-->
-<th:block th:replace="layout/fragments/footer :: footerFragment">
-</th:block>
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
 
 </html>
