@@ -1,5 +1,6 @@
 package com.example.anysale.member;
 
+import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.repository.MemberRepository;
 import com.example.anysale.member.service.MemberService;
@@ -19,6 +20,8 @@ public class MemberServiceTest {
     @InjectMocks
     private MemberService memberService;
 
+    MemberDTO memberDTO;
+
     public MemberServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
@@ -37,7 +40,7 @@ public class MemberServiceTest {
 
         when(memberRepository.save(member)).thenReturn(member);
 
-        Member savedMember = memberService.saveMember(member);
+        Member savedMember = memberService.registerMember(memberDTO);
 
         assertNotNull(savedMember);
         assertEquals("testUser", savedMember.getId());

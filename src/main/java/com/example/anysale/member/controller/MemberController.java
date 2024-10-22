@@ -68,7 +68,7 @@ public class MemberController {
         memberDTO.setRole("ROLE_USER"); // 기본 역할 설정
         memberDTO.setScore(0.0); // 기본 점수 설정
 
-        Member member = memberService.registerMember(memberDTO);
+        memberService.registerMember(memberDTO);
         return "redirect:/member/login";
     }
 
@@ -124,8 +124,31 @@ public class MemberController {
         return "redirect:/";
     }
 
+    // 회원 정보 수정
+    @GetMapping("/member/modify")
+    public String modify(@RequestParam(name = "id") String id, Model model){
+        
+        MemberDTO memberDTO = memberService.memberInfo(id);
+        
+        // 조회한 데이터를 화면에 전달
+        model.addAttribute("memberDTO", memberDTO);
+
+        return "/member/modify";
+        
+    }
+
+    @PostMapping("/member/modify")
+    public String modifyPost(@Valid @ModelAttribute("memberDTO") MemberDTO memberDTO, BindingResult result) {
 
 
+        if (result.hasErrors()) {
+            return "/member/modify";
+        }
+
+        memberService.modifyMember(memberDTO);
+
+        return "redirect:/member/myPage";
+    }
 
 
 
