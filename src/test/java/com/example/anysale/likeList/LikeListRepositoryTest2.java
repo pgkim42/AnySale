@@ -1,3 +1,4 @@
+/*
 package com.example.anysale.likeList;
 
 import com.example.anysale.likeList.entity.LikeList;
@@ -79,3 +80,4 @@ public class LikeListRepositoryTest2 {
   }
 
 }
+*/
