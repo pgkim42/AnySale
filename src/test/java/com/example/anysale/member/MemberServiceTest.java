@@ -25,7 +25,7 @@ public class MemberServiceTest {
     public MemberServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
-
+//
     @Test
     public void testSaveMember() {
         Member member = Member.builder()
