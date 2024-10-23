@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+<!-- 헤더 -->
 <th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
 
+<!-- 상품 상세 정보 -->
 <div class="container mt-5">
     <h1 class="text-center">상품 상세 정보</h1>
     <div class="row">
@@ -15,16 +17,24 @@
             <p><strong>가격: </strong><span th:text="${productDTO.price}"></span></p>
             <p><strong>카테고리: </strong><span th:text="${productDTO.category}"></span></p>
             <p><strong>상품 상태: </strong><span th:text="${productDTO.productCondition}"></span></p>
-            <p><strong>거래 날짜: </strong><span th:text="${productDTO.dealDate}"></span></p>
+            <p><strong>거래희망 시간: </strong><span th:text="${formattedDealDate}"></span></p>
             <p><strong>상태: </strong><span th:text="${productDTO.status}"></span></p>
             <p><strong>위치: </strong><span th:text="${productDTO.location}"></span></p>
             <p><strong>판매자: </strong><span th:text="${productDTO.userId}"></span></p>
+            <p><strong>등록일: </strong><span th:text="${formattedCreateDate}"></span></p>
+
+            <div th:if="${formattedUpdateDate != null}">
+                <p><strong>수정일: </strong><span th:text="${formattedUpdateDate}"></span></p>
+            </div>
+
             <a href="/products" class="btn btn-primary">목록으로 돌아가기</a>
-            <br>
+
+            <!-- 로그인한 사용자일 경우에만 삭제 버튼 표시 -->
             <div th:if="${productDTO.userId == member.id}">
                 <form id="deleteProductForm" style="display:inline;">
                     <input type="hidden" name="itemCode" th:value="${productDTO.itemCode}">
                     <button type="button" class="btn btn-danger" onclick="confirmDelete()">삭제</button>
+                    <button type="button" class="btn btn-warning" onclick="confirmUpdate()">수정</button>
                 </form>
             </div>
         </div>
@@ -48,9 +58,10 @@
                     <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
                     <p class="comment-date" th:text="${comment.createDate}">작성일자</p>
 
-                    <!-- 댓글을 작성한 작성자일 경우에만 삭제 버튼 표시 -->
+                    <!-- 댓글 작성자일 경우에만 삭제 버튼 표시 -->
                     <div th:if="${comment.userId == userid}">
-                        <form action="/api/comments/delete" method="post" style="display:inline;" onsubmit="return confirm('댓글을 지우시겠습니까?');">
+                        <form action="/api/comments/delete" method="post" style="display:inline;"
+                              onsubmit="return confirm('댓글을 지우시겠습니까?');">
                             <input type="hidden" name="commentId" th:value="${comment.commentId}">
                             <input type="hidden" name="itemCode" th:value="${productDTO.itemCode}">
                             <button type="submit" class="btn btn-danger btn-sm">삭제</button>
@@ -63,14 +74,12 @@
 </div>
 
 <!-- 댓글 작성 폼 -->
-<div class="container mt-5">
+<div class="container mt-5" th:if="${userid != ''}">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h3>댓글 작성</h3>
             <form id="commentForm">
                 <input type="hidden" name="itemCode" id="itemCode" th:value="${productDTO.itemCode}">
-
-
                 <div class="form-group">
                     <label for="content">댓글 내용</label>
                     <textarea id="content" name="content" class="form-control" rows="3" placeholder="댓글을 입력하세요..."
@@ -83,8 +92,16 @@
     </div>
 </div>
 
-<script>
+<!-- 비회원일 경우 로그인 안내 메시지 -->
+<div class="container mt-5" th:if="${userid == ''}">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <p>댓글을 작성하려면 <a th:href="@{/member/login}">로그인</a> 해주세요.</p>
+        </div>
+    </div>
+</div>
 
+<script>
     const currentUserId = "[[${userid}]]";
 
     document.getElementById("commentForm").addEventListener("submit", function (event) {
@@ -109,10 +126,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // 댓글 목록에 새로운 댓글을 추가
-                    addCommentToList(data.comment);
-                    // 폼 초기화
-                    document.getElementById("content").value = "";
+                    addCommentToList(data.comment);  // 새로운 댓글을 목록에 추가
+                    document.getElementById("content").value = "";  // 폼 초기화
                 } else {
                     alert("댓글 작성에 실패했습니다.");
                 }
@@ -122,35 +137,31 @@
             });
     });
 
-    // 새로운 댓글을 목록에 추가하는 함수
     function addCommentToList(comment) {
-        // "댓글이 없습니다" 메시지가 있으면 삭제
         const noCommentsMessage = document.querySelector(".col-md-8 p");
         if (noCommentsMessage && noCommentsMessage.textContent === '댓글이 없습니다.') {
             noCommentsMessage.remove();
         }
 
-        const commentSection = document.querySelector(".col-md-8");  // 댓글을 추가할 섹션
+        const commentSection = document.querySelector(".col-md-8");
 
         const newComment = document.createElement("div");
         newComment.classList.add("comment-card", "card", "mt-4");
 
         newComment.innerHTML = `
-         <div class="card-body">
-            <h5 class="comment-author">${comment.userId}</h5>
-            <p class="comment-text">${comment.content}</p>
-            <p class="comment-date">${new Date(comment.createDate).toLocaleString()}</p>
-            ${comment.userId === currentUserId ? `
-                <form action="/api/comments/delete" method="post" style="display:inline;">
-                    <input type="hidden" name="commentId" value="${comment.commentId}">
-                    <input type="hidden" name="itemCode" value="${comment.itemCode}">
-                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
-                </form>
-            ` : ' '}
+            <div class="card-body">
+                <h5 class="comment-author">${comment.userId}</h5>
+                <p class="comment-text">${comment.content}</p>
+                <p class="comment-date">${new Date(comment.createDate).toLocaleString()}</p>
+                ${comment.userId === currentUserId ? `
+                    <form action="/api/comments/delete" method="post" style="display:inline;">
+                        <input type="hidden" name="commentId" value="${comment.commentId}">
+                        <input type="hidden" name="itemCode" value="${comment.itemCode}">
+                        <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                    </form>
+                ` : ''}
             </div>
-        </div>
-    `;
-
+        `;
         commentSection.appendChild(newComment);
     }
 
@@ -164,7 +175,7 @@
                 .then(response => {
                     if (response.ok) {
                         alert("상품이 삭제되었습니다.");
-                        window.location.href = "/products"; // 삭제 후 목록 페이지로 이동
+                        window.location.href = "/products";  // 삭제 후 목록 페이지로 이동
                     } else {
                         alert("삭제에 실패했습니다.");
                     }
@@ -176,6 +187,10 @@
         }
     }
 
+    function confirmUpdate() {
+        const itemCode = document.querySelector('input[name="itemCode"]').value;
+        window.location.href = `/products/update/${itemCode}`;
+    }
 </script>
 
 <th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
