@@ -101,6 +101,12 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findById(id);
     }
 
+    // 아이디 찾기
+    @Override
+    public Optional<String> searchById(String name, String email) {
+        return memberRepository.searchById(name, email);
+    }
+
 
 
 //    @Autowired

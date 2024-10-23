@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 //@RestController
 //@RequestMapping("/api/members")
@@ -128,18 +129,6 @@ public class MemberController {
         return "member/list"; // 회원 목록 보기
     }
 
-    // 회원 삭제
-    @PostMapping("/member/remove")
-    public String remove(@RequestParam("id") String id, RedirectAttributes redirectAttributes) {
-        try {
-            memberService.deleteMember(id);
-            redirectAttributes.addFlashAttribute("successMessage", "회원이 삭제되었습니다.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "회원 삭제에 실패했습니다.");
-        }
-        return "redirect:/";
-    }
-
     // 회원 정보 수정
     @GetMapping("/member/modify")
     public String modify(@RequestParam(name = "id") String id , Model model, HttpSession session) {
@@ -174,7 +163,42 @@ public class MemberController {
         return "redirect:/member/logout";    // 수정 성공 시 리다이렉션
     }
 
+    // 회원 삭제
+    @PostMapping("/member/remove")
+    public String remove(@RequestParam("id") String id, RedirectAttributes redirectAttributes) {
+        try {
+            memberService.deleteMember(id);
+            redirectAttributes.addFlashAttribute("successMessage", "회원이 삭제되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "회원 삭제에 실패했습니다.");
+        }
+        return "redirect:/";
+    }
 
+    // 아이디 찾기
+    @GetMapping("/member/searchId")
+    public String searchId(@RequestParam(value = "name", required = false, defaultValue = "") String name,
+                           @RequestParam(value = "email", required = false, defaultValue = "") String email,
+                           Model model) {
+        Optional<String> memberId = memberService.searchById(name, email);
+
+        model.addAttribute("member", new Member());
+
+        if(memberId.isPresent()){
+            model.addAttribute("memberId", memberId.get());
+            System.out.println("memberId : " + memberId.get());
+            return "/member/searchIdResult";
+        } else {
+            model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
+            return "/member/searchId";
+        }
+    }
+
+    // 비밀번호 찾기
+    @GetMapping("/member/searchPw")
+    public String searchPw(Model model) {
+        return "member/searchPw";
+    }
 
 
 
