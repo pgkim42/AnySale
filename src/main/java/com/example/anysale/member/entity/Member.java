@@ -6,7 +6,9 @@ import jakarta.persistence.Entity;
 import lombok.*;
 
 @Table(name = "member")
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

@@ -26,7 +26,6 @@ public class LikeListRepositoryTest {
   @Autowired
   ProductRepository productRepository;
 
-
   // 회원 등록
   @Test
   void 회원등록() {

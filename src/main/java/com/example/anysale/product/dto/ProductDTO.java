@@ -1,5 +1,6 @@
 package com.example.anysale.product.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,5 +23,6 @@ public class ProductDTO {
     private String status;
     private String location;
     private String userId;
-
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 //@RestController
 //@RequestMapping("/api/members")
@@ -88,6 +89,10 @@ public class MemberController {
         // 사용자 존재 여부 및 비밀번호 확인
         if (member != null && member.getPassword().equals(password)) {
             session.setAttribute("userId", userId); // 세션에 사용자 ID 저장
+
+            if ("ADMIN".equalsIgnoreCase(member.getId()) && member.getRole().equals("ROLE_ADMIN")) {
+                return "redirect:/member/adminPage";
+            }
             return "redirect:/products"; // 로그인 성공 시 리디렉션
         }
 
@@ -96,10 +101,22 @@ public class MemberController {
         return "/member/login"; // 로그인 페이지로 돌아감
     }
 
+    // 어드민 페이지 이동
+    @GetMapping("/member/adminPage")
+    public String adminPage() {
+        return "/member/adminPage";
+    }
+
+    // 로그아웃
     @GetMapping("/member/logout")
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+        boolean isModified = session.getAttribute("isModified") != null; // 플래그 확인
         session.invalidate();
-        return "redirect:/products";
+        if(isModified) {
+            redirectAttributes.addFlashAttribute("successMessage", "회원 수정이 완료되었습니다. 다시 로그인해주세요.");
+            return "redirect:/member/login";
+        }
+        return "redirect:/products"; // 제품 페이지로 리다이렉션
     }
 
 
@@ -110,6 +127,40 @@ public class MemberController {
         List<MemberDTO> memberList = memberService.getList();
         model.addAttribute("list", memberList);
         return "member/list"; // 회원 목록 보기
+    }
+
+    // 회원 정보 수정
+    @GetMapping("/member/modify")
+    public String modify(@RequestParam(name = "id") String id , Model model, HttpSession session) {
+
+        String userId = (String) session.getAttribute("userId");
+
+        MemberDTO memberDTO = memberService.memberInfo(id);
+
+        memberDTO.setName(memberDTO.getName());
+
+        // 조회한 데이터를 화면에 전달
+        model.addAttribute("memberDTO", memberDTO);
+        model.addAttribute("userid", userId);
+        return "/member/modify";
+        
+    }
+
+    @PostMapping("/member/modify")
+    public String modifyPost(@Valid @ModelAttribute("memberDTO") MemberDTO memberDTO, BindingResult result, RedirectAttributes redirectAttributes, HttpSession session) {
+        System.out.println("modifyPost called"); // 로그 추가
+        System.out.println("MemberDTO: " + memberDTO);
+
+        if (result.hasErrors()) {
+            result.getAllErrors().forEach(error -> {
+                System.out.println("Error: " + error.getDefaultMessage());
+            });
+            return "/member/modify";
+        }
+
+        memberService.modifyMember(memberDTO);
+        session.setAttribute("isModified", true); // 수정 완료 플래그 설정
+        return "redirect:/member/logout";    // 수정 성공 시 리다이렉션
     }
 
     // 회원 삭제
@@ -124,33 +175,43 @@ public class MemberController {
         return "redirect:/";
     }
 
-    // 회원 정보 수정
-    @GetMapping("/member/modify")
-    public String modify(@RequestParam(name = "id") String id, Model model){
-        
-        MemberDTO memberDTO = memberService.memberInfo(id);
-        
-        // 조회한 데이터를 화면에 전달
-        model.addAttribute("memberDTO", memberDTO);
+    // 아이디 찾기
+    @GetMapping("/member/searchId")
+    public String searchId(@RequestParam(value = "name", required = false, defaultValue = "") String name,
+                           @RequestParam(value = "email", required = false, defaultValue = "") String email,
+                           Model model) {
+        Optional<String> memberId = memberService.searchById(name, email);
 
-        return "/member/modify";
-        
-    }
+        model.addAttribute("member", new Member());
 
-    @PostMapping("/member/modify")
-    public String modifyPost(@Valid @ModelAttribute("memberDTO") MemberDTO memberDTO, BindingResult result) {
-
-
-        if (result.hasErrors()) {
-            return "/member/modify";
+        if(memberId.isPresent()){
+            model.addAttribute("memberId", memberId.get());
+            System.out.println("memberId : " + memberId.get());
+            return "/member/searchIdResult";
+        } else {
+            model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
+            return "/member/searchId";
         }
-
-        memberService.modifyMember(memberDTO);
-
-        return "redirect:/member/myPage";
     }
 
+    // 비밀번호 찾기
+    @GetMapping("/member/searchPw")
+    public String searchPw(@RequestParam(value = "id", required = false, defaultValue = "") String id,
+                                            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                            @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
+        Optional<String> memberPw = memberService.searchByPw(id, name, email);
 
+        model.addAttribute("member", new Member());
+
+        if(memberPw.isPresent()){
+            model.addAttribute("memberPw", memberPw.get());
+            System.out.println("memberPw : " + memberPw.get());
+            return "/member/searchIdResult";
+        } else {
+            model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
+            return "/member/searchId";
+        }
+    }
 
 
 
