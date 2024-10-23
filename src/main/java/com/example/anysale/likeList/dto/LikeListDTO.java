@@ -6,22 +6,25 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class LikeListDTO {
 
   private String itemCode;          //상품 코드, 찜한 상품의 고유 코드
   private String memberId;          //멤버아이디, 찜한 회원의 ID
 
-  // 모든 필드를 초기화하는 생성자
+/*  // 모든 필드를 초기화하는 생성자
   public LikeListDTO(String itemCode, String memberId) {
     this.itemCode = itemCode; //상품 코드 설정
     this.memberId = memberId; //멤버 아이디 설정
-  }
+  }*/
 
-  @Override
+  /*@Override
   public String toString() {
     return "LikeListDTO{" +
         "memberId='" + memberId + '\'' +
         ", itemCode='" + itemCode + '}';
-  }
+  }*/
 }
