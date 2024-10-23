@@ -5,12 +5,15 @@ import com.example.anysale.product.entity.Product;
 import com.example.anysale.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,4 +91,40 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(String itemCode) {
         productRepository.deleteById(itemCode);
     }
+
+    @Override
+    public Page<ProductDTO> getPagedProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage.map(this::entityToDto);
+    }
+
+    @Override
+    public Page<ProductDTO> searchProducts(String searchType, String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+
+        Page<Product> productsPage;
+        if ("category".equalsIgnoreCase(searchType)) {
+            productsPage = productRepository.findByCategoryContaining(keyword, pageable);
+        } else {
+            productsPage = productRepository.findByTitleContaining(keyword, pageable);
+        }
+
+        return productsPage.map(this::entityToDto);
+    }
+
+    @Override
+    public Page<ProductDTO> searchProductsByTitle(String title, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate") );
+        Page<Product> productPage = productRepository.findByTitleContaining(title, pageable);
+        return productPage.map(this::entityToDto);
+    }
+
+    @Override
+    public Page<ProductDTO> searchProductsByCategory(String category, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<Product> productPage = productRepository.findByCategoryContaining(category, pageable);
+        return productPage.map(this::entityToDto);
+    }
+
 }

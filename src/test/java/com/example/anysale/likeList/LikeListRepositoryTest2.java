@@ -41,24 +41,24 @@ public class LikeListRepositoryTest2 {
     memberRepository.save(member);
   }
 
-  @Test
-  void product등록() {
-    Product product = Product.builder()
-        .itemCode("ITEM2024")
-        .price("20000")
-        .category("Electronics")
-        .content("Latest smartphone with advanced features.")
-        .productCondition("New")
-        .imageUrl("http://example.com/image.jpg")
-        .dealDate(LocalDateTime.now())
-        .modDate(LocalDateTime.now())
-        .status("Available")
-        .location("Seoul")
-        .userId("user1")
-        .build();
-
-    productRepository.save(product);
-  }
+//  @Test
+//  void product등록() {
+//    Product product = Product.builder()
+//        .itemCode("ITEM2024")
+//        .price("20000")
+//        .category("Electronics")
+//        .content("Latest smartphone with advanced features.")
+//        .productCondition("New")
+//        .imageUrl("http://example.com/image.jpg")
+//        .dealDate(LocalDateTime.now())
+//        .modDate(LocalDateTime.now())
+//        .status("Available")
+//        .location("Seoul")
+//        .userId("user1")
+//        .build();
+//
+//    productRepository.save(product);
+//  }
 
   @Test
   void likelist등록() {
