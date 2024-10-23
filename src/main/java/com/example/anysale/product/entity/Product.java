@@ -38,7 +38,7 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private String productCondition;
 
-    @Column(nullable = false)
+    @Column
     private String imageUrl;
 
     @Column(nullable = false)

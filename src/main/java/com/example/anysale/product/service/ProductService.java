@@ -2,6 +2,7 @@ package com.example.anysale.product.service;
 
 import com.example.anysale.product.dto.ProductDTO;
 import com.example.anysale.product.entity.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,6 +19,13 @@ public interface ProductService {
     ProductDTO updateProduct(String itemCode, ProductDTO productDTO);
 
     void deleteProduct(String itemCode);
+
+    Page<ProductDTO> getPagedProducts(int page, int size);
+
+    Page<ProductDTO> searchProducts(String searchType, String keyword, int page, int size);
+
+    Page<ProductDTO> searchProductsByTitle(String title, int page, int size);
+    Page<ProductDTO> searchProductsByCategory(String category, int page, int size);
 
     default Product dtoToEntity(ProductDTO productDTO) {
         return Product.builder()
@@ -48,6 +56,8 @@ public interface ProductService {
                 .status(product.getStatus())
                 .location(product.getLocation())
                 .userId(product.getUserId())
+                .createDate(product.getCreateDate())
+                .updateDate(product.getUpdateDate())
                 .build();
     }
 
