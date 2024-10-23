@@ -12,18 +12,28 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, String> {
 
+    // 계정 삭제
     @Modifying
     @Query("DELETE FROM Member m WHERE m.id = :id")
     void deleteById(@Param("id") String id);
 
+    // 마이페이지 불러오기
     @Query("select m from Member m where m.id = :id")
     Optional<Member> selectById(@Param("id") String id);
 
+    // 아이디 찾기
     @Query("select m.id from Member m where m.name = :name and m.email = :email")
     Optional<String> searchById(@Param("name") String name, @Param("email") String email);
 
+    // 비밀번호 찾기 
     @Query("select m.password from Member m where m.id = :id and m.name = :name and m.email = :email")
     Optional<String> searchByPw( @Param("id") String id,@Param("name") String name, @Param("email") String email);
+
+    // 이메일 중복 체크
+    boolean existsByEmail(String email);
+
+    // 아이디 중복 체크
+    boolean existsById(String id);
 
 
 }

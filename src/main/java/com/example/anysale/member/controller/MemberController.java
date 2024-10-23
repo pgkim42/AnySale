@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -66,12 +63,40 @@ public class MemberController {
             return "/member/register"; // 오류가 있으면 폼으로 돌아감
         }
 
+        // 이메일 중복 체크
+        if (memberService.existByEmail(memberDTO.getEmail())) {
+            model.addAttribute("errorMessage", memberDTO.getEmail() + "는 사용 중인 이메일입니다.");
+            return "/member/register"; // 중복된 이메일로 인해 오류 발생
+        }
+
+        // 아이디 중복 체크
+        if (memberService.existById(memberDTO.getId())) {
+            model.addAttribute("errorMessage", memberDTO.getId() + "는 사용중인 아이디입니다.");
+            return "/member/register"; // 중복된 아이디로 인해 오류 발생
+        }
+
         memberDTO.setRole("ROLE_USER"); // 기본 역할 설정
         memberDTO.setScore(0.0); // 기본 점수 설정
 
         memberService.registerMember(memberDTO);
+
         return "redirect:/member/login";
     }
+
+    @GetMapping("/member/check-id/{id}")
+    @ResponseBody
+    public String checkId(@PathVariable("id") String id) {
+        boolean exists = memberService.existById(id);
+        return exists ? "이미 사용 중인 아이디입니다." : "사용 가능한 아이디입니다.";
+    }
+
+    @GetMapping("/member/check-email/{email}")
+    @ResponseBody
+    public String checkEmail(@PathVariable("email") String email) {
+        boolean exists = memberService.existByEmail(email);
+        return exists ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.";
+    }
+
 
     // 로그인
     @GetMapping("/member/login")
@@ -113,7 +138,7 @@ public class MemberController {
         boolean isModified = session.getAttribute("isModified") != null; // 플래그 확인
         session.invalidate();
         if(isModified) {
-            redirectAttributes.addFlashAttribute("successMessage", "회원 수정이 완료되었습니다. 다시 로그인해주세요.");
+            redirectAttributes.addFlashAttribute("successMessage", "회원 수정이 완료되었습니다. <br> 다시 로그인해주세요.");
             return "redirect:/member/login";
         }
         return "redirect:/products"; // 제품 페이지로 리다이렉션
@@ -185,9 +210,8 @@ public class MemberController {
         model.addAttribute("member", new Member());
 
         if(memberId.isPresent()){
-            model.addAttribute("memberId", memberId.get());
-            System.out.println("memberId : " + memberId.get());
-            return "/member/searchIdResult";
+            model.addAttribute("successMessage", "아이디는 " +memberId.get() + "입니다.");
+            return "/member/searchId";
         } else {
             model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
             return "/member/searchId";
@@ -199,17 +223,17 @@ public class MemberController {
     public String searchPw(@RequestParam(value = "id", required = false, defaultValue = "") String id,
                                             @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                             @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
+        Optional<String> memberId = memberService.searchById(name, email);
         Optional<String> memberPw = memberService.searchByPw(id, name, email);
 
         model.addAttribute("member", new Member());
 
-        if(memberPw.isPresent()){
-            model.addAttribute("memberPw", memberPw.get());
-            System.out.println("memberPw : " + memberPw.get());
-            return "/member/searchIdResult";
+        if(memberPw.isPresent() && memberId.isPresent()){
+            model.addAttribute("successMessage", memberId.get() + " 님의 <br> 비밀번호는 : " + memberPw.get() + "입니다.");
+            return "/member/searchPw";
         } else {
             model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
-            return "/member/searchId";
+            return "/member/searchPw";
         }
     }
 

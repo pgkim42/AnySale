@@ -2,6 +2,8 @@ package com.example.anysale.member.service;
 
 import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
+import com.example.anysale.member.repository.MemberRepository;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,12 @@ public interface MemberService {
 
     // 비밀번호 찾기
     Optional<String> searchByPw(String id, String name, String email);
+
+    // 아이디 중복 체크
+     boolean existById(String id);
+
+    // 이메일 중복 체크
+     boolean existByEmail(String email);
 
 
     // 엔티티를 DTO로 변환

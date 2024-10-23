@@ -5,6 +5,7 @@ import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,25 +21,33 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member registerMember(MemberDTO memberDTO) {
 
-        if (memberRepository.existsById(memberDTO.getId())) {
-            throw new RuntimeException("이미 사용 중인 ID입니다.");
-        } else if (memberRepository.existsById(memberDTO.getEmail())){
-            throw new RuntimeException("이미 사용중인 이메일입니다.");
-        }
-
         Member member = Member.builder()
                 .id(memberDTO.getId())
                 .password(memberDTO.getPassword())
                 .name(memberDTO.getName())
                 .email(memberDTO.getEmail())
                 .phone(memberDTO.getPhone())
-                .role("ROLE_USER")
-                .score(0.0) // 점수는 항상 0으로 초기화
-                .profilePhotoUrl("")
+                .role(memberDTO.getRole())
+                .score(memberDTO.getScore())
+                .profilePhotoUrl(memberDTO.getProfilePhotoUrl())
                 .build();
 
         return memberRepository.save(member);
     }
+
+    // 아이디 중복체크
+    @Override
+    public boolean existById(String id) {
+        return memberRepository.existsById(id);
+    }
+
+    // 이메일 중복체크
+    @Override
+    public boolean existByEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+
 
     // 회원 수정
     @Override
@@ -107,10 +116,13 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.searchById(name, email);
     }
 
+    // 비밀번호 찾기
     @Override
     public Optional<String> searchByPw(String id, String name, String email) {
         return  memberRepository.searchByPw(id, name, email);
     }
+
+
 
 
 //    @Autowired
