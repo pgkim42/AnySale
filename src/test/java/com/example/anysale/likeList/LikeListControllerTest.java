@@ -29,6 +29,7 @@ public class LikeListControllerTest {
   @MockBean
   private LikeListService likeListService;
 
+  //
   // 회원의 찜 목록 조회 테스트
   @Test
   public void testGetLikeList() throws Exception {
