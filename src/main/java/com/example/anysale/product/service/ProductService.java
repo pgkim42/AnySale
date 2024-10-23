@@ -35,11 +35,11 @@ public interface ProductService {
                 .title(productDTO.getTitle())
                 .content(productDTO.getContent())
                 .productCondition(productDTO.getProductCondition())
-                .imageUrl(productDTO.getImageUrl())
                 .dealDate(productDTO.getDealDate())
                 .status(productDTO.getStatus())
                 .location(productDTO.getLocation())
                 .userId(productDTO.getUserId())  // userId를 반드시 매핑
+                .imageUrl(productDTO.getImageUrl()) // imageUrl 필드 매핑 추가
                 .build();
     }
 

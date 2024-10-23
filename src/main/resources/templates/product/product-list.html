@@ -73,6 +73,7 @@
         fetch(`/products/searchAjax?searchType=${searchType}&keyword=${keyword}&page=${page}&size=20`)
             .then(response => response.json())
             .then(data => {
+                console.log(data);  // 상품 데이터를 콘솔에 출력
                 updateProductList(data.content);  // 제품 목록 업데이트
                 updatePagination(data);          // 페이지네이션 업데이트
             })
@@ -88,7 +89,7 @@
             const productCard = `
                 <div class="col mb-5">
                     <div class="card h-100">
-                        <img class="card-img-top" src="${product.imageUrl}" alt="Product Image"/>
+                        <img class="card-img-top" src="/uploadfile/${product.imageUrl}" alt="상품이미지"/>
                         <div class="card-body p-4">
                             <div class="text-center">
                                 <h5 class="fw-bolder">${product.title}</h5>
@@ -99,7 +100,7 @@
                         </div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="text-center">
-                                <a class="btn btn-outline-dark mt-auto" href="/products/detail/${product.itemCode}">자세히 보기</a>
+                                <a class="btn btn-outline-dark mt-auto" href="/products/detail/${product.itemCode}">${product.itemCode} 자세히 보기</a>
                             </div>
                         </div>
                     </div>
@@ -131,11 +132,6 @@
         }
     }
 
-    // 페이지가 로드될 때 처음 목록을 가져옴
-    document.addEventListener("DOMContentLoaded", function () {
-        loadProducts(0);  // 첫 번째 페이지 로드
-    });
-
     // 검색 필드의 입력 타입을 토글하는 함수
     function toggleSearchInput() {
         let searchType = document.getElementById('searchType').value;
@@ -151,10 +147,12 @@
         }
     }
 
-    // 페이지 로드 시 초기 상태 설정
+    // 페이지가 로드될 때 처음 목록을 가져옴
     document.addEventListener("DOMContentLoaded", function () {
+        loadProducts(0);  // 첫 번째 페이지 로드
         toggleSearchInput();  // 페이지 로드 후 상태에 맞게 설정
     });
+
 </script>
 
 <!-- Footer Fragment 포함 -->

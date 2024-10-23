@@ -8,9 +8,11 @@ import com.example.anysale.product.dto.ProductDTO;
 import com.example.anysale.product.service.ProductService;
 import com.example.anysale.comment.dto.CommentDTO;
 import com.example.anysale.comment.service.CommentService;
+import com.example.anysale.util.FileUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +36,16 @@ public class ProductPageController {
     private final CommentService commentService;
     private final MemberService memberService;
     private final MemberController memberController;
+    private final FileUtil fileUtil;
 
     @Autowired
-    public ProductPageController(ProductService productService, CommentService commentService, MemberService memberService, MemberController memberController) {
+    public ProductPageController(ProductService productService, CommentService commentService,
+                                 MemberService memberService, MemberController memberController, FileUtil fileUtil) {
         this.productService = productService;
         this.commentService = commentService;
         this.memberService = memberService;
         this.memberController = memberController;
+        this.fileUtil = fileUtil;
     }
 
     // 상품 목록 보기 (페이징 처리)
@@ -98,18 +103,23 @@ public class ProductPageController {
         return "product/product-add";  // 상품 등록 페이지로 이동
     }
 
-    // 상품 등록 처리
+    //
     @PostMapping("/products/add")
-    public String addProduct(ProductDTO productDTO) {
+    public String addProduct(@ModelAttribute ProductDTO productDTO,
+                             @RequestParam("uploadFile") MultipartFile multipartFile) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            String imageUrl = fileUtil.fileUpload(multipartFile); // 파일 업로드 처리 로직
+            productDTO.setImageUrl(imageUrl); // 파일 URL을 DTO에 설정
+        }
         productService.saveProduct(productDTO);
         return "redirect:/products";
     }
 
-
-
     // 상품 상세 페이지
     @GetMapping("/products/detail/{itemCode}")
     public String showProductDetailPage(Model model, @PathVariable("itemCode") String itemCode, HttpSession session) {
+        System.out.println("받은 itemCode: " + itemCode);
+
         String userId = (String) session.getAttribute("userId");
 
         ProductDTO productDTO = productService.getProductById(itemCode)

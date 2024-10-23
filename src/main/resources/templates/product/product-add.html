@@ -8,19 +8,19 @@
 <!-- 상품 추가 폼 -->
 <div class="container">
     <h1>상품 추가하기</h1>
-    <form id="productForm">
+    <form id="productForm" th:action="@{/products/add}" th:method="post" enctype="multipart/form-data">
         <!-- 제목 입력 필드 추가 -->
         <div class="mb-3">
             <label for="title" class="form-label">상품 제목</label>
-            <input type="text" class="form-control" id="title" placeholder="상품 제목을 입력하세요" required>
+            <input type="text" class="form-control" id="title" name="title" placeholder="상품 제목을 입력하세요" required>
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">가격</label>
-            <input type="number" class="form-control" id="price" placeholder="가격을 입력하세요" required>
+            <input type="number" class="form-control" id="price" name="price" placeholder="가격을 입력하세요" required>
         </div>
         <div class="mb-3">
             <label for="category" class="form-label">카테고리</label>
-            <select class="form-control" id="category" required>
+            <select class="form-control" id="category" name="category" required>
                 <option value="의류">의류</option>
                 <option value="도서">도서</option>
                 <option value="전자제품">전자제품</option>
@@ -28,11 +28,11 @@
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
-            <textarea class="form-control" id="content" placeholder="상품 내용을 입력하세요" required></textarea>
+            <textarea class="form-control" id="content" name="content" placeholder="상품 내용을 입력하세요" required></textarea>
         </div>
         <div class="mb-3">
             <label for="productCondition" class="form-label">상품 상태</label>
-            <select class="form-control" id="productCondition" required>
+            <select class="form-control" id="productCondition" name="productCondition" required>
                 <option value="최상">최상</option>
                 <option value="상">상</option>
                 <option value="중">중</option>
@@ -41,20 +41,20 @@
         </div>
 
         <div class="mb-3">
-            <label for="imageUrl" class="form-label">이미지 URL</label>
-            <input type="url" class="form-control" id="imageUrl" value="http://via.placeholder.com/480x320" required>
-        </div>
-        <div class="mb-3">
             <label for="dealDate" class="form-label">거래 날짜</label>
-            <input type="datetime-local" class="form-control" id="dealDate" required>
+            <input type="datetime-local" class="form-control" id="dealDate" name="dealDate" required>
         </div>
         <div class="mb-3">
             <label for="location" class="form-label">위치</label>
-            <input type="text" class="form-control" id="location" placeholder="상품 위치를 입력하세요" required>
+            <input type="text" class="form-control" id="location" name="location" placeholder="상품 위치를 입력하세요" required>
         </div>
         <div class="mb-3">
             <label for="userId" class="form-label">사용자 ID</label>
-            <input type="text" class="form-control" id="userId"  th:value="${member.id}" readonly>
+            <input type="text" class="form-control" id="userId" name="userId" th:value="${member.id}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="uploadFile" class="form-label">이미지 업로드</label>
+            <input type="file" class="form-control" id="uploadFile" name="uploadFile" required>
         </div>
         <button type="submit" class="btn btn-primary">추가하기</button>
     </form>
@@ -67,7 +67,7 @@
 <!-- 자바스크립트 추가 -->
 <script>
     window.onload = function () {
-        const dealDateInput = document.getElementById('dealDate');
+        let dealDateInput = document.getElementById('dealDate');
         if (dealDateInput) {
             const today = new Date();
             today.setDate(today.getDate() + 1);
@@ -82,45 +82,6 @@
             console.error('dealDateInput을 찾을 수 없습니다.');
         }
     };
-
-    document.getElementById('productForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const productDTO = {
-            title: document.getElementById('title').value, // 제목 필드 추가
-            price: document.getElementById('price').value,
-            category: document.getElementById('category').value,
-            content: document.getElementById('content').value,
-            productCondition: document.getElementById('productCondition').value,
-            imageUrl: document.getElementById('imageUrl').value,
-            dealDate: document.getElementById('dealDate').value,
-            location: document.getElementById('location').value,
-            userId: document.getElementById('userId').value
-        };
-
-        fetch('/api/products', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productDTO)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('서버 에러');
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById('resultMessage').innerHTML = `<div class="alert alert-success">상품이 성공적으로 추가되었습니다!</div>`;
-                setTimeout(() => {
-                    window.location.href = '/products';
-                }, 1500);
-            })
-            .catch((error) => {
-                document.getElementById('resultMessage').innerHTML = `<div class="alert alert-danger">오류가 발생했습니다: ${error.message}</div>`;
-            });
-    });
 </script>
 </body>
 

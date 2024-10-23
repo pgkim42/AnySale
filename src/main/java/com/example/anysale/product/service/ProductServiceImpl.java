@@ -3,6 +3,7 @@ package com.example.anysale.product.service;
 import com.example.anysale.product.dto.ProductDTO;
 import com.example.anysale.product.entity.Product;
 import com.example.anysale.product.repository.ProductRepository;
+import com.example.anysale.util.FileUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,9 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
+    @Autowired
+    private FileUtil fileUtil;
+
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final SecureRandom random = new SecureRandom();
 
@@ -48,6 +52,10 @@ public class ProductServiceImpl implements ProductService {
         productDTO.setStatus("대기중");
 
         Product product = dtoToEntity(productDTO);
+
+        String imageUrl = fileUtil.fileUpload(productDTO.getUploadFile());
+        product.setImageUrl(imageUrl);
+
         Product savedProduct = productRepository.save(product);
         return entityToDto(savedProduct);
     }
@@ -55,6 +63,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<ProductDTO> getProductById(String itemCode) {
         Optional<Product> product = productRepository.findById(itemCode);
+        System.out.println("ProductServiceImpl의 getProductById 메서드가 받은 itemCode: " + itemCode);
+
         return product.map(this::entityToDto);
     }
 
