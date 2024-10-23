@@ -1,6 +1,5 @@
 package com.example.anysale.likeList;
 
-import ch.qos.logback.core.CoreConstants;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.repository.LikeListRepository;
 import com.example.anysale.member.entity.Member;
@@ -72,7 +71,7 @@ public class LikeListRepositoryTest {
   // 상품 등록
   @Test
   void 상품등록() {
-    Product product = Product.builder()
+    Product product1 = Product.builder()
         .itemCode("ITEM001")
         .price("100000")
         .category("골동품")
@@ -100,8 +99,40 @@ public class LikeListRepositoryTest {
         .userId("user2")
         .build();
 
-    productRepository.save(product);
+    Product product3 = Product.builder()
+        .itemCode("ITEM003")
+        .price("100000")
+        .category("골동품")
+        .title("지니의 요술램프(1번남음..)")
+        .content("살살문질러서 외부에 사용감도 없어요! 네고x (주의사항! 지니 생각보다 크니깐 집에서 부르지마세요!!)")
+        .productCondition("새거같은헌거")
+        .imageUrl("http://example.com/photo.jpg")
+        .dealDate(LocalDateTime.now())
+        .status("판매중")
+        .location("인천광역시 구월동 124-12")
+        .userId("user2")
+        .build();
+
+    Product product4 = Product.builder()
+        .itemCode("ITEM004")
+        .price("5000")
+        .category("탈것")
+        .title("프리미엄 주환이")
+        .content("속도 장난아님. 승차감 좋아요!")
+        .productCondition("중고")
+        .imageUrl("http://example.com/photo.jpg")
+        .dealDate(LocalDateTime.now())
+        .status("거래중")
+        .location("인천광역시 구월동 546-75")
+        .userId("user1")
+        .build();
+
+
+    productRepository.save(product1);
     productRepository.save(product2);
+    productRepository.save(product3);
+    productRepository.save(product4);
+
   }
 
 
@@ -109,36 +140,62 @@ public class LikeListRepositoryTest {
   @Test
   void 찜상품등록() {
 
-    Member member = Member.builder()
+    Member member1 = Member.builder()
         .id("user1")
         .build();
 
-    Product product = Product.builder()
+    Product product1 = Product.builder()
         .itemCode("ITEM001")
         .build();
 
-    LikeList likeList = LikeList.builder()
-        .member(member)
-        .product(product)
-        .wishDate(LocalDateTime.now())
+    LikeList likeList1 = LikeList.builder()
+        .member(member1)
+        .product(product1)
         .build();
 
-    Member member1 = Member.builder()
+    Member member2 = Member.builder()
             .id("user2")
                 .build();
 
-    Product product1 = Product.builder()
+    Product product2 = Product.builder()
             .itemCode("ITEM002")
                 .build();
 
-    LikeList likeList1 = LikeList.builder()
-            .member(member1)
-                .product(product1)
-                    .wishDate(LocalDateTime.now())
+    LikeList likeList2 = LikeList.builder()
+            .member(member2)
+                .product(product2)
                         .build();
 
-    likeListRepository.save(likeList);
+    Member member3 = Member.builder()
+        .id("user2")
+        .build();
+
+    Product product3 = Product.builder()
+        .itemCode("ITEM001")
+        .build();
+
+    LikeList likeList3 = LikeList.builder()
+        .member(member3)
+        .product(product3)
+        .build();
+
+    Member member4 = Member.builder()
+            .id("user1")
+                .build();
+
+    Product product4 = Product.builder()
+            .itemCode("ITEM002")
+                .build();
+
+    LikeList likeList4 = LikeList.builder()
+            .member(member4)
+                .product(product4)
+                        .build();
+
     likeListRepository.save(likeList1);
+    likeListRepository.save(likeList2);
+    likeListRepository.save(likeList3);
+    likeListRepository.save(likeList4);
   }
 
 
@@ -222,7 +279,6 @@ public class LikeListRepositoryTest {
   public void 찜상품수정() {
     Optional<LikeList> result = likeListRepository.findById(2);
     LikeList likeList = result.get();
-    likeList.setWishDate(LocalDateTime.now());
     likeListRepository.save(likeList);
   }
 

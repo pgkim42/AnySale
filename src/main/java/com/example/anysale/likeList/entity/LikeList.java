@@ -29,8 +29,5 @@ public class LikeList extends BaseEntity {
   @JoinColumn(name = "member_id", referencedColumnName = "id")  // 'Member' 엔티티와 다대일 관계, 외래키로 'member_id'를 명시적으로 지정
   private Member member;  // 찜한 회원과의 연관 관계
 
-  @Column(nullable = false)
-  private LocalDateTime wishDate;  // 찜 등록일, 필수 값으로 null 불가
-
   //test
 }

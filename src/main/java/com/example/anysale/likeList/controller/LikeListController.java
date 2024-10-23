@@ -1,50 +1,46 @@
-/*
 package com.example.anysale.likeList.controller;
 
 import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.service.LikeListService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/like")
+@RequestMapping("/likeList")
 public class LikeListController {
 
-  private final LikeListService likeListService;
+  private LikeListService likeListService;
 
   @Autowired
   public LikeListController(LikeListService likeListService) {
     this.likeListService = likeListService;
   }
 
-  @GetMapping("/likeList")
-  public String getLikeList(Model model) {
-    String userId = "userId";
-    String itemCode = "itemCode";
-    LocalDateTime wishDate = LocalDateTime.now();
-    model.addAttribute("likeList", likeListService.getLikedItemsByUserId(userId, itemCode, wishDate));
-    return "likeList";
-  }
-
-  @GetMapping("/member/{id}")
-  public List<LikeListDTO> getLikedItemsByUserId(@PathVariable String id, String itemCode, LocalDateTime wishDate) {
-    return likeListService.getLikedItemsByUserId(id, itemCode, wishDate);
-  }
-
-  @PatchMapping("/add")
-  public LikeList addLikedItem(@RequestBody LikeList likeList) {
+  // 찜목록 추가
+  @PostMapping
+  public LikeList addLikeList(@RequestBody LikeList likeList) {
     return likeListService.addLikeList(likeList);
   }
 
-  @DeleteMapping("/remove/{id}")
-  public ResponseEntity<LikeList> removeLikedItem(@PathVariable int id) {
-    LikeList removedItem = likeListService.removeLikeList(id);
-    return ResponseEntity.ok(removedItem);
+  // 회원의 찜목록 조회
+  @GetMapping("/{memberId}")
+  public List<LikeListDTO> getLikeList(@PathVariable String memberId) {
+    return likeListService.getLikeList(memberId);
   }
+
+  // 찜 목록에서 특정 상품 제거
+  @DeleteMapping("/{likeListId}")
+  public LikeList removeLikeList(@PathVariable int likeListId) {
+    return likeListService.removeLikeList(likeListId);
+  }
+
+  // 찜 목록에서 모든 상품 제거
+  @DeleteMapping("/all/{memberId}")
+  public void removeAllLikeList(@PathVariable String memberId) {
+    likeListService.removeAllLikeList(memberId);
+  }
+
 }
-*/
