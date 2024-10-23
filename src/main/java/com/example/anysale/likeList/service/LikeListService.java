@@ -1,6 +1,5 @@
 package com.example.anysale.likeList.service;
 
-
 import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 
