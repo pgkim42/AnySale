@@ -196,8 +196,21 @@ public class MemberController {
 
     // 비밀번호 찾기
     @GetMapping("/member/searchPw")
-    public String searchPw(Model model) {
-        return "member/searchPw";
+    public String searchPw(@RequestParam(value = "id", required = false, defaultValue = "") String id,
+                                            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                            @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
+        Optional<String> memberPw = memberService.searchByPw(id, name, email);
+
+        model.addAttribute("member", new Member());
+
+        if(memberPw.isPresent()){
+            model.addAttribute("memberPw", memberPw.get());
+            System.out.println("memberPw : " + memberPw.get());
+            return "/member/searchIdResult";
+        } else {
+            model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
+            return "/member/searchId";
+        }
     }
 
 

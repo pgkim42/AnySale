@@ -107,6 +107,10 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.searchById(name, email);
     }
 
+    @Override
+    public Optional<String> searchByPw(String id, String name, String email) {
+        return  memberRepository.searchByPw(id, name, email);
+    }
 
 
 //    @Autowired

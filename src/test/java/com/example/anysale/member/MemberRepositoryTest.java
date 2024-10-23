@@ -119,7 +119,7 @@ public class MemberRepositoryTest {
 
     @Test
     public void 아이디찾기() {
-        Optional<Member> opt = memberService.searchById("정성민", "sungmin990923@naver.co2m");
+        Optional<String> opt = memberService.searchById("정성민", "sungmin990923@naver.co2m");
         if(opt.isPresent()){
             System.out.println(opt);
         } else {
