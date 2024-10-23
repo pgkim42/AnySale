@@ -1,7 +1,9 @@
 package com.example.anysale.member;
 
+import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.repository.MemberRepository;
+import com.example.anysale.member.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +23,9 @@ public class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberService memberService;
 
     @Test
     public void testSaveMember() {
@@ -110,5 +116,16 @@ public class MemberRepositoryTest {
         assertTrue(updatedMember.isPresent());
         assertEquals("Updated Name", updatedMember.get().getName());
     }
+
+    @Test
+    public void 아이디찾기() {
+        Optional<Member> opt = memberService.searchById("정성민", "sungmin990923@naver.co2m");
+        if(opt.isPresent()){
+            System.out.println(opt);
+        } else {
+            System.out.println("없는값입니다.");
+        }
+    }
+
 }
 

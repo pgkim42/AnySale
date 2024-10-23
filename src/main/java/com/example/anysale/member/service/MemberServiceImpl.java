@@ -45,15 +45,25 @@ public class MemberServiceImpl implements MemberService {
     public void modifyMember(MemberDTO memberDTO) {
         // 전달 받은 DTO에서 id를 꺼내고, id가 DB에 있는지 확인
         String id = memberDTO.getId();
-        Optional<Member> member = memberRepository.findById(id);
-        if (member.isPresent()) {
-            // 비밀번호, 이메일, 핸드폰 번호만 변경 가능.
-            member.get().setPassword(memberDTO.getPassword());
-            member.get().setEmail(memberDTO.getEmail());
-            member.get().setPhone(memberDTO.getPhone());
+        Optional<Member> memberOpt = memberRepository.findById(id);
+        if (memberOpt.isPresent()) {
+            Member memberEntity = memberOpt.get();
+
+            // 각각 이메일, 패스워드, 핸드폰번호 하나씩 바꿀 수 있게 로직변경
+
+            if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()){
+                memberEntity.setPassword(memberDTO.getPassword());
+            }
+            if (memberDTO.getEmail() != null && !memberDTO.getEmail().isEmpty()){
+                memberEntity.setEmail(memberDTO.getEmail());
+            }
+            if (memberDTO.getPhone() != null && !memberDTO.getPhone().isEmpty()) {
+                memberEntity.setPhone(memberDTO.getPhone());
+            }
 
             // DB 업데이트
-            memberRepository.save(member.get());
+            memberRepository.save(memberEntity);
+            System.out.println("Member updated: " + memberEntity);
         }
     }
 
@@ -89,6 +99,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Optional<Member> getMemberById(String id) {
         return memberRepository.findById(id);
+    }
+
+    // 아이디 찾기
+    @Override
+    public Optional<String> searchById(String name, String email) {
+        return memberRepository.searchById(name, email);
     }
 
 

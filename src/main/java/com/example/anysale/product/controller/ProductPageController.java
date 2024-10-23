@@ -1,5 +1,6 @@
 package com.example.anysale.product.controller;
 
+import com.example.anysale.member.controller.MemberController;
 import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.service.MemberService;
@@ -32,12 +33,14 @@ public class ProductPageController {
     private final ProductService productService;
     private final CommentService commentService;
     private final MemberService memberService;
+    private final MemberController memberController;
 
     @Autowired
-    public ProductPageController(ProductService productService, CommentService commentService, MemberService memberService) {
+    public ProductPageController(ProductService productService, CommentService commentService, MemberService memberService, MemberController memberController) {
         this.productService = productService;
         this.commentService = commentService;
         this.memberService = memberService;
+        this.memberController = memberController;
     }
 
     // 상품 목록 보기 (페이징 처리)
