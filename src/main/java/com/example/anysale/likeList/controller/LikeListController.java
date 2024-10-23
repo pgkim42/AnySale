@@ -10,6 +10,7 @@ import com.example.anysale.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,8 +51,8 @@ public class LikeListController {
 
   // 회원의 찜목록 조회
   @GetMapping("/list")
-  public List<LikeListDTO> getLikeLists(@RequestParam String memberId) {
-    return likeListService.getLikeList(memberId);
+  public String getLikeLists(@RequestParam(value = "memberId") String memberId) {
+    return "like/likeList";
   }
 
   // 찜 목록에서 특정 상품 제거
