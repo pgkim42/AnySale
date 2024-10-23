@@ -8,16 +8,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class MemberServiceTest {
 
-    @Mock
+    @Autowired
     private MemberRepository memberRepository;
 
-    @InjectMocks
+    @Autowired
     private MemberService memberService;
 
     MemberDTO memberDTO;
@@ -25,7 +29,18 @@ public class MemberServiceTest {
     public MemberServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
-//
+
+    @Test
+    public void modifyMember() {
+        MemberDTO memberDTO = memberService.memberInfo("test1");
+
+        memberDTO.setPassword("1234abcd");
+
+        memberService.modifyMember(memberDTO);
+
+    }
+
+
     @Test
     public void testSaveMember() {
         Member member = Member.builder()
