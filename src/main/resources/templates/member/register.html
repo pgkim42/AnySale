@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+<head>
   <th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .form-container {
       max-width: 600px;
-      margin: 0 auto;
+      margin: 100px auto;
       padding: 30px;
       border: 1px solid #e0e0e0;
       border-radius: 10px;
@@ -31,42 +32,93 @@
       margin-top: 20px;
     }
   </style>
+</head>
 
 <body>
-<div class="container mt-5">
-  <h2 class="text-center mt-5">이것도 팔아?</h2>
+<div class="form-container">
+  <form th:action="@{/member/register}" method="post" th:object="${memberDTO}" class="needs-validation">
 
-  <div class="form-container">
-    <form action="#" th:action="@{/member/register}" method="post" th:object="${memberDTO}" class="needs-validation">
-      <div class="form-group">
-        <label for="id" class="sub-title">아이디:</label>
+    <div class="form-group">
+      <label for="id" class="sub-title">아이디:</label>
+      <div class="input-group">
         <input type="text" id="id" th:field="*{id}" class="form-control" required />
-        <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="error-message"></span>
+        <div class="input-group-append">
+          <button type="button" onclick="checkId()" class="btn btn-secondary">중복 체크</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="password" class="sub-title">비밀번호:</label>
-        <input type="password" id="password" th:field="*{password}" class="form-control" required />
-        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
-      </div>
-      <div class="form-group">
-        <label for="name" class="sub-title">이름:</label>
-        <input type="text" id="name" th:field="*{name}" class="form-control" required />
-        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></span>
-      </div>
-      <div class="form-group">
-        <label for="email" class="sub-title">이메일:</label>
+      <span id="idMessage" class="error-message"></span>
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="sub-title">비밀번호:</label>
+      <input type="password" id="password" th:field="*{password}" class="form-control" required />
+      <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
+    </div>
+
+    <div class="form-group">
+      <label for="name" class="sub-title">이름:</label>
+      <input type="text" id="name" th:field="*{name}" class="form-control" required />
+      <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></span>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="sub-title">이메일:</label>
+      <div class="input-group">
         <input type="email" id="email" th:field="*{email}" class="form-control" required />
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></span>
+        <div class="input-group-append">
+          <button type="button" onclick="checkEmail()" class="btn btn-secondary">중복 체크</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="phone" class="sub-title">전화번호:</label>
-        <input type="text" id="phone" th:field="*{phone}" class="form-control" required />
-        <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-message"></span>
-      </div>
-      <button type="submit" class="btn btn-primary btn-custom">회원 추가</button>
-    </form>
-  </div>
+      <span id="emailMessage" class="error-message"></span>
+    </div>
+
+    <div class="form-group">
+      <label for="phone" class="sub-title">전화번호:</label>
+      <input type="text" id="phone" th:field="*{phone}" class="form-control" required />
+      <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-message"></span>
+    </div>
+
+    <button type="submit" id="registerBtn" class="btn btn-primary btn-custom">회원 추가</button>
+  </form>
 </div>
+
+<script>
+  function checkId() {
+    var id = document.getElementById("id").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/member/check-id/" + encodeURIComponent(id), true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        var message = xhr.responseText;
+        document.getElementById("idMessage").innerText = message;
+        if (message.includes("이미 사용 중인 아이디입니다.")) {
+          document.getElementById("registerBtn").disabled = true; // 버튼 비활성화
+        } else {
+          document.getElementById("registerBtn").disabled = false; // 버튼 활성화
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  function checkEmail() {
+    var email = document.getElementById("email").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/member/check-email/" + encodeURIComponent(email), true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        var message = xhr.responseText;
+        document.getElementById("emailMessage").innerText = message;
+        if (message.includes("이미 사용 중인 이메일입니다.")) {
+          document.getElementById("registerBtn").disabled = true; // 버튼 비활성화
+        } else {
+          document.getElementById("registerBtn").disabled = false; // 버튼 활성화
+        }
+      }
+    };
+    xhr.send();
+  }
+</script>
 
 <th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
 </body>
