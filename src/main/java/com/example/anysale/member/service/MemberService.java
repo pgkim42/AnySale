@@ -29,6 +29,10 @@ public interface MemberService {
     // 아이디 찾기
     Optional<String> searchById(String name, String email);
 
+    // 비밀번호 찾기
+    Optional<String> searchByPw(String id, String name, String email);
+
+
     // 엔티티를 DTO로 변환
     default MemberDTO entityToDto(Member entity) {
         return MemberDTO.builder()
