@@ -2,8 +2,10 @@ package com.example.anysale.member.service;
 
 import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
+import com.example.anysale.member.entity.MemberRole;
 import com.example.anysale.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -16,22 +18,19 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
 
     // 회원가입
     @Override
-    public Member registerMember(MemberDTO memberDTO) {
+    public Member registerMember(Member member) {
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encodedPassword); // 암호화된 비밀번호로 설정
 
-        Member member = Member.builder()
-                .id(memberDTO.getId())
-                .password(memberDTO.getPassword())
-                .name(memberDTO.getName())
-                .email(memberDTO.getEmail())
-                .phone(memberDTO.getPhone())
-                .role(memberDTO.getRole())
-                .score(memberDTO.getScore())
-                .profilePhotoUrl(memberDTO.getProfilePhotoUrl())
-                .build();
+        // 기본 역할 추가
+        member.setRole(MemberRole.ROLE_USER);
 
+        // 엔티티 저장
         return memberRepository.save(member);
     }
 
