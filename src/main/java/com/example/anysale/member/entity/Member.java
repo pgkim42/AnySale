@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Table(name = "member")
 @Getter
 @Setter
@@ -34,9 +37,23 @@ public class Member extends BaseEntity {
     @Column(name = "profile_photo_url", length = 255)
     private String profilePhotoUrl;
 
-    @Column(name = "role", length = 50 )
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", length = 50)
+    private MemberRole role; // 역할을 Enum 타입으로 직접 저장
 
     @Column(name = "score")
     private Double score;
+
+    @Column(name = "fromSocial")
+    private boolean fromSocial;
+
+    // 역할 설정 메서드
+    public void setRole(MemberRole role) {
+        this.role = role; // Enum 자체로 저장
+    }
+
+    // 역할 반환 메서드
+    public MemberRole getRole() {
+        return this.role; // Enum 타입 그대로 반환
+    }
 }

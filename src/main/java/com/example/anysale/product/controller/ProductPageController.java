@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -55,9 +57,14 @@ public class ProductPageController {
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
-            Model model, HttpSession session) {
+            Model model) {
 
-        String userId = (String) session.getAttribute("userId");
+        // SecurityContextHolder에서 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = null;
+        if (authentication != null && authentication.isAuthenticated()) {
+            userId = authentication.getName(); // 사용자 ID (이름)
+        }
 
         Member member = null;
         if (userId != null) {
@@ -73,14 +80,14 @@ public class ProductPageController {
             totalPages = 1;
         }
 
-        model.addAttribute("member", member);
+        model.addAttribute("member", member);  // member 객체를 모델에 추가
         model.addAttribute("products", productsPage.getContent());  // 현재 페이지의 제품 목록
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", page);  // 현재 페이지
         model.addAttribute("totalPages", totalPages);  // 총 페이지 수
 
-        return "product/product-list";
+        return "product/product-list";  // 뷰 이름 반환
     }
 
     // 상품 등록 페이지
