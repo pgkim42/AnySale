@@ -20,5 +20,5 @@
 
 10-24
 - 로그인 창 디자인 O
-- 회원가입 창 디자인 ~ing
+- 회원가입 창 디자인 O
 - spring security ~ing
