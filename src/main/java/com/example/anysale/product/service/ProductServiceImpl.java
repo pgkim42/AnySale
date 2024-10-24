@@ -46,14 +46,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) {
         if (productDTO.getItemCode() == null || productDTO.getItemCode().isEmpty()) {
-            productDTO.setItemCode(generateRandomItemCode(10));  // 10자리의 랜덤 상품 코드 생성
+            productDTO.setItemCode(generateRandomItemCode(14));  // 14자리의 랜덤 상품 코드 생성
         }
 
         productDTO.setStatus("대기중");
 
         Product product = dtoToEntity(productDTO);
 
-        String imageUrl = fileUtil.fileUpload(productDTO.getUploadFile());
+        String imageUrl = null;
+        if (productDTO.getUploadFile() != null && !productDTO.getUploadFile().isEmpty()) {
+            imageUrl = fileUtil.fileUpload(productDTO.getUploadFile());
+        }
         product.setImageUrl(imageUrl);
 
         Product savedProduct = productRepository.save(product);
@@ -67,6 +70,7 @@ public class ProductServiceImpl implements ProductService {
 
         return product.map(this::entityToDto);
     }
+
 
     @Override
     public List<ProductDTO> getAllProducts() {

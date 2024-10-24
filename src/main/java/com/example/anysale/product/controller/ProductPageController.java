@@ -9,25 +9,17 @@ import com.example.anysale.product.service.ProductService;
 import com.example.anysale.comment.dto.CommentDTO;
 import com.example.anysale.comment.service.CommentService;
 import com.example.anysale.util.FileUtil;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.UUID;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import jakarta.servlet.http.*;
 
 @Controller
 public class ProductPageController {
@@ -106,7 +98,11 @@ public class ProductPageController {
     //
     @PostMapping("/products/add")
     public String addProduct(@ModelAttribute ProductDTO productDTO,
-                             @RequestParam("uploadFile") MultipartFile multipartFile) {
+                             @RequestParam("uploadFile") MultipartFile multipartFile, HttpServletRequest request) {
+
+        System.out.println("요청 메소드: " + request.getMethod()); // 디버깅용 로그
+        System.out.println("요청 URL: " + request.getRequestURL());
+
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String imageUrl = fileUtil.fileUpload(multipartFile); // 파일 업로드 처리 로직
             productDTO.setImageUrl(imageUrl); // 파일 URL을 DTO에 설정
@@ -176,21 +172,33 @@ public class ProductPageController {
         model.addAttribute("productDTO", productDTO);
         model.addAttribute("formattedDealDate", formattedDealDate);
 
+        System.out.println("showUpdateProductPage의 imageUrl : " + productDTO.getImageUrl());
+
         return "product/product-update";
     }
 
-    // 상품 수정 처리
     @PostMapping("/products/update/{itemCode}")
-    public String updateProduct(@PathVariable("itemCode") String itemCode, @ModelAttribute ProductDTO productDTO,
-                                @RequestParam("dealDate") String dealDateString) {
+    public String updateProduct(@PathVariable("itemCode") String itemCode,
+                                @ModelAttribute ProductDTO productDTO,
+                                @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile,
+                                @RequestParam(value = "existingImageUrl", required = false) String existingImageUrl) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        LocalDateTime dealDate = LocalDateTime.parse(dealDateString, formatter);
-        productDTO.setDealDate(dealDate);
+        // 파일이 업로드되었는지 확인 (null 체크 추가)
+        if (uploadFile != null && !uploadFile.isEmpty()) {
+            String uploadedFileName = fileUtil.fileUpload(uploadFile);
+            productDTO.setImageUrl(uploadedFileName);  // 새 이미지 설정
+        } else {
+            // 업로드된 파일이 없을 때는 기존 이미지 유지
+            System.out.println("기존 이미지 url : " + existingImageUrl);
+            if (existingImageUrl != null) {
+                productDTO.setImageUrl(existingImageUrl);  // 기존 이미지 유지
+            }
+        }
 
         productService.updateProduct(itemCode, productDTO);
-        return "redirect:/products/detail/" + itemCode;
+        return "redirect:/products/detail/" + itemCode;  // 업데이트 후 상세 페이지로 이동
     }
+
 
     // Ajax 검색 처리
     @GetMapping("/products/searchAjax")
