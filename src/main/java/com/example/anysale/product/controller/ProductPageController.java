@@ -16,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -123,7 +125,29 @@ public class ProductPageController {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedDealDate = productDTO.getDealDate().format(formatter);
-        String formattedCreateDate = productDTO.getCreateDate().format(formatter);
+
+        /* 시간 표시 계산용, 메서드로 만들 예정? */
+
+        // 현재 시간과 등록일 차이를 계산
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(productDTO.getCreateDate(), now);
+
+        // 시간 차이를 '몇 시간 전', '몇 분 전' 형식으로 변환
+        long seconds = duration.getSeconds();
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        String formattedCreateDate;
+        if (days > 0) {
+            formattedCreateDate = days + "일 전";
+        } else if (hours > 0) {
+            formattedCreateDate = hours + "시간 전";
+        } else if (minutes > 0) {
+            formattedCreateDate = minutes + "분 전";
+        } else {
+            formattedCreateDate = "방금 전";
+        }
 
         if (productDTO.getUpdateDate() != null) {
             String formattedUpdateDate = productDTO.getUpdateDate().format(formatter);

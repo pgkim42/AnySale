@@ -18,6 +18,7 @@
         letter-spacing: 0.5px;
         margin-bottom: 15px;
         line-height: 1.5;
+        text-align: justify;
     }
     .price {
         font-size: 22px;
@@ -46,9 +47,7 @@
         <!-- 제품 정보 -->
         <div class="col-md-6">
             <h1 class="post-title" th:text="${productDTO.title}">상품 제목</h1>
-            <h2 class="post-subtitle" th:text="${productDTO.content}">상품 설명</h2>
-
-
+            <p class="post-subtitle" th:text="${productDTO.content}">상품 설명</p>
             <!-- 가격 -->
             <p class="price"><span id="price" th:text="${productDTO.price}"></span> 원</p>
             <script>
@@ -57,7 +56,6 @@
                 priceElement.textContent = price.toLocaleString();
             </script>
 
-            <!-- 기타 정보 -->
             <ul class="list-unstyled mt-4">
                 <li><strong>카테고리:</strong> <span th:text="${productDTO.category}"></span></li>
                 <li><strong>작성자:</strong> <span th:text="${productDTO.getUserId()}"></span></li>
