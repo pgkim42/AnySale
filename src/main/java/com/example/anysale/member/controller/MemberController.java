@@ -7,6 +7,7 @@ import com.example.anysale.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,17 +85,23 @@ public class MemberController {
     }
 
     @GetMapping("/member/check-id/{id}")
-    @ResponseBody
-    public String checkId(@PathVariable("id") String id) {
+    public ResponseEntity<String> checkId(@PathVariable String id) {
+        if (id == null || id.isEmpty()) {
+            return ResponseEntity.badRequest().body("아이디를 입력해주세요.");
+        }
+
         boolean exists = memberService.existById(id);
-        return exists ? "이미 사용 중인 아이디입니다." : "사용 가능한 아이디입니다.";
+        return exists ? ResponseEntity.ok("이미 사용 중인 아이디입니다.") : ResponseEntity.ok("사용 가능한 아이디입니다.");
     }
 
     @GetMapping("/member/check-email/{email}")
-    @ResponseBody
-    public String checkEmail(@PathVariable("email") String email) {
+    public ResponseEntity<String> checkEmail(@PathVariable String email) {
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("이메일을 입력해주세요.");
+        }
+
         boolean exists = memberService.existByEmail(email);
-        return exists ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.";
+        return exists ? ResponseEntity.ok("이미 사용 중인 이메일입니다.") : ResponseEntity.ok("사용 가능한 이메일입니다.");
     }
 
 
