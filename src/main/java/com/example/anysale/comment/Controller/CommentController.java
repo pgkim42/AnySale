@@ -4,7 +4,10 @@ import com.example.anysale.comment.dto.CommentDTO;
 import com.example.anysale.comment.service.CommentService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +30,13 @@ public class CommentController {
     // 댓글 작성
     @PostMapping
     public ResponseEntity<Map<String, Object>> createComment(@RequestBody CommentDTO commentDTO, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");    // 세션에서 사용자 ID 값 가져오기
-        commentDTO.setUserId(userId);   // 세션 사용자 ID 설정
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "로그인이 필요합니다.")); // 인증되지 않은 경우
+        }
+
+        String userId = authentication.getName(); // 인증된 사용자 ID 가져오기
+        commentDTO.setUserId(userId); // 세션 사용자 ID 설정
 
         CommentDTO savedComment = commentService.createComment(commentDTO);
 
@@ -60,6 +68,11 @@ public class CommentController {
     public String updateComment(@RequestParam("commentId") int commentId,
                                 @RequestParam("content") String content,
                                 @RequestParam("itemCode") String itemCode) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/member/login"; // 로그인 페이지로 리디렉션
+        }
+
         CommentDTO commentDTO = commentService.findCommentById(commentId).orElseThrow();
         commentDTO.setContent(content);
         commentService.updateComment(commentDTO);
@@ -68,8 +81,15 @@ public class CommentController {
 
     @PostMapping("/delete")
     public String deleteComment(@RequestParam("commentId") int commentId,
-                                @RequestParam("itemCode") String itemCode) {
+                                @RequestParam("itemCode") String itemCode,
+                                @RequestParam(value = "_csrf", required = false) String csrfToken) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/member/login"; // 로그인 페이지로 리디렉션
+        }
+
         commentService.deleteComment(commentId);
+
         return "redirect:/products/detail/" + itemCode;
     }
 
@@ -81,4 +101,3 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 }
-
