@@ -64,6 +64,7 @@
                               onsubmit="return confirm('댓글을 지우시겠습니까?');">
                             <input type="hidden" name="commentId" th:value="${comment.commentId}">
                             <input type="hidden" name="itemCode" th:value="${productDTO.itemCode}">
+                            <input type="hidden" name="_csrf" value="${_csrf.token}"> <!-- CSRF 토큰 추가 -->
                             <button type="submit" class="btn btn-danger btn-sm">삭제</button>
                         </form>
                     </div>
@@ -101,6 +102,10 @@
     </div>
 </div>
 
+<!-- CSRF 토큰 메타 태그 추가 -->
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 <script>
     const currentUserId = "[[${userid}]]";
 
@@ -109,18 +114,22 @@
 
         const content = document.getElementById("content").value;
         const itemCode = document.getElementById("itemCode").value;
-        const userId = document.getElementById("userId").value;
+
+        // CSRF 토큰 설정
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
         // AJAX 요청
         fetch("/api/comments", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken  // CSRF 토큰 추가
             },
             body: JSON.stringify({
                 content: content,
-                itemCode: itemCode,
-                userId: userId
+                itemCode: itemCode
+                // userId는 세션에서 자동으로 가져옴
             })
         })
             .then(response => response.json())

@@ -61,15 +61,12 @@ public class ProductPageController {
 
         // SecurityContextHolder에서 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = null;
-        if (authentication != null && authentication.isAuthenticated()) {
-            userId = authentication.getName(); // 사용자 ID (이름)
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/member/login"; // 로그인하지 않은 경우 로그인 페이지로 리디렉션
         }
+        String userId = authentication.getName(); // 인증된 사용자 ID (예: email 또는 username)
 
-        Member member = null;
-        if (userId != null) {
-            member = memberService.getMemberById(userId).orElse(null);
-        }
+        Member member = memberService.getMemberById(userId).orElse(null);
 
         // 페이징된 결과 가져오기
         Page<ProductDTO> productsPage = productService.getPagedProducts(page, size);
@@ -93,11 +90,11 @@ public class ProductPageController {
     // 상품 등록 페이지
     @GetMapping("/products/add")
     public String showAddProductPage(Model model, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-
-        if (userId == null) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/member/login";  // 로그인 페이지로 리다이렉트
         }
+        String userId = authentication.getName();
 
         Member member = memberService.getMemberById(userId).orElse(null);
         if (member == null) {
@@ -110,7 +107,6 @@ public class ProductPageController {
         return "product/product-add";  // 상품 등록 페이지로 이동
     }
 
-    //
     @PostMapping("/products/add")
     public String addProduct(@ModelAttribute ProductDTO productDTO,
                              @RequestParam("uploadFile") MultipartFile multipartFile) {
@@ -127,7 +123,11 @@ public class ProductPageController {
     public String showProductDetailPage(Model model, @PathVariable("itemCode") String itemCode, HttpSession session) {
         System.out.println("받은 itemCode: " + itemCode);
 
-        String userId = (String) session.getAttribute("userId");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = null;
+        if (authentication != null && authentication.isAuthenticated()) {
+            userId = authentication.getName();
+        }
 
         ProductDTO productDTO = productService.getProductById(itemCode)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with itemCode: " + itemCode));
@@ -162,11 +162,11 @@ public class ProductPageController {
     // 상품 수정 페이지
     @GetMapping("/products/update/{itemCode}")
     public String showUpdateProductPage(Model model, @PathVariable("itemCode") String itemCode, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-
-        if (userId == null) {
-            return "redirect:/member/login";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/member/login";  // 로그인하지 않은 경우 로그인 페이지로 리디렉션
         }
+        String userId = authentication.getName();
 
         Member member = memberService.getMemberById(userId).orElse(null);
         if (member == null) {

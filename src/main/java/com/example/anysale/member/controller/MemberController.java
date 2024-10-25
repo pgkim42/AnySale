@@ -213,19 +213,27 @@ public class MemberController {
 
     // 회원 정보 수정
     @GetMapping("/member/modify")
-    public String modify(@RequestParam(name = "id") String id , Model model, HttpSession session) {
+    public String modify(@RequestParam(name = "id") String id, Model model) {
+        // SecurityContextHolder에서 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String userId = (String) session.getAttribute("userId");
+        // 인증 확인
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/member/login"; // 로그인하지 않은 경우 로그인 페이지로 리디렉션
+        }
 
-        MemberDTO memberDTO = memberService.memberInfo(id);
+        String userId = authentication.getName(); // 인증된 사용자 ID (예: email 또는 username)
 
+        // 현재 회원 정보 가져오기
+        MemberDTO memberDTO = memberService.memberInfo(userId);
+
+        // 회원 정보를 수정할 때 사용할 데이터 설정
         memberDTO.setName(memberDTO.getName());
 
         // 조회한 데이터를 화면에 전달
         model.addAttribute("memberDTO", memberDTO);
         model.addAttribute("userid", userId);
         return "/member/modify";
-        
     }
 
     @PostMapping("/member/modify")
