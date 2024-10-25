@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 public class ProductDTO {
     private String itemCode;
-    private String price;
+    private Long price;
     private String category;
     private String title;
     private String content;

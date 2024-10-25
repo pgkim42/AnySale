@@ -3,8 +3,6 @@
 <head>
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
   <meta charset="utf-8">
-  <meta name="_csrf" content="${_csrf.token}"/>
-  <meta name="_csrf_header" content="${_csrf.headerName}"/>
   <link rel="stylesheet" type="text/css" href="/css/login.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
@@ -55,31 +53,24 @@
         <div>
 
           <div class="input-group">
-            <input type="text" id="id" th:field="*{id}" class="form__input" placeholder="ID" required />
+            <input type="text" id="id" th:field="*{id}" class="form__input" required />
             <button type="button" onclick="checkId()" class="form__button button check">중복 체크</button>
             <br>
             <span id="idMessage" class="error-message"></span>
           </div>
 
-          <input type="password" id="password" th:field="*{password}" class="form__input" placeholder="Password" required />
+          <input type="password" id="password" th:field="*{password}" class="form__input" required />
           <br>
           <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
 
-          <input type="text" id="name" th:field="*{name}" class="form__input" placeholder="Name" required />
-          <br>
-          <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></span>
+          <input type="text" id="name" th:field="*{name}" class="form__input" readonly />
 
           <div class="input-group">
-            <input type="email" id="email" th:field="*{email}" class="form__input" placeholder="Email" required />
-            <button type="button" onclick="checkEmail()" class="form__button button check">중복 체크</button>
-            <br>
-            <span id="emailMessage" class="error-message"></span>
+            <input type="email" id="email" th:field="*{email}" class="form__input" readonly />
           </div>
 
-          <input type="text" id="phone" th:field="*{phone}" class="form__input" placeholder="phone" required />
+          <input type="text" id="phone" th:field="*{phone}" class="form__input" required />
           <br>
-          <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-message"></span>
-
 
         </div>
         <button type="submit" id="registerBtn" class="form__button button submit">회원 추가</button>
@@ -87,68 +78,29 @@
       </form>
   </div>
 </div>
+
 <script>
   function checkId() {
-    let id = document.getElementById("id").value;
-    if (!id) {
-      document.getElementById("idMessage").innerText = "아이디를 입력해주세요.";
-      return;
-    }
-
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", `/member/check-id/${id}`, true);
-    xhr.setRequestHeader("X-CSRF-Token", getCsrfToken());
+    var id = document.getElementById("id").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/member/check-id/" + encodeURIComponent(id), true);
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
-          let message = xhr.responseText;
+          var message = xhr.responseText;
           document.getElementById("idMessage").innerText = message;
           document.getElementById("registerBtn").disabled = message.includes("이미 사용 중인 아이디입니다.");
         } else {
-          document.getElementById("idMessage").innerText = "서버 오류 발생: " + xhr.status;
+          document.getElementById("idMessage").innerText = "아이디를 입력해주세요.";
         }
       }
     };
     xhr.send();
   }
 
-  function checkEmail() {
-    let email = document.getElementById("email").value;
-    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!email) {
-      document.getElementById("emailMessage").innerText = "이메일을 입력해주세요.";
-      return;
-    }
-
-    if (!emailPattern.test(email)) {
-      document.getElementById("emailMessage").innerText = "이메일 형식이 올바르지 않습니다.";
-      return;
-    }
-
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", `/member/check-email/${email}`, true);
-    xhr.setRequestHeader("X-CSRF-Token", getCsrfToken());
-
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          let message = xhr.responseText;
-          document.getElementById("emailMessage").innerText = message;
-          document.getElementById("registerBtn").disabled = message.includes("이미 사용 중인 이메일입니다.");
-        } else {
-          document.getElementById("emailMessage").innerText = "서버 오류 발생: " + xhr.status;
-        }
-      }
-    };
-    xhr.send();
-  }
-
-  function getCsrfToken() {
-    return document.querySelector('meta[name="_csrf"]').getAttribute('content');
-  }
 </script>
+
 
 </body>
 

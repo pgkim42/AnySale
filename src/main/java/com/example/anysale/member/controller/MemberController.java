@@ -2,44 +2,61 @@ package com.example.anysale.member.controller;
 
 import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
+import com.example.anysale.member.entity.MemberRole;
 import com.example.anysale.member.repository.MemberRepository;
 import com.example.anysale.member.service.MemberService;
+import com.example.anysale.security.dto.AuthMemberDTO;
+import com.example.anysale.security.service.MemberUserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 //@RestController
 //@RequestMapping("/api/members")
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class MemberController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final MemberUserDetailsService memberUserDetailsService;
 
     @GetMapping("/")
     public String index() {
-        return "memberhome";
+        return "main";
     }
 
+    // 마이페이지
     @GetMapping("/member/myPage")
-    public String myPage(Model model, HttpSession session) {
-        String userId = (String) session.getAttribute("userId"); // 세션에서 사용자 ID 가져오기
-
-        if (userId == null) {
+    public String myPage(Model model) {
+        // SecurityContextHolder에서 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/member/login"; // 로그인하지 않은 경우 로그인 페이지로 리디렉션
         }
+
+        // 사용자 ID 가져오기
+        String userId = authentication.getName(); // 인증된 사용자 ID (예: email 또는 username)
 
         // 현재 회원 정보 가져오기
         MemberDTO memberDTO = memberService.memberInfo(userId);
@@ -66,14 +83,47 @@ public class MemberController {
             return "/member/register"; // 오류가 있으면 폼으로 돌아감
         }
 
-        memberDTO.setRole("ROLE_USER"); // 기본 역할 설정
-        memberDTO.setScore(0.0); // 기본 점수 설정
+        // 이메일, 아이디 중복 체크
+        if (memberService.existByEmail(memberDTO.getEmail())) {
+            model.addAttribute("errorMessage", memberDTO.getEmail() + "는 사용 중인 이메일입니다.");
+            return "/member/register";
+        }
 
-        memberService.registerMember(memberDTO);
-        return "redirect:/member/login";
+        if (memberService.existById(memberDTO.getId())) {
+            model.addAttribute("errorMessage", memberDTO.getId() + "는 사용 중인 아이디입니다.");
+            return "/member/register";
+        }
+
+        // 비밀번호 인코딩은 ServiceImpl에서 처리함
+        Member member = memberService.dtoToEntity(memberDTO);
+
+        // 회원가입 처리
+        memberService.registerMember(member);
+
+        return "redirect:/"; // 로그인 후 메인 페이지로 리다이렉션
     }
 
-    // 로그인
+    @GetMapping("/member/check-id/{id}")
+    public ResponseEntity<String> checkId(@PathVariable String id) {
+        if (id == null || id.isEmpty()) {
+            return ResponseEntity.badRequest().body("아이디를 입력해주세요.");
+        }
+
+        boolean exists = memberService.existById(id);
+        return exists ? ResponseEntity.ok("이미 사용 중인 아이디입니다.") : ResponseEntity.ok("사용 가능한 아이디입니다.");
+    }
+
+    @GetMapping("/member/check-email/{email}")
+    public ResponseEntity<String> checkEmail(@PathVariable String email) {
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("이메일을 입력해주세요.");
+        }
+
+        boolean exists = memberService.existByEmail(email);
+        return exists ? ResponseEntity.ok("이미 사용 중인 이메일입니다.") : ResponseEntity.ok("사용 가능한 이메일입니다.");
+    }
+
+    // 로그인 폼 요청
     @GetMapping("/member/login")
     public String login() {
         return "/member/login";
@@ -82,24 +132,56 @@ public class MemberController {
     @PostMapping("/member/login")
     public String login(@RequestParam("id") String userId,
                         @RequestParam("password") String password,
-                        Model model,
-                        HttpSession session) {
+                        HttpSession session,
+                        Model model) {
+
         Member member = memberRepository.findById(userId).orElse(null);
 
-        // 사용자 존재 여부 및 비밀번호 확인
-        if (member != null && member.getPassword().equals(password)) {
-            session.setAttribute("userId", userId); // 세션에 사용자 ID 저장
+        if (member != null) {
+            // 비밀번호 확인
+            if (checkPassword(password, member.getPassword())) {
+                log.info("로그인 성공: {}", member.getId());
 
-            if ("ADMIN".equalsIgnoreCase(member.getId()) && member.getRole().equals("ROLE_ADMIN")) {
-                return "redirect:/member/adminPage";
+                // 사용자 권한 설정 (하나의 역할만 사용)
+                List<GrantedAuthority> authorities = Collections.singletonList(
+                        new SimpleGrantedAuthority(member.getRole().name())
+                );
+
+                // Spring Security를 이용한 인증 처리
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        member.getId(), // Principal: 사용자 ID
+                        null, // Credentials는 null로 설정
+                        authorities // 사용자 권한
+                );
+
+                // SecurityContextHolder에 인증 정보 저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // 세션에 사용자 ID 저장 (로그인 상태 유지)
+                session.setAttribute("userId", member.getId());
+
+                // 로그인 성공 시 사용자 권한 설정
+                if (member.getRole() == MemberRole.ROLE_ADMIN) {
+                    return "redirect:/member/adminPage"; // 관리자는 admin 페이지로
+                }
+                return "redirect:/products"; // 일반 사용자는 상품 페이지로 리다이렉션
+            } else {
+                log.warn("로그인 실패: 사용자 ID '{}'는 맞지만 비밀번호가 잘못되었습니다.", userId);
             }
-            return "redirect:/products"; // 로그인 성공 시 리디렉션
+        } else {
+            log.warn("로그인 실패: 사용자 ID '{}'가 존재하지 않습니다.", userId);
         }
 
-        // 실패 시 오류 메시지 추가
+        // 로그인 실패 시 오류 메시지 추가
         model.addAttribute("errorMessage", "ID 또는 비밀번호가 잘못되었습니다.");
         return "/member/login"; // 로그인 페이지로 돌아감
     }
+
+    // 비밀번호 검사
+    private boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
 
     // 어드민 페이지 이동
     @GetMapping("/member/adminPage")
@@ -113,7 +195,7 @@ public class MemberController {
         boolean isModified = session.getAttribute("isModified") != null; // 플래그 확인
         session.invalidate();
         if(isModified) {
-            redirectAttributes.addFlashAttribute("successMessage", "회원 수정이 완료되었습니다. 다시 로그인해주세요.");
+            redirectAttributes.addFlashAttribute("successMessage", "회원 수정이 완료되었습니다. <br> 다시 로그인해주세요.");
             return "redirect:/member/login";
         }
         return "redirect:/products"; // 제품 페이지로 리다이렉션
@@ -131,19 +213,27 @@ public class MemberController {
 
     // 회원 정보 수정
     @GetMapping("/member/modify")
-    public String modify(@RequestParam(name = "id") String id , Model model, HttpSession session) {
+    public String modify(@RequestParam(name = "id") String id, Model model) {
+        // SecurityContextHolder에서 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String userId = (String) session.getAttribute("userId");
+        // 인증 확인
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/member/login"; // 로그인하지 않은 경우 로그인 페이지로 리디렉션
+        }
 
-        MemberDTO memberDTO = memberService.memberInfo(id);
+        String userId = authentication.getName(); // 인증된 사용자 ID (예: email 또는 username)
 
+        // 현재 회원 정보 가져오기
+        MemberDTO memberDTO = memberService.memberInfo(userId);
+
+        // 회원 정보를 수정할 때 사용할 데이터 설정
         memberDTO.setName(memberDTO.getName());
 
         // 조회한 데이터를 화면에 전달
         model.addAttribute("memberDTO", memberDTO);
         model.addAttribute("userid", userId);
         return "/member/modify";
-        
     }
 
     @PostMapping("/member/modify")
@@ -185,9 +275,8 @@ public class MemberController {
         model.addAttribute("member", new Member());
 
         if(memberId.isPresent()){
-            model.addAttribute("memberId", memberId.get());
-            System.out.println("memberId : " + memberId.get());
-            return "/member/searchIdResult";
+            model.addAttribute("successMessage", "아이디는 " +memberId.get() + "입니다.");
+            return "/member/searchId";
         } else {
             model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
             return "/member/searchId";
@@ -199,65 +288,52 @@ public class MemberController {
     public String searchPw(@RequestParam(value = "id", required = false, defaultValue = "") String id,
                                             @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                             @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
+        Optional<String> memberId = memberService.searchById(name, email);
         Optional<String> memberPw = memberService.searchByPw(id, name, email);
 
         model.addAttribute("member", new Member());
 
-        if(memberPw.isPresent()){
-            model.addAttribute("memberPw", memberPw.get());
-            System.out.println("memberPw : " + memberPw.get());
-            return "/member/searchIdResult";
+        if(memberPw.isPresent() && memberId.isPresent()){
+            model.addAttribute("successMessage", memberId.get() + " 님의 <br> 비밀번호는 : " + memberPw.get() + "입니다.");
+            return "/member/searchPw";
         } else {
             model.addAttribute("errorMessage", "일치하는 회원이 없습니다.");
-            return "/member/searchId";
+            return "/member/searchPw";
         }
     }
 
+// ====================================================================================================================================================================================
 
+    // 소셜 회원 관련 내용
 
-//    @Autowired
-//    private MemberService memberService;
-//
-//    // 모든 회원 조회
-//    @GetMapping
-//    public ResponseEntity<List<Member>> getAllMembers() {
-//        List<Member> members = memberService.getAllMembers();
-//        return new ResponseEntity<>(members, HttpStatus.OK);
-//    }
-//
-//    // 특정 회원 조회
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Member> getMemberById(@PathVariable String id) {
-//        Optional<Member> member = memberService.getMemberById(id);
-//        if (member.isPresent()) {
-//            return new ResponseEntity<>(member.get(), HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
-//    // 회원 등록
-//    @PostMapping
-//    public ResponseEntity<Member> createMember(@RequestBody Member member) {
-//        Member createdMember = memberService.saveMember(member);
-//        return new ResponseEntity<>(createdMember, HttpStatus.CREATED);
-//    }
-//
-//    // 회원 정보 수정
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Member> updateMember(@PathVariable String id, @RequestBody Member updatedMember) {
-//        try {
-//            Member member = memberService.updateMember(id, updatedMember);
-//            return new ResponseEntity<>(member, HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
-//    // 회원 삭제
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteMember(@PathVariable String id) {
-//        memberService.deleteMember(id);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    // 소셜 수정페이지
+    @GetMapping("/member/social/socialModify")
+    public String showModifyPage(Authentication authentication, Model model) {
+        AuthMemberDTO authMember = (AuthMemberDTO) authentication.getPrincipal();
+        model.addAttribute("member", authMember);
+
+        Member member = memberRepository.findByEmail(authMember.getEmail(),true)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+        model.addAttribute("member", member);
+        return "member/social/socialModify";
+    }
+
+    // 수정
+    @PostMapping("/member/social/socialUpdate")
+    public String updateMember(Authentication authentication, String name, String password) {
+        AuthMemberDTO authMember = (AuthMemberDTO) authentication.getPrincipal();
+        Member member = memberRepository.findByEmail(authMember.getEmail(), true).orElseThrow();
+
+        // 이름 수정
+        member.setName(name);
+
+        // 비밀번호 수정
+        if (password != null && !password.isEmpty()) {
+            member.setPassword(passwordEncoder.encode(password));
+        }
+
+        memberRepository.save(member);
+        return "redirect:/member/logout"; // 수정 완료 후 리다이렉트
+    }
 }

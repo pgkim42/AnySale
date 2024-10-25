@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface MemberService {
 
-    // 회원가입
-    Member registerMember(MemberDTO memberDTO);
+    // 회원가입 (MemberDTO를 받아서 처리)
+    Member registerMember(Member memberDTO);
 
     // 회원 정보 수정
     void modifyMember(MemberDTO memberDTO);
@@ -32,8 +32,27 @@ public interface MemberService {
     // 비밀번호 찾기
     Optional<String> searchByPw(String id, String name, String email);
 
+    // 아이디 중복 체크
+    boolean existById(String id);
 
-    // 엔티티를 DTO로 변환
+    // 이메일 중복 체크
+    boolean existByEmail(String email);
+
+    // DTO에서 엔티티로 변환
+    default Member dtoToEntity(MemberDTO memberDTO) {
+        return Member.builder()
+                .id(memberDTO.getId())
+                .password(memberDTO.getPassword())
+                .name(memberDTO.getName())
+                .email(memberDTO.getEmail())
+                .phone(memberDTO.getPhone())
+                .profilePhotoUrl(memberDTO.getProfilePhotoUrl())
+                .role(memberDTO.getRole())
+                .score(memberDTO.getScore())
+                .build();
+    }
+
+    // 엔티티에서 DTO로 변환
     default MemberDTO entityToDto(Member entity) {
         return MemberDTO.builder()
                 .id(entity.getId())
@@ -42,26 +61,8 @@ public interface MemberService {
                 .email(entity.getEmail())
                 .phone(entity.getPhone())
                 .role(entity.getRole())
-                .score(entity.getScore())
                 .profilePhotoUrl(entity.getProfilePhotoUrl())
-                .createDate(entity.getCreateDate())
-                .updateDate(entity.getUpdateDate())
+                .score(entity.getScore())
                 .build();
     }
-
-
-
-
-//    List<Member> getAllMembers();
-//
-//    Optional<Member> getMemberById(String id);
-//
-//    Member saveMember(Member member);
-//
-//    void deleteMember(String id);
-//
-//    Member updateMember(String id, Member updatedMember);
-//
-//    boolean login(String id, String password);
 }
-
