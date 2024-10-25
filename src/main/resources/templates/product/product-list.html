@@ -73,8 +73,7 @@
         fetch(`/products/searchAjax?searchType=${searchType}&keyword=${keyword}&page=${page}&size=20`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);  // 상품 데이터를 콘솔에 출력
-                updateProductList(data.content);  // 제품 목록 업데이트
+                updateProductList(data.content);
                 updatePagination(data);          // 페이지네이션 업데이트
             })
             .catch(error => console.error('Error:', error));
@@ -86,29 +85,34 @@
         productList.innerHTML = '';  // 기존 목록 제거
 
         products.forEach(product => {
+
+            const formattedPrice = new Intl.NumberFormat('ko-KR').format(product.price) + ' 원';
+
             const productCard = `
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <img class="card-img-top" src="/uploadfile/${product.imageUrl}" alt="상품이미지"/>
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <h5 class="fw-bolder">${product.title}</h5>
-                                <p class="text-muted mb-0">${product.category}</p>
-                                <p>${product.content}</p>
-                                <span>${product.price}</span>
-                            </div>
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <img class="card-img-top p-1" src="/uploadfile/${product.imageUrl}" alt="상품이미지" onerror="this.src='/uploadfile/default-image.png';" />
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder">${product.title}</h5>
+                            <p class="text-muted mb-0">${product.category}</p>
+                            <p>${product.content}</p>
+                            <span>${formattedPrice}</span>
                         </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center">
-                                <a class="btn btn-outline-dark mt-auto" href="/products/detail/${product.itemCode}">${product.itemCode} 자세히 보기</a>
-                            </div>
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" href="/products/detail/${product.itemCode}">자세히 보기</a>
                         </div>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
             productList.insertAdjacentHTML('beforeend', productCard);  // 새 제품 카드 추가
         });
     }
+
+
 
     // 페이지네이션을 업데이트하는 함수
     function updatePagination(pageData) {
