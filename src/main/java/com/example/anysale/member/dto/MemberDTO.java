@@ -1,5 +1,6 @@
 package com.example.anysale.member.dto;
 
+import com.example.anysale.member.entity.MemberRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -32,7 +33,7 @@ public class MemberDTO {
     @NotBlank(message = "전화번호는 필수 입력 값입니다.")
     private String phone;
 
-    private String role;
+    private MemberRole role;
 
     private double score;
 
@@ -41,7 +42,5 @@ public class MemberDTO {
     private LocalDateTime createDate;
 
     private LocalDateTime updateDate;
-
-
 }
 
