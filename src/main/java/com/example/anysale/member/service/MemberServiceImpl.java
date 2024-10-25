@@ -58,11 +58,11 @@ public class MemberServiceImpl implements MemberService {
             Member memberEntity = memberOpt.get();
 
             // 각각 이메일, 패스워드, 핸드폰번호 하나씩 바꿀 수 있게 로직변경
-
-            if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()){
-                memberEntity.setPassword(memberDTO.getPassword());
+            if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()) {
+                // 패스워드를 암호화하여 설정
+                memberEntity.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
             }
-            if (memberDTO.getEmail() != null && !memberDTO.getEmail().isEmpty()){
+            if (memberDTO.getEmail() != null && !memberDTO.getEmail().isEmpty()) {
                 memberEntity.setEmail(memberDTO.getEmail());
             }
             if (memberDTO.getPhone() != null && !memberDTO.getPhone().isEmpty()) {
