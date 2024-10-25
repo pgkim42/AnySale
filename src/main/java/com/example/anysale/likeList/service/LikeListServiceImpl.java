@@ -3,6 +3,8 @@ package com.example.anysale.likeList.service;
 import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.repository.LikeListRepository;
+import com.example.anysale.product.entity.Product;
+import com.example.anysale.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +16,20 @@ import java.util.stream.Collectors;
 public class LikeListServiceImpl implements LikeListService {
 
   private final LikeListRepository likeListRepository;
+  private final ProductRepository productRepository;
 
   @Autowired
-  public LikeListServiceImpl(LikeListRepository likeListRepository) {
+  public LikeListServiceImpl(LikeListRepository likeListRepository, ProductRepository productRepository) {
     this.likeListRepository = likeListRepository;
+    this.productRepository = productRepository;
   }
 
-  // 찜 목록에 상품추가
+  // 찜 목록에 상품 추가
   @Override
   public LikeList addLikeList(LikeList likeList) {
     return likeListRepository.save(likeList);
   }
+
 
   // 회원의 찜목록 조회
   @Override

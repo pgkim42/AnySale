@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -56,7 +58,16 @@ public class SecurityConfig {
                     rem.rememberMeParameter("remember");
                     rem.tokenValiditySeconds(60 * 60 * 24 * 7);
                     rem.userDetailsService(memberUserDetailsService);
-                });
+                })
+
+                // CSRF 설정 추가
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())  // 기본 세션 저장 방식으로 변경
+                        .ignoringRequestMatchers(
+                                "/member/check-id/**",
+                                "/member/check-email/**"
+                        )
+                );
 
         return http.build();
     }
