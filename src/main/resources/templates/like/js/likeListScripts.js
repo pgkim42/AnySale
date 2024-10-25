@@ -1,3 +1,31 @@
+function bookmark() {
+    const likeList = {
+        itemCode: YO5AFY30Z92QFX,
+        memberId: a
+    };
+
+    fetch('/likeList', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(likeList),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                alert('찜 목록에 추가되었습니다.');
+            } else {
+                alert('찜 목록 추가에 실패했습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('오류가 발생했습니다.');
+        });
+}
+
+
 /*
 fetch(`/likeList/list?memberId=${memberId}`)
     .then(response => {

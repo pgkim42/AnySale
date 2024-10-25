@@ -145,11 +145,11 @@ public class LikeListRepositoryTest {
   void 찜상품등록() {
 
     Member member1 = Member.builder()
-        .id("aa")
+        .id("a")
         .build();
 
     Product product1 = Product.builder()
-        .itemCode("ITEM001")
+        .itemCode("YO5AFY30Z92QFX")
         .build();
 
     LikeList likeList1 = LikeList.builder()
@@ -157,31 +157,31 @@ public class LikeListRepositoryTest {
         .product(product1)
         .build();
 
-    Member member2 = Member.builder()
-            .id("user2")
-                .build();
-
-    Product product2 = Product.builder()
-            .itemCode("ITEM002")
-                .build();
-
-    LikeList likeList2 = LikeList.builder()
-            .member(member1)
-                .product(product2)
-                        .build();
-
-    Member member3 = Member.builder()
-        .id("user2")
-        .build();
-
-    Product product3 = Product.builder()
-        .itemCode("ITEM001")
-        .build();
-
-    LikeList likeList3 = LikeList.builder()
-        .member(member1)
-        .product(product3)
-        .build();
+//    Member member2 = Member.builder()
+//            .id("user2")
+//                .build();
+//
+//    Product product2 = Product.builder()
+//            .itemCode("ITEM002")
+//                .build();
+//
+//    LikeList likeList2 = LikeList.builder()
+//            .member(member1)
+//                .product(product2)
+//                        .build();
+//
+//    Member member3 = Member.builder()
+//        .id("user2")
+//        .build();
+//
+//    Product product3 = Product.builder()
+//        .itemCode("ITEM001")
+//        .build();
+//
+//    LikeList likeList3 = LikeList.builder()
+//        .member(member1)
+//        .product(product3)
+//        .build();
 
 //    Member member4 = Member.builder()
 //            .id("user1")
@@ -197,8 +197,8 @@ public class LikeListRepositoryTest {
 //                        .build();
 
     likeListRepository.save(likeList1);
-    likeListRepository.save(likeList2);
-    likeListRepository.save(likeList3);
+//    likeListRepository.save(likeList2);
+//    likeListRepository.save(likeList3);
 //    likeListRepository.save(likeList4);
   }
 

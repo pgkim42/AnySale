@@ -23,6 +23,7 @@ public class LikeList extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "item_code", referencedColumnName = "itemCode")  // 'Product' 엔티티와 다대일 관계, 외래키로 'item_code'를 명시적으로 지정
   private Product product;  // 찜한 상품과의 연관 관계
+// 리스트???
 
   @ManyToOne
   @JoinColumn(name = "member_id", referencedColumnName = "id")  // 'Member' 엔티티와 다대일 관계, 외래키로 'member_id'를 명시적으로 지정

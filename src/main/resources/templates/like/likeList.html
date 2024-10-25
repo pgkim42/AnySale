@@ -4,104 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관심목록</title>
-    <!-- <link rel="stylesheet" href="css/likeListStyle.css"> -->
+    <link rel="stylesheet" href="css/likeListStyle.css">
 </head>
 <body>
 
-    <h1>관심목록</h1>
+<h1>관심목록</h1>
 
-    <div class="filter-buttons">
-        <button>전체</button>
-        <button>중고거래</button>
-        <button>동네홍보</button>
-        <button>부동산</button>
-        <button>알바</button>
-    </div>
+<div class="filter-buttons">
+    <button>전체</button>
+    <button>중고거래</button>
+    <button>동네홍보</button>
+    <button>부동산</button>
+    <button>알바</button>
+</div>
 
-    <div class="product-list">
+<div id="like-list-container">
+    <table>
+        <thead>
+        <tr>
+            <th>상품 코드</th>
+            <th>상품명</th>
+            <th>작업</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 여기에 찜 목록 데이터가 동적으로 들어옵니다 -->
+        <tr th:each="item : ${likeList}">
 
-            <div class="div-temp1">
-                    <h2 th:text="${title}"></h2>
-<!--
-                <div class="product-item">
-                <img src="@{${item.imageUrl}}" alt="상품이미지">
-                <div class="product-info">
+            [[${item}]]
 
-                <p th:text="${item.location}">주소명</p>
-                <p th:text="${item.category}">카테고리명</p>
-                <span class="product-price" th:text="${item.price}">금액</span>
-                </div>
+            <td th:text="${item.itemCode}">상품 코드</td>
+            <td th:text="${item.title}">상품명</td> <!-- 상품명 표시 -->
+            <td>
+                <button onclick="removeLikeList(${item.id})">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-                <div class="div-temp2">
-                    <form method="post" th:action="@{/likeList/remove/{id}(id=${item.id})}">
-                        <button class="like-button" type="submit">
-                            <img src="assets/icon/heart.gif" alt="찜하기">
-                        </button>
-                    </form>
-                </div>
+<!-- 상품 정보 표시 영역 -->
+<div th:if="${product != null}">
+    <h2>상품 정보</h2>
+    <p>상품 코드: <span th:text="${product.itemCode}"></span></p>
+    <p>상품명: <span th:text="${product.title}"></span></p>
+    <p>상세 설명: <span th:text="${product.description}"></span></p> <!-- 필요에 따라 추가 -->
+</div>
 
-                </div>-->
-            </div>
-
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const memberId = 'user1';  // 실제 멤버 ID로 변경
-            fetch(`/likeList/list?memberId=${memberId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const productList = document.querySelector('.product-list');
-                    productList.innerHTML = ''; // 기존 내용을 초기화
-                    data.forEach(item => {
-                        const productItem = document.createElement('div');
-                        productItem.classList.add('product-item');
-                        productItem.innerHTML = `
-                    <img src="assets/item/johwan.jpg" alt="상품 이미지">
-                    <div class="product-info">
-                        <div class="div-temp1">
-                            <h2>${item.itemCode}</h2>
-                            <p>상품 설명</p>
-                            <span class="product-price">가격 정보</span>
-                        </div>
-                        <div class="div-temp2">
-                            <button class="like-button" onclick="removeLikeList(${item.itemCode})">
-                                <img src="assets/icon/heart.gif" alt="찜하기">
-                            </button>
-                        </div>
-                    </div>
-                `;
-                        productList.appendChild(productItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-        });
-
-        // 찜 목록에서 상품 제거
-        function removeLikeList(likeListId) {
-            fetch(`/likeList/${likeListId}`, {
-                method: 'DELETE'
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const memberId = 'user1';  // 실제 멤버 ID로 변경
+        fetch(`/likeList/list/${memberId}`) // 경로 수정
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
             })
-                .then(response => {
-                    if (response.ok) {
-                        alert('상품이 찜 목록에서 제거되었습니다.');
-                        location.reload(); // 페이지 새로고침
-                    } else {
-                        alert('상품 제거에 실패했습니다.');
-                    }
-                })
-                .catch(error => {
-                    console.error('There was a problem with the delete operation:', error);
+            .then(data => {
+                const likeListContainer = document.querySelector('#like-list-container tbody');
+                likeListContainer.innerHTML = ''; // 기존 내용을 초기화
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.itemCode}</td>
+                        <td>${item.title}</td>
+                        <td>
+                            <button onclick="removeLikeList(${item.id})">삭제</button>
+                        </td>
+                    `;
+                    likeListContainer.appendChild(row);
                 });
-        }
-    </script>
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+
+    // 찜 목록에서 상품 제거
+    function removeLikeList(likeListId) {
+        fetch(`/likeList/${likeListId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('상품이 찜 목록에서 제거되었습니다.');
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    alert('상품 제거에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the delete operation:', error);
+            });
+    }
+</script>
 
 
 </body>
