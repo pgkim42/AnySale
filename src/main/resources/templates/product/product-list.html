@@ -31,38 +31,35 @@
 
 <!-- Search form -->
 <div class="container">
-    <form th:action="@{/products/search}" method="get" class="mb-4">
-        <div class="row justify-content-center">
-
-            <div class="col-lg-3 col-md-4">
-                <select class="form-select" name="searchType" id="searchType" onchange="toggleSearchInput()">
-                    <option value="title" th:selected="${searchType == 'title'}">제목</option>
-                    <option value="category" th:selected="${searchType == 'category'}">카테고리</option>
-                </select>
-            </div>
-
-            <!-- 제목 검색 필드 -->
-            <div class="col-md-5" id="keywordInput">
-                <input type="text" class="form-control" name="titleKeyword" placeholder="검색어를 입력하세요"
-                       th:value="${keyword}"/>
-            </div>
-
-            <!-- 카테고리 검색 드롭다운 -->
-            <div class="col-md-5" id="categoryInput" style="display: none;">
-                <select class="form-select" name="categoryKeyword">
-                    <option value="의류" th:selected="${keyword == '의류'}">의류</option>
-                    <option value="도서" th:selected="${keyword == '도서'}">도서</option>
-                    <option value="전자제품" th:selected="${keyword == '전자제품'}">전자제품</option>
-                </select>
-            </div>
-
-            <!-- Search Button -->
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">검색</button>
-            </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-3 col-md-4">
+            <select class="form-select" name="searchType" id="searchType" onchange="toggleSearchInput()">
+                <option value="title">제목</option>
+                <option value="category">카테고리</option>
+            </select>
         </div>
-    </form>
+
+        <!-- 제목 검색 필드 -->
+        <div class="col-md-5" id="keywordInput">
+            <input type="text" class="form-control" id="titleKeyword" placeholder="검색어를 입력하세요"/>
+        </div>
+
+        <!-- 카테고리 검색 드롭다운 -->
+        <div class="col-md-5" id="categoryInput" style="display: none;">
+            <select class="form-select" id="categoryKeyword">
+                <option value="의류">의류</option>
+                <option value="도서">도서</option>
+                <option value="전자제품">전자제품</option>
+            </select>
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary w-100" onclick="searchProducts(0)">검색</button>
+        </div>
+    </div>
 </div>
+
 
 <script type="text/javascript">
     // 페이지네이션 버튼 클릭 시 Ajax로 데이터 요청
@@ -79,13 +76,28 @@
             .catch(error => console.error('Error:', error));
     }
 
+    // 검색 버튼 클릭 시 Ajax로 데이터 요청
+    function searchProducts(page) {
+        const searchType = document.getElementById('searchType').value;
+        const keyword = searchType === 'title'
+            ? document.getElementById('titleKeyword').value
+            : document.getElementById('categoryKeyword').value;
+
+        fetch(`/products/searchAjax?searchType=${searchType}&keyword=${keyword}&page=${page}&size=20`)
+            .then(response => response.json())
+            .then(data => {
+                updateProductList(data.content);   // 제품 목록 업데이트
+                updatePagination(data);            // 페이지네이션 업데이트
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
     // 제품 목록을 업데이트하는 함수
     function updateProductList(products) {
         const productList = document.getElementById('productList');
         productList.innerHTML = '';  // 기존 목록 제거
 
         products.forEach(product => {
-
             const formattedPrice = new Intl.NumberFormat('ko-KR').format(product.price) + ' 원';
 
             const productCard = `
@@ -112,8 +124,6 @@
         });
     }
 
-
-
     // 페이지네이션을 업데이트하는 함수
     function updatePagination(pageData) {
         const pagination = document.getElementById('pagination');
@@ -121,26 +131,33 @@
 
         // 이전 버튼
         if (pageData.number > 0) {
-            pagination.insertAdjacentHTML('beforeend', `<li class="page-item"><a class="page-link" href="#" onclick="loadProducts(${pageData.number - 1}); return false;">Previous</a></li>`);
+            pagination.insertAdjacentHTML('beforeend', `<li class="page-item"><a class="page-link" href="#" onclick="event.preventDefault(); searchProducts(${pageData.number - 1});">Previous</a></li>`);
         }
 
         // 페이지 번호 버튼들
         for (let i = 0; i < pageData.totalPages; i++) {
             const activeClass = i === pageData.number ? 'active' : '';
-            pagination.insertAdjacentHTML('beforeend', `<li class="page-item ${activeClass}"><a class="page-link" href="#" onclick="loadProducts(${i}); return false;">${i + 1}</a></li>`);
+            pagination.insertAdjacentHTML('beforeend', `<li class="page-item ${activeClass}"><a class="page-link" href="#" onclick="searchProducts(${i}); return false;">${i + 1}</a></li>`);
         }
 
         // 다음 버튼
         if (pageData.number < pageData.totalPages - 1) {
-            pagination.insertAdjacentHTML('beforeend', `<li class="page-item"><a class="page-link" href="#" onclick="loadProducts(${pageData.number + 1}); return false;">Next</a></li>`);
+            pagination.insertAdjacentHTML('beforeend', `<li class="page-item"><a class="page-link" href="#" onclick="searchProducts(${pageData.number + 1}); return false;">Next</a></li>`);
         }
     }
 
+    document.getElementById('titleKeyword').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // 기본 Enter 키 동작 방지
+            searchProducts(0);      // 첫 페이지부터 검색
+        }
+    });
+
     // 검색 필드의 입력 타입을 토글하는 함수
     function toggleSearchInput() {
-        let searchType = document.getElementById('searchType').value;
-        let keywordInput = document.getElementById('keywordInput');
-        let categoryInput = document.getElementById('categoryInput');
+        const searchType = document.getElementById('searchType').value;
+        const keywordInput = document.getElementById('keywordInput');
+        const categoryInput = document.getElementById('categoryInput');
 
         if (searchType === 'category') {
             keywordInput.style.display = 'none';
@@ -153,9 +170,10 @@
 
     // 페이지가 로드될 때 처음 목록을 가져옴
     document.addEventListener("DOMContentLoaded", function () {
-        loadProducts(0);  // 첫 번째 페이지 로드
-        toggleSearchInput();  // 페이지 로드 후 상태에 맞게 설정
+        searchProducts(0);             // 첫 번째 페이지 로드
+        toggleSearchInput();            // 페이지 로드 후 상태에 맞게 설정
     });
+
 
 </script>
 

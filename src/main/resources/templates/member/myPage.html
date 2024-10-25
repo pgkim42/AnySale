@@ -1,44 +1,140 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{layout/fragments/header :: headerFragment}"></th:block>
- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Page</title>
+  <style>
+    /* Reset CSS */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<body class="bg-light">
-<div class="container mt-5">
-  <h2 class="text-center">마이페이지</h2>
+    /* Body styling */
+    body {
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #4a4a4a;
+    }
 
-  <div class="card mb-4">
-    <div class="card-body">
-      <h5 class="card-title">회원 정보</h5>
-      <p class="card-text">아이디: <span th:text="${member.id}"></span></p>
-      <p class="card-text">비밀번호: <span th:text="${member.password}"></span></p>
-      <p class="card-text">이름: <span th:text="${member.name}"></span></p>
-      <p class="card-text">이메일: <span th:text="${member.email}"></span></p>
-      <p class="card-text">전화번호: <span th:text="${member.phone}"></span></p>
-      <p class="card-text">역할: <span th:text="${member.role}"></span></p>
-      <p class="card-text">평점: <span th:text="${member.score}"></span></p>
-    </div>
+    /* Main container */
+    .container {
+      background-color: #ffffff;
+      width: 90%;
+      max-width: 600px;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Header */
+    h2 {
+      font-size: 1.8rem;
+      color: #333333;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Card for member info */
+    .card {
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      color: #555555;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.6;
+    }
+
+    /* Button styling */
+    .btn {
+      display: inline-block;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      color: #4a4a4a;
+      background: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    .btn-danger {
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+
+    .btn-danger:hover {
+      background-color: #f8e0e0;
+    }
+
+    .btn-primary {
+      border-color: #3498db;
+      color: #3498db;
+      margin-right: 10px;
+    }
+
+    .btn-primary:hover {
+      background-color: #eaf2fb;
+    }
+
+    /* Button row */
+    .button-row {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h2>마이페이지</h2>
+
+  <div class="card">
+    <h5 class="card-title">회원 정보</h5>
+    <p class="card-text">아이디: <span th:text="${member.id}">sample_id</span></p>
+    <p class="card-text">이름: <span th:text="${member.name}">홍길동</span></p>
+    <p class="card-text">이메일: <span th:text="${member.email}">hong@example.com</span></p>
+    <p class="card-text">전화번호: <span th:text="${member.phone}">010-1234-5678</span></p>
+    <p class="card-text">평점: <span th:text="${member.score}">5.0</span></p>
   </div>
 
-    <form action="/member/remove" method="post" onsubmit="return confirm('정말로 회원 탈퇴하시겠습니까?');">
-      <input type="hidden" name="id" th:value="${member.id}" />
-      <button type="submit" class="btn btn-danger">회원 탈퇴</button>
-    </form>
-      <br>
-
-    <form>
-      <a class="btn btn-primary" href="/products">Home</a>
-    </form>
-
-  <form>
-    <a th:href="@{/member/modify(id=${member.id})}" class="btn btn-secondary">수정</a>
+  <!-- Delete form -->
+  <form action="/member/remove" method="post" onsubmit="return confirm('정말로 회원 탈퇴하시겠습니까?');">
+    <input type="hidden" name="id" th:value="${member.id}" />
+    <button type="submit" class="btn btn-danger">회원 탈퇴</button>
   </form>
+
+  <!-- Button row with navigation buttons -->
+  <div class="button-row">
+    <a class="btn btn-primary" href="/products">Home</a>
+    <a th:href="@{/member/modify(id=${member.id})}" class="btn">수정</a>
+  </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
-
 </html>
