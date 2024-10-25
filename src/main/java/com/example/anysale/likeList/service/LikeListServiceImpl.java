@@ -3,13 +3,11 @@ package com.example.anysale.likeList.service;
 import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.repository.LikeListRepository;
-import com.example.anysale.member.entity.Member;
-import com.example.anysale.product.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,19 +31,18 @@ public class LikeListServiceImpl implements LikeListService {
   public List<LikeListDTO> getLikeList(String memberId) {
     List<LikeList> likeLists = likeListRepository.findByMemberId(memberId);
     return likeLists.stream()
-        .map(this::entityToDto)  //변환 메서드 사용?
+        .map(likeList -> new LikeListDTO(likeList.getProduct().getItemCode(), likeList.getMember().getId()))
         .collect(Collectors.toList());
   }
 
   // 찜목록에서 특정상품 제거
   @Override
   public LikeList removeLikeList(int likeListId) {
-    Optional<LikeList> likeListOpt = likeListRepository.findById(likeListId);
-    if (likeListOpt.isPresent()) {
-      likeListRepository.delete(likeListOpt.get());
-      return likeListOpt.get();  //삭제한 항목 반환?
+    LikeList likeList = likeListRepository.findById(likeListId).orElse(null);
+    if (likeList != null) {
+      likeListRepository.delete(likeList);
     }
-    return null;  //항목이 없을 경우 null 반환(예외 처리도 고려)?
+    return likeList;
   }
 
   // 찜목록에서 모든 상품 제거
@@ -53,27 +50,5 @@ public class LikeListServiceImpl implements LikeListService {
   public void removeAllLikeList(String memberId) {
     List<LikeList> likeLists = likeListRepository.findByMemberId(memberId);
     likeLists.forEach(likeListRepository::delete);
-  }
-
-  // Entity -> DTO 변환
-  public LikeListDTO entityToDto(LikeList likeList) {
-    return new LikeListDTO(likeList.getProduct().getItemCode(), likeList.getMember().getId());
-  }
-
-  // DTO -> Entity 변환
-  public LikeList dtoToEntity(LikeListDTO dto) {
-
-    Product product = new Product();
-    product.setItemCode(dto.getItemCode());
-
-    Member member = new Member();
-    member.setId(dto.getMemberId());
-
-    LikeList entity = LikeList.builder()
-        .product(product)
-        .member(member)
-        .build();
-
-    return entity;
   }
 }

@@ -2,6 +2,7 @@ package com.example.anysale.comment.Controller;
 
 import com.example.anysale.comment.dto.CommentDTO;
 import com.example.anysale.comment.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,18 +81,38 @@ public class CommentController {
     }
 
     @PostMapping("/delete")
-    public String deleteComment(@RequestParam("commentId") int commentId,
-                                @RequestParam("itemCode") String itemCode,
-                                @RequestParam(value = "_csrf", required = false) String csrfToken) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/member/login"; // 로그인 페이지로 리디렉션
+    public ResponseEntity<Map<String, String>> deleteComment(@RequestBody Map<String, String> payload) {
+        String csrfToken = payload.get("_csrf");
+        System.out.println("csrfToken: " + csrfToken);
+
+        int commentId;
+        try {
+            commentId = Integer.parseInt(payload.get("commentId"));
+            System.out.println("commentId: " + commentId);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid commentId format");
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid commentId format");
+            return ResponseEntity.badRequest().body(errorResponse);
         }
 
+        String itemCode = payload.get("itemCode");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("redirect", "/member/login");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        // Comment 삭제 처리
         commentService.deleteComment(commentId);
 
-        return "redirect:/products/detail/" + itemCode;
+        Map<String, String> response = new HashMap<>();
+        response.put("redirect", "/products/detail/" + itemCode);
+        return ResponseEntity.ok(response);
     }
+
 
     // 특정 상품의 댓글 목록 조회
     @GetMapping("/item/{itemCode}")

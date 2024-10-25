@@ -24,9 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //@RestController
@@ -104,14 +102,16 @@ public class MemberController {
     }
 
     @GetMapping("/member/check-id/{id}")
-    public ResponseEntity<String> checkId(@PathVariable String id) {
+    @ResponseBody  // 문자열을 응답으로 보낼 수 있도록 추가
+    public String checkId(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
-            return ResponseEntity.badRequest().body("아이디를 입력해주세요.");
+            return "아이디를 입력해주세요.";
+        } else {
+            boolean exists = memberService.existById(id);
+            return exists ? "중복이에요" : "쓸수있어요";
         }
-
-        boolean exists = memberService.existById(id);
-        return exists ? ResponseEntity.ok("이미 사용 중인 아이디입니다.") : ResponseEntity.ok("사용 가능한 아이디입니다.");
     }
+
 
     @GetMapping("/member/check-email/{email}")
     public ResponseEntity<String> checkEmail(@PathVariable String email) {
