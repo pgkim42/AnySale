@@ -272,33 +272,6 @@
         window.location.href = `/products/update/${itemCode}`;
     });
 
-    // function confirmDelete() {
-    //     if (confirm("상품을 삭제하시겠습니까?")) {
-    //         const itemCode = document.querySelector('input[name="itemCode"]').value;
-    //
-    //         fetch(`/api/products/${itemCode}`, {
-    //             method: "DELETE"
-    //         })
-    //             .then(response => {
-    //                 if (response.ok) {
-    //                     alert("상품이 삭제되었습니다.");
-    //                     window.location.href = "/products"; // 삭제 후 목록 페이지로 이동
-    //                 } else {
-    //                     alert("삭제에 실패했습니다.");
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 console.error("Error:", error);
-    //                 alert("오류가 발생했습니다.");
-    //             });
-    //     }
-    // }
-    //
-    // function confirmUpdate() {
-    //     const itemCode = document.querySelector('input[name="itemCode"]').value;
-    //     window.location.href = `/products/update/${itemCode}`;
-    // }
-
     document.addEventListener('submit', function (event) {
         if (event.target.matches('form[action="/api/comments/delete"]')) {
             if (!confirm("댓글을 지우시겠습니까?")) {
