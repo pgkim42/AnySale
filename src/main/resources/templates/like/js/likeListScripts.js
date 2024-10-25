@@ -1,3 +1,4 @@
+/*
 fetch(`/likeList/list?memberId=${memberId}`)
     .then(response => {
         if (!response.ok) {
@@ -33,4 +34,4 @@ fetch(`/likeList/list?memberId=${memberId}`)
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
     });
-//
+//*/

@@ -151,10 +151,54 @@
         }
     }
 
+    // 찜 기능 처리 시작 !!!!
+    function getlikelist() {
+        const memberId = 'aa';  // 실제 멤버 ID로 변경
+        fetch(`/likeList/list?memberId=${memberId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const productList = document.querySelector('.product-list');
+                productList.innerHTML = ''; // 기존 내용을 초기화
+                data.forEach(item => {
+                    const productItem = document.createElement('div');
+                    productItem.classList.add('product-item');
+                    productItem.innerHTML = `
+                    <img src="assets/item/johwan.jpg" alt="상품 이미지">
+                    <div class="product-info">
+                        <div class="div-temp1">
+                            <h2>${item.itemCode}</h2>
+                            <p>상품 설명</p>
+                            <span class="product-price">가격 정보</span>
+                        </div>
+                        <div class="div-temp2">
+                            <button class="like-button" onclick="removeLikeList(${item.itemCode})">
+                                <img src="assets/icon/heart.gif" alt="찜하기">
+                            </button>
+                        </div>
+                    </div>
+                `;
+                    productList.appendChild(productItem);
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+
+    // 찜 기능 처리 끝 !!!!
+
     // 페이지가 로드될 때 처음 목록을 가져옴
     document.addEventListener("DOMContentLoaded", function () {
         loadProducts(0);  // 첫 번째 페이지 로드
         toggleSearchInput();  // 페이지 로드 후 상태에 맞게 설정
+
+        //찜 처리
+        getlikelist();
     });
 
 </script>

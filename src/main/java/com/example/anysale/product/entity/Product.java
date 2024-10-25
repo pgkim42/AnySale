@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class Product extends BaseEntity {
 
     @Id
-    @Column(name = "item_code")
+//    @Column(name = "item_code")
     private String itemCode;
 
     @Column(nullable = false)
@@ -52,5 +52,6 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private String userId;
+
 }
 

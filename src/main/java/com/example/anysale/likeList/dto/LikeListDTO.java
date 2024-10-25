@@ -12,19 +12,31 @@ import java.time.LocalDateTime;
 @Builder
 public class LikeListDTO {
 
-  private String itemCode;          //상품 코드, 찜한 상품의 고유 코드
-  private String memberId;          //멤버아이디, 찜한 회원의 ID
 
-/*  // 모든 필드를 초기화하는 생성자
+  private int id;                  // 찜 목록 ID
+  private String itemCode;         //상품 코드, 찜한 상품의 고유 코드
+  private String memberId;         //멤버아이디, 찜한 회원의 ID
+  private String title;            // 상품명
+  private String location;         // 주소
+  private String category;         // 카테고리
+  private long price;            // 금액
+
+  // 모든 필드를 초기화하는 생성자
   public LikeListDTO(String itemCode, String memberId) {
     this.itemCode = itemCode; //상품 코드 설정
     this.memberId = memberId; //멤버 아이디 설정
-  }*/
+  }
 
-  /*@Override
+  @Override
   public String toString() {
     return "LikeListDTO{" +
-        "memberId='" + memberId + '\'' +
-        ", itemCode='" + itemCode + '}';
-  }*/
+        "id=" + id +
+        ", itemCode='" + itemCode + '\'' +
+        ", title='" + title + '\'' +
+        ", location='" + location + '\'' +
+        ", category='" + category + '\'' +
+        ", price=" + price +
+        ", memberId='" + memberId + '\'' +
+        '}';
+  }
 }

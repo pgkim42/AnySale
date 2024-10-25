@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관심목록</title>
-    <link rel="stylesheet" href="css/likeListStyle.css">
+    <!-- <link rel="stylesheet" href="css/likeListStyle.css"> -->
 </head>
 <body>
 
@@ -20,135 +20,28 @@
 
     <div class="product-list">
 
-        <div th:each="item : ${likeList}">
-            <div class="product-item">
-                <img src="assets/item/joohwan.jpg" alt="상품이미지">
+            <div class="div-temp1">
+                    <h2 th:text="${title}"></h2>
+<!--
+                <div class="product-item">
+                <img src="@{${item.imageUrl}}" alt="상품이미지">
                 <div class="product-info">
 
-                    <div class="div-temp1">
-                        <h2 th:text="${item.itemCode}">상품명</h2>
-                        <p>상품설명</p>
-                        <span class="product-price">가격정보</span>
-                    </div>
-                    <div class="div-temp2">
-                        <button class="like-button">
+                <p th:text="${item.location}">주소명</p>
+                <p th:text="${item.category}">카테고리명</p>
+                <span class="product-price" th:text="${item.price}">금액</span>
+                </div>
+
+                <div class="div-temp2">
+                    <form method="post" th:action="@{/likeList/remove/{id}(id=${item.id})}">
+                        <button class="like-button" type="submit">
                             <img src="assets/icon/heart.gif" alt="찜하기">
                         </button>
-                    </div>
+                    </form>
                 </div>
+
+                </div>-->
             </div>
-        </div>
-        <div class="product-item">
-            <img src="assets/item/joohwan.jpg" alt="탕진핑">
-            <div class="product-info">
-
-                <div class="div-temp1">
-                    <h2>프리미엄 주환이1</h2>
-                    <p>구월동, 길거리 상품</p>
-                    <span class="product-price">5,000원</span>
-                </div>
-
-                <div class="div-temp2">
-                    <button class="like-button">
-                        <img src="assets/icon/heart.gif" alt="찜하기">
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="product-item">
-            <img src="assets/item/joohwan.jpg" alt="함께 일할 직원 모집">
-            <div class="product-info">
-
-                <div class="div-temp1">
-                    <h2>꿀알바2</h2>
-                    <p>구월동, 알바</p>
-                    <span class="product-price">월급 3000만원</span>
-                </div>
-
-                <div class="div-temp2">
-                    <button class="like-button">
-                        <img src="assets/icon/brokenHeart.gif" alt="찜하기">
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="product-item">
-            <img src="assets/item/joohwan.jpg" alt="탕진핑">
-            <div class="product-info">
-
-                <div class="div-temp1">
-                    <h2>세미 주환이3</h2>
-                    <p>만수동, 길거리 상품</p>
-                    <span class="product-price">100원</span>
-                </div>
-
-                <div class="div-temp2">
-                    <button class="like-button">
-                        <img src="assets/icon/heart.gif" alt="찜하기">
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="product-item">
-            <img src="assets/item/joohwan.jpg" alt="함께 일할 직원 모집">
-            <div class="product-info">
-
-                <div class="div-temp1">
-                    <h2>돈많이 줄께4</h2>
-                    <p>논현동, 알바</p>
-                    <span class="product-price">월급 7000만원</span>
-                </div>
-
-                <div class="div-temp2">
-                    <button class="like-button">
-                        <img src="assets/icon/heart.gif" alt="찜하기">
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="product-item">
-            <img src="assets/item/joohwan.jpg" alt="함께 일할 직원 모집">
-            <div class="product-info">
-                <div class="div-temp1">
-                    <h2>단기 대타구합니다5</h2>
-                    <p>간석동, 알바</p>
-                    <span class="product-price">월급 1000만원</span>
-                </div>
-
-                <div class="div-temp2">
-                    <button class="like-button">
-                        <img src="assets/icon/heart.gif" alt="찜하기">
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="product-item">
-            <img src="assets/item/joohwan.jpg" alt="함께 일할 직원 모집">
-            <div class="product-info">
-                <div class="div-temp1">
-                    <h2>가족같은 노예구해요6</h2>
-                    <p>만수동, 알바</p>
-                    <span class="product-price">월급 700원</span>
-                </div>
-
-                <div class="div-temp2">
-                    <button class="like-button">
-                        <img src="assets/icon/heart.gif" alt="찜하기">
-                    </button>
-                </div>
-
-            </div>
-        </div>
 
     </div>
 

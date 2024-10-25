@@ -21,7 +21,7 @@ public class LikeList extends BaseEntity {
   private int id; // 고유 ID, 기본키로 자동 증가하는 값
 
   @ManyToOne
-  @JoinColumn(name = "item_code")  // 'Product' 엔티티와 다대일 관계, 외래키로 'item_code'를 명시적으로 지정
+  @JoinColumn(name = "item_code", referencedColumnName = "itemCode")  // 'Product' 엔티티와 다대일 관계, 외래키로 'item_code'를 명시적으로 지정
   private Product product;  // 찜한 상품과의 연관 관계
 
   @ManyToOne
