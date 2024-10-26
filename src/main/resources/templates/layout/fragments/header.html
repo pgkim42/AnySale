@@ -44,7 +44,7 @@
         </div>
 
         <div th:if="${member != null and member.id != null}">
-          <span th:text="'안녕하세요, ' + ${member.id} + '님'"></span>
+          <span th:text="'안녕하세요, ' + ${member.id} + '님'"></span>  &nbsp
           <a class="btn btn-outline-dark" href="/member/logout">
             <i class="bi bi-person me-1"></i> 로그아웃
           </a>

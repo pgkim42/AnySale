@@ -2,6 +2,7 @@ package com.example.anysale.member.repository;
 
 import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
+import com.example.anysale.product.entity.Product;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

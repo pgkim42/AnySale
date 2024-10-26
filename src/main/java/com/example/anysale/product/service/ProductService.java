@@ -26,6 +26,10 @@ public interface ProductService {
 
     Page<ProductDTO> searchProductsByTitle(String title, int page, int size);
     Page<ProductDTO> searchProductsByCategory(String category, int page, int size);
+    
+    // 판매글 조회
+    List<ProductDTO> getProductsWithValidUserId(String userId);  // 반환 타입을 ProductDTO로 수정
+
 
     default Product dtoToEntity(ProductDTO productDTO) {
         return Product.builder()
