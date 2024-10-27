@@ -5,6 +5,8 @@ import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.entity.MemberRole;
 import com.example.anysale.member.repository.MemberRepository;
 import com.example.anysale.member.service.MemberService;
+import com.example.anysale.product.dto.ProductDTO;
+import com.example.anysale.product.service.ProductService;
 import com.example.anysale.security.dto.AuthMemberDTO;
 import com.example.anysale.security.service.MemberUserDetailsService;
 import jakarta.servlet.http.HttpSession;
@@ -34,6 +36,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final ProductService productService;
     private final PasswordEncoder passwordEncoder;
     private final MemberUserDetailsService memberUserDetailsService;
 
@@ -59,7 +62,7 @@ public class MemberController {
         }
 
         // 사용자 ID 가져오기
-        String userId = authentication.getName(); // 인증된 사용자 ID (예: email 또는 username)
+        String userId = authentication.getName(); // 인증된 사용자 ID
 
         // 현재 회원 정보 가져오기
         MemberDTO memberDTO = memberService.memberInfo(userId);
@@ -69,8 +72,14 @@ public class MemberController {
         }
 
         model.addAttribute("member", memberDTO);
+
+        // 유효한 사용자 ID에 해당하는 제품 목록 가져오기
+        List<ProductDTO> products = productService.getProductsWithValidUserId(userId);
+        model.addAttribute("products", products); // ProductDTO 리스트 추가
+
         return "/member/myPage"; // 회원 정보를 보여주는 페이지로 이동
     }
+
 
 
     // 회원가입
@@ -304,6 +313,8 @@ public class MemberController {
             return "/member/searchPw";
         }
     }
+
+
 
 // ====================================================================================================================================================================================
 
