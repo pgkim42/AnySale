@@ -131,51 +131,54 @@
     margin-top: 15px;
   }
 
-  .btn {
-    flex: 1;
-    padding: 10px 0;
+  /* 버튼 스타일 */
+  .btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .btn-outline-dark {
     font-weight: bold;
-    text-align: center;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 25px;
+    color: #333;
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #f9f9f9;
+    transition: 0.3s ease;
+    padding: 10px 20px; /* 버튼 패딩 추가 */
+    text-align: center; /* 텍스트 정렬 */
+    text-decoration: none; /* 텍스트 밑줄 제거 */
   }
 
-  .btn-danger {
-    background-image: linear-gradient(45deg, #dc3545, #ff6b6b);
-  }
-
-  .btn-primary {
-    background-image: linear-gradient(45deg, #007bff, #1a8cff);
-  }
-
-  .btn-secondary {
-    background-image: linear-gradient(45deg, #6c757d, #8892a0);
-  }
-
-  .btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
+  .btn-outline-dark:hover {
+    background-color: #D3D3D3;
+    color: #003366;
   }
 </style>
 
+<script>
+  function showMemberInfo() {
+    document.getElementById('member-info').style.display = 'flex';
+    document.getElementById('sell-product-info').style.display = 'none';
+  }
+
+  function showSellProductInfo() {
+    document.getElementById('member-info').style.display = 'none';
+    document.getElementById('sell-product-info').style.display = 'block';
+  }
+</script>
+</head>
 <body>
 <div class="main-container">
-  <!-- 사이드바 -->
   <aside class="sidebar">
     <h3>마이페이지 메뉴</h3>
     <ul>
-      <li><a href="#member-info">회원 정보</a></li>
-      <li><a href="/member/myPage/sellProduct">회원 판매글 리스트</a></li>
+      <li><a href="javascript:void(0);" onclick="showMemberInfo()">회원 정보</a></li>
+      <li><a href="javascript:void(0);" onclick="showSellProductInfo()">회원 판매글 리스트</a></li>
       <li><a href="#purchase-list">회원 구매글 리스트</a></li>
       <li><a href="#like-list">좋아요 리스트</a></li>
     </ul>
   </aside>
 
-  <!-- 메인 콘텐츠 -->
   <div class="content-container">
     <h2 class="text-center">마이페이지</h2>
 
@@ -206,19 +209,56 @@
         <div class="info-card-title">평점</div>
         <div class="info-card-text" th:text="${member.score}"></div>
       </div>
+      <div class="btn-group">
+        <form action="/member/remove" method="post" onsubmit="return confirm('정말로 회원 탈퇴하시겠습니까?');">
+          <input type="hidden" name="id" th:value="${member.id}" />
+          <button type="submit" class="btn btn-danger">회원 탈퇴</button>
+        </form>
+        <a th:href="@{/member/modify(id=${member.id})}" class="btn btn-secondary">회원 수정</a>
+      </div>
     </div>
 
-    <!-- 회원 탈퇴 버튼 -->
-    <form action="/member/remove" method="post" onsubmit="return confirm('정말로 회원 탈퇴하시겠습니까?');">
-      <input type="hidden" name="id" th:value="${member.id}" />
-      <button type="submit" class="btn btn-danger">회원 탈퇴</button>
-    </form>
 
-    <!-- 버튼 그룹 -->
-    <div class="btn-group">
-      <a href="/products" class="btn btn-primary">Home</a>
-      <a th:href="@{/member/modify(id=${member.id})}" class="btn btn-secondary">수정</a>
+
+
+
+    <!-- 판매글 정보 카드 그리드 (초기에는 숨김) -->
+    <div class="card-grid" id="sell-product-info" style="display: none;">
+      <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+          <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">내 판매글 목록</h1>
+            <p class="lead fw-normal text-white-50 mb-0">내가 올린 상품을 확인하세요.</p>
+          </div>
+        </div>
+      </header>
+      <section id="productSection" class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+          <div id="productList" class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
+            <div th:each="product : ${products}" class="col mb-5">
+              <div class="card h-100">
+                <img class="card-img-top p-1" th:src="@{/uploadfile/{imageUrl}(imageUrl=${product.imageUrl})}" alt="상품이미지" onerror="this.src='/uploadfile/default-image.png';" />
+                <div class="card-body p-4">
+                  <div class="text-center">
+                    <h5 class="fw-bolder" th:text="${product.title}" >상품 제목</h5>
+                    <p class="text-muted mb-0" th:text="${product.category}">카테고리</p>
+                    <p th:text="${product.content}">상품 설명</p>
+                    <span th:text="${#numbers.formatDecimal(product.price, 0, 0)} + ' 원'">가격</span>
+                  </div>
+                </div>
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                  <div class="text-center">
+                    <button class="btn btn-outline-dark mt-auto" onclick="soldOut()">판매 완료</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
+
+
   </div>
 </div>
 

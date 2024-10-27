@@ -255,25 +255,5 @@ public class ProductPageController {
         return productsPage;
     }
 
-    // 판매글 목록 조회
-    @GetMapping("/member/myPage/sellProduct")
-    public String getProductsWithValidUserId(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/member/login";  // 로그인하지 않은 경우 로그인 페이지로 리디렉션
-        }
-        String userId = authentication.getName();
 
-        Member member = memberService.getMemberById(userId).orElse(null);
-
-        // 유효한 사용자 ID에 해당하는 제품 목록 가져오기
-        List<ProductDTO> products = productService.getProductsWithValidUserId(userId); // 수정된 메서드 호출
-
-        // 모델에 제품 DTO 목록 추가
-        model.addAttribute("member", member);
-        model.addAttribute("products", products);  // ProductDTO 리스트 추가
-        model.addAttribute("userId", userId);
-
-        return "member/myPage/sellProduct";  // 반환할 Thymeleaf 템플릿 이름
-    }
 }
