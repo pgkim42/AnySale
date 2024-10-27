@@ -30,7 +30,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/products").permitAll() // 모든 사용자에게 /products 접근 허용
-                        .requestMatchers("/member/login", "/member/register", "/css/**", "/js/**", "/review/**", "/member/myPage/**").permitAll() // 로그인, 회원가입 및 정적 자원은 모두에게 허용
+                        .requestMatchers("/member/login", "/member/register", "/css/**", "/js/**", "/review/**", "/member/**", "/assets/**").permitAll() // 로그인, 회원가입 및 정적 자원은 모두에게 허용
                         .requestMatchers("/member/adminPage").hasRole("ADMIN") // ROLE_ADMIN만 접근 가능
                         .anyRequest().hasRole("USER")// 그 외 모든 요청은 인증 필요
                 )
