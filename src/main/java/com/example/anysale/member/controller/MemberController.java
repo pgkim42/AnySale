@@ -27,8 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//@RestController
-//@RequestMapping("/api/members")
 @Controller
 @RequiredArgsConstructor
 @Log4j2
@@ -38,6 +36,13 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberUserDetailsService memberUserDetailsService;
+
+    // 임시
+    @GetMapping("/member/temp")
+    public String temp() {
+
+        return "temp/content";
+    }
 
     @GetMapping("/")
     public String index() {
@@ -102,16 +107,14 @@ public class MemberController {
     }
 
     @GetMapping("/member/check-id/{id}")
-    @ResponseBody  // 문자열을 응답으로 보낼 수 있도록 추가
-    public String checkId(@PathVariable String id) {
+    public ResponseEntity<String> checkId(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
-            return "아이디를 입력해주세요.";
-        } else {
-            boolean exists = memberService.existById(id);
-            return exists ? "중복이에요" : "쓸수있어요";
+            return ResponseEntity.badRequest().body("아이디를 입력해주세요.");
         }
-    }
 
+        boolean exists = memberService.existById(id);
+        return exists ? ResponseEntity.ok("이미 사용 중인 아이디입니다.") : ResponseEntity.ok("사용 가능한 아이디입니다.");
+    }
 
     @GetMapping("/member/check-email/{email}")
     public ResponseEntity<String> checkEmail(@PathVariable String email) {
@@ -286,8 +289,8 @@ public class MemberController {
     // 비밀번호 찾기
     @GetMapping("/member/searchPw")
     public String searchPw(@RequestParam(value = "id", required = false, defaultValue = "") String id,
-                                            @RequestParam(value = "name", required = false, defaultValue = "") String name,
-                                            @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
+                           @RequestParam(value = "name", required = false, defaultValue = "") String name,
+                           @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
         Optional<String> memberId = memberService.searchById(name, email);
         Optional<String> memberPw = memberService.searchByPw(id, name, email);
 
