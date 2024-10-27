@@ -141,4 +141,12 @@ public class ProductServiceImpl implements ProductService {
         return productPage.map(this::entityToDto);
     }
 
+    @Override
+    public List<ProductDTO> getProductsWithValidUserId(String userId) {
+        List<Product> products = productRepository.findProductsByUserId(userId);
+        return products.stream()
+                .map(this::entityToDto)
+                .collect(Collectors.toList());
+    }
+
 }
