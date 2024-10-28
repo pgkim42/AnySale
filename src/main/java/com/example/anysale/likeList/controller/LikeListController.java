@@ -10,6 +10,8 @@ import com.example.anysale.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +70,18 @@ public class LikeListController {
 
   @GetMapping("/list")
   public String getLikeLists(Model model, Principal principal) {
+
+    // SecurityContextHolder에서 사용자 정보 가져오기
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+      return "redirect:/member/login"; // 로그인하지 않은 경우 로그인 페이지로 리디렉션
+    }
+
+    // 사용자 ID 가져오기
+    String userId = authentication.getName(); // 인증된 사용자 ID
+    Member member = memberService.getMemberById(userId).orElse(null);
+
+    model.addAttribute("member", member);
 
     if (principal == null) {
       return "redirect:/login"; // 로그인 페이지로 리다이렉트

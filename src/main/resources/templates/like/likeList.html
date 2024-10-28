@@ -193,23 +193,23 @@
 </div>
 
 <!-- 찜 목록 -->
-<!--<div id="like-list-container">-->
-<!--    <table>-->
-<!--        <tbody>-->
-<!--        &lt;!&ndash; 여기에 찜 목록 데이터가 동적으로 들어옵니다 &ndash;&gt;-->
-<!--        <tr th:each="item : ${likeList}">-->
-<!--            <td><img th:src="@{/uploadfile/{imageUrl}(imageUrl=${item.imageUrl})}" alt="상품 이미지" style="width: 100px; height: auto;"></td>-->
-<!--            <td th:text="${item.title}">상품명</td>-->
-<!--            <td th:text="${item.category}">카테고리</td>-->
-<!--            <td th:text="${item.content}">상세 설명</td>-->
-<!--            <td th:text="${item.price}">상품 가격</td>-->
-<!--            <td>-->
-<!--                <button onclick="removeLikeList(${item.id})">삭제</button>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
+<div id="like-list-container">
+    <table>
+        <tbody>
+        <!-- 여기에 찜 목록 데이터가 동적으로 들어옵니다 -->
+        <tr th:each="item : ${likeList}">
+            <td><img th:src="@{/uploadfile/{imageUrl}(imageUrl=${item.imageUrl})}" alt="상품 이미지" style="width: 100px; height: auto;"></td>
+            <td th:text="${item.title}">상품명</td>
+            <td th:text="${item.category}">카테고리</td>
+            <td th:text="${item.content}">상세 설명</td>
+            <td th:text="${item.price}">상품 가격</td>
+            <td>
+                <button onclick="removeLikeList(${item.id})">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 <script type="text/javascript">
     // 페이지네이션 버튼 클릭 시 Ajax로 데이터 요청
@@ -329,6 +329,7 @@
         loadProducts(0); // 첫 페이지 로드
     };
 </script>
+<th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
 
 </body>
 </html>
