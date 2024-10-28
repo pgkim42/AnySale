@@ -124,7 +124,7 @@ public class MemberController {
         // 회원가입 처리
         memberService.registerMember(member);
 
-        return "redirect:/"; // 로그인 후 메인 페이지로 리다이렉션
+        return "redirect:/member/login"; // 로그인 후 메인 페이지로 리다이렉션
     }
 
     @GetMapping("/member/check-id/{id}")
