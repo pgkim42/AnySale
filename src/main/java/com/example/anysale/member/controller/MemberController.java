@@ -5,6 +5,8 @@ import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.entity.MemberRole;
 import com.example.anysale.member.repository.MemberRepository;
 import com.example.anysale.member.service.MemberService;
+import com.example.anysale.product.dto.ProductDTO;
+import com.example.anysale.product.service.ProductService;
 import com.example.anysale.security.dto.AuthMemberDTO;
 import com.example.anysale.security.service.MemberUserDetailsService;
 import jakarta.servlet.http.HttpSession;
@@ -27,8 +29,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//@RestController
-//@RequestMapping("/api/members")
 @Controller
 @RequiredArgsConstructor
 @Log4j2
@@ -36,8 +36,16 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final ProductService productService;
     private final PasswordEncoder passwordEncoder;
     private final MemberUserDetailsService memberUserDetailsService;
+
+    // 임시
+    @GetMapping("/member/temp")
+    public String temp() {
+
+        return "temp/content";
+    }
 
     @GetMapping("/")
     public String index() {
@@ -54,7 +62,7 @@ public class MemberController {
         }
 
         // 사용자 ID 가져오기
-        String userId = authentication.getName(); // 인증된 사용자 ID (예: email 또는 username)
+        String userId = authentication.getName(); // 인증된 사용자 ID
 
         // 현재 회원 정보 가져오기
         MemberDTO memberDTO = memberService.memberInfo(userId);
@@ -64,8 +72,14 @@ public class MemberController {
         }
 
         model.addAttribute("member", memberDTO);
+
+        // 유효한 사용자 ID에 해당하는 제품 목록 가져오기
+        List<ProductDTO> products = productService.getProductsWithValidUserId(userId);
+        model.addAttribute("products", products); // ProductDTO 리스트 추가
+
         return "/member/myPage"; // 회원 정보를 보여주는 페이지로 이동
     }
+
 
 
     // 회원가입
@@ -102,16 +116,14 @@ public class MemberController {
     }
 
     @GetMapping("/member/check-id/{id}")
-    @ResponseBody  // 문자열을 응답으로 보낼 수 있도록 추가
-    public String checkId(@PathVariable String id) {
+    public ResponseEntity<String> checkId(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
-            return "아이디를 입력해주세요.";
-        } else {
-            boolean exists = memberService.existById(id);
-            return exists ? "중복이에요" : "쓸수있어요";
+            return ResponseEntity.badRequest().body("아이디를 입력해주세요.");
         }
-    }
 
+        boolean exists = memberService.existById(id);
+        return exists ? ResponseEntity.ok("이미 사용 중인 아이디입니다.") : ResponseEntity.ok("사용 가능한 아이디입니다.");
+    }
 
     @GetMapping("/member/check-email/{email}")
     public ResponseEntity<String> checkEmail(@PathVariable String email) {
@@ -262,7 +274,7 @@ public class MemberController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "회원 삭제에 실패했습니다.");
         }
-        return "redirect:/";
+        return "redirect:/products";
     }
 
     // 아이디 찾기
@@ -286,8 +298,8 @@ public class MemberController {
     // 비밀번호 찾기
     @GetMapping("/member/searchPw")
     public String searchPw(@RequestParam(value = "id", required = false, defaultValue = "") String id,
-                                            @RequestParam(value = "name", required = false, defaultValue = "") String name,
-                                            @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
+                           @RequestParam(value = "name", required = false, defaultValue = "") String name,
+                           @RequestParam(value = "email", required = false, defaultValue = "") String email, Model model) {
         Optional<String> memberId = memberService.searchById(name, email);
         Optional<String> memberPw = memberService.searchByPw(id, name, email);
 
@@ -301,6 +313,8 @@ public class MemberController {
             return "/member/searchPw";
         }
     }
+
+
 
 // ====================================================================================================================================================================================
 
