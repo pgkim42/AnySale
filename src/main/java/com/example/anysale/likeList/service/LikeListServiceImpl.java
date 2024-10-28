@@ -1,10 +1,7 @@
 package com.example.anysale.likeList.service;
 
-import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.repository.LikeListRepository;
-import com.example.anysale.member.dto.MemberDTO;
-import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.repository.MemberRepository;
 import com.example.anysale.member.service.MemberService;
 import com.example.anysale.product.dto.ProductDTO;
@@ -104,32 +101,6 @@ public class LikeListServiceImpl implements LikeListService {
   }
 }
 
-
-//@Service
-//public class LikeListServiceImpl implements LikeListService {
-//
-//  private final LikeListRepository likeListRepository;
-//
-//  @Autowired
-//  public LikeListServiceImpl(LikeListRepository likeListRepository) {
-//    this.likeListRepository = likeListRepository;
-//  }
-//
-//  // 찜 목록에 상품 추가
-//  @Override
-//  public LikeList addLikeList(LikeList likeList) {
-//    return likeListRepository.save(likeList);
-//  }
-//
-//  // 회원의 찜 목록 조회
-//  @Override
-//  public List<LikeListDTO> getLikeList(String memberId) {
-//    List<LikeList> likeLists = likeListRepository.findByMemberId(memberId);
-//    return likeLists.stream()
-//        .map(likeList -> new LikeListDTO(likeList.getProduct().getItemCode(), likeList.getMember().getId())) // 수정된 부분
-//        .collect(Collectors.toList());
-//  }
-//
 //  // 찜 목록에서 특정 상품 제거
 //  @Override
 //  public LikeList removeLikeList(int likeListId) {

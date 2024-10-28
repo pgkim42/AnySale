@@ -1,6 +1,5 @@
 package com.example.anysale.likeList.controller;
 
-import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.service.LikeListService;
 import com.example.anysale.member.entity.Member;
@@ -82,17 +81,6 @@ public class LikeListController {
 //    return ResponseEntity.ok(likeLists);
   }
 
-//
-//  // 회원의 찜목록 조회
-//  @GetMapping("/list")
-//  public List<LikeListDTO> getLikeLists(@RequestParam(value = "memberId") String memberId, Model model) {
-//    // memberId로 찜 목록을 조회하는 로직 추가 필요
-//     List<LikeListDTO> likeLists = likeListService.getLikeList(memberId);
-//    // model.addAttribute("likeLists", likeLists);
-//
-//    return likeLists;
-//  }
-//
 //  // 찜 목록에서 특정 상품 제거
 //  @DeleteMapping("/{likeListId}")
 //  public ResponseEntity<Void> removeLikeList(@PathVariable int likeListId) {
