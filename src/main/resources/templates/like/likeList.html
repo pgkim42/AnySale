@@ -46,35 +46,15 @@
             border: none;
         }
 
-        /* 검색 폼 스타일 */
-        .search-form .form-select,
-        .search-form .form-control,
-        .search-form .btn-primary {
-            height: 45px;
-            font-size: 14px;
-            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #f9f9f9;
-            border-radius: 25px;
-            transition: 0.3s ease;
-        }
-
-        .search-form .btn-primary {
-            background-color: #D3D3D3;
-            color: #003366;
-            font-weight: bold;
-            border: none;
-        }
-
-        .search-form .btn-primary:hover {
-            background-color: #C0C0C0;
-            transform: scale(1.05);
-        }
-
         /* 카드 레이아웃 스타일 */
         .card {
             border-radius: 15px;
-            box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+            box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
             overflow: hidden;
+            background-color: white;
+            margin: 15px;
+            text-align: center;
         }
 
         .card:hover {
@@ -99,45 +79,46 @@
             text-align: center;
         }
 
-        /* 버튼 스타일 */
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-outline-dark {
-            font-weight: bold;
+        /* 삭제 버튼 스타일 */
+        .btn-remove {
+            background-color: #ff4757;
+            color: white;
+            border: none;
             border-radius: 25px;
-            color: #333;
-            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #f9f9f9;
-            transition: 0.3s ease;
-            padding: 10px 20px; /* 버튼 패딩 추가 */
-            text-align: center; /* 텍스트 정렬 */
-            text-decoration: none; /* 텍스트 밑줄 제거 */
-        }
-
-        .btn-outline-dark:hover {
-            background-color: #D3D3D3;
-            color: #003366;
-        }
-
-        /* 페이지네이션 스타일 */
-        .pagination-container .page-link {
-            color: #003366;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
             font-weight: bold;
-            box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #f9f9f9;
-            border-radius: 20px;
-            transition: 0.3s ease;
         }
 
-        .pagination-container .page-link:hover {
-            background-color: #D3D3D3;
-            color: #003366;
+        .btn-remove:hover {
+            background-color: #ff6b81;
+        }
+
+        /* 테이블 스타일 */
+        #like-list-container {
+            margin: 20px auto;
+            max-width: 1200px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 상품 리스트 스타일 */
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* 상품 카드 스타일 */
+        .product-card {
+            width: 300px;
+            margin: 15px;
         }
     </style>
 </head>
-
 <body>
 
 <!-- Header -->
@@ -149,185 +130,49 @@
 <!-- Section for Products -->
 <section id="productSection" class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
-        <div id="productList" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div id="like-list-container" class="product-list">
+            <table>
+                <tbody>
+                <!-- 여기에 찜 목록 데이터가 동적으로 들어옵니다 -->
+                <tr th:each="item : ${likeList}">
+                    <td class="product-card">
+                        <div class="card">
+                            <img th:src="@{/uploadfile/{imageUrl}(imageUrl=${item.imageUrl})}" alt="상품 이미지" class="card-img-top">
+                            <div class="card-body">
+                                <h5 th:text="${item.title}">상품명</h5>
+                                <p th:text="${item.category}">카테고리</p>
+                                <p th:text="${item.content}">상세 설명</p>
+                                <p th:text="${item.price}">상품 가격</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination-container mt-4">
-        <ul class="pagination justify-content-center" id="pagination">
-        </ul>
     </div>
 </section>
 
-<!-- 내용 -->
-<!-- Search form -->
-<div class="container">
-    <div class="row justify-content-center mb-4">
-        <div class="col-lg-3 col-md-4">
-            <select class="form-select" name="searchType" id="searchType" onchange="toggleSearchInput()">
-                <option value="title">제목</option>
-                <option value="category">카테고리</option>
-            </select>
-        </div>
-
-        <!-- 제목 검색 필드 -->
-        <div class="col-md-5" id="keywordInput">
-            <input type="text" class="form-control" id="titleKeyword" placeholder="검색어를 입력하세요"/>
-        </div>
-
-        <!-- 카테고리 검색 드롭다운 -->
-        <div class="col-md-5" id="categoryInput" style="display: none;">
-            <select class="form-select" id="categoryKeyword">
-                <option value="의류">의류</option>
-                <option value="도서">도서</option>
-                <option value="전자제품">전자제품</option>
-            </select>
-        </div>
-
-        <!-- Search Button -->
-        <div class="col-md-2">
-            <button type="button" class="btn btn-primary w-100" onclick="searchProducts(0)">검색</button>
-        </div>
-    </div>
-</div>
-
-<!-- 찜 목록 -->
-<div id="like-list-container">
-    <table>
-        <tbody>
-        <!-- 여기에 찜 목록 데이터가 동적으로 들어옵니다 -->
-        <tr th:each="item : ${likeList}">
-            <td><img th:src="@{/uploadfile/{imageUrl}(imageUrl=${item.imageUrl})}" alt="상품 이미지" style="width: 100px; height: auto;"></td>
-            <td th:text="${item.title}">상품명</td>
-            <td th:text="${item.category}">카테고리</td>
-            <td th:text="${item.content}">상세 설명</td>
-            <td th:text="${item.price}">상품 가격</td>
-            <td>
-                <button onclick="removeLikeList(${item.id})">삭제</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<script type="text/javascript">
-    // 페이지네이션 버튼 클릭 시 Ajax로 데이터 요청
-    function loadProducts(page) {
-        const searchType = document.getElementById('searchType').value;
-        const keyword = document.getElementById('titleKeyword').value;  // 수정된 부분
-
-        fetch(`/products/searchAjax?searchType=${searchType}&keyword=${keyword}&page=${page}&size=20`)
-            .then(response => response.json())
-            .then(data => {
-                updateProductList(data.content);
-                updatePagination(data);          // 페이지네이션 업데이트
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    // 검색 버튼 클릭 시 Ajax로 데이터 요청
-    function searchProducts(page) {
-        const searchType = document.getElementById('searchType').value;
-        const keyword = searchType === 'title'
-            ? document.getElementById('titleKeyword').value
-            : document.getElementById('categoryKeyword').value;
-
-        fetch(`/products/searchAjax?searchType=${searchType}&keyword=${keyword}&page=${page}&size=20`)
-            .then(response => response.json())
-            .then(data => {
-                updateProductList(data.content);   // 제품 목록 업데이트
-                updatePagination(data);            // 페이지네이션 업데이트
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    // 제품 목록을 업데이트하는 함수
-    function updateProductList(products) {
-        const productList = document.getElementById('productList');
-        productList.innerHTML = '';  // 기존 목록 제거
-
-        products.forEach(product => {
-            const formattedPrice = new Intl.NumberFormat('ko-KR').format(product.price) + ' 원';
-            const productCard = `
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <img class="card-img-top p-1" src="/uploadfile/${product.imageUrl}" alt="상품이미지" onerror="this.src='/uploadfile/default-image.png';" />
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h5 class="fw-bolder">${product.title}</h5>
-                            <span>${formattedPrice}</span>
-                        </div>
-                    </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-dark" onclick="removeLikeList(${product.id})">취소하기</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `;
-            productList.insertAdjacentHTML('beforeend', productCard);
-        });
-    }
-
-    // 페이지네이션 업데이트
-    function updatePagination(data) {
-        const pagination = document.getElementById('pagination');
-        pagination.innerHTML = '';
-
-        for (let i = 0; i < data.totalPages; i++) {
-            const pageItem = document.createElement('li');
-            pageItem.classList.add('page-item');
-
-            const pageLink = document.createElement('a');
-            pageLink.classList.add('page-link');
-            pageLink.textContent = i + 1;
-
-            // 현재 페이지와 클릭된 페이지 비교
-            if (i === data.number) {
-                pageLink.classList.add('active');
-            } else {
-                pageLink.onclick = function () {
-                    loadProducts(i); // 클릭된 페이지로 이동
-                };
-            }
-
-            pageItem.appendChild(pageLink);
-            pagination.appendChild(pageItem);
-        }
-    }
-
-    // 찜 목록 삭제 함수
-    function removeLikeList(itemId) {
+<script>
+    // 찜 목록에서 상품 제거
+    function removeLikeList(likeListId) {
         if (confirm('정말로 찜 목록에서 이 아이템을 삭제하시겠습니까?')) {
-            fetch(`/likeList/${itemId}`, {
-                method: 'DELETE',
+            fetch(`/likeList/${likeListId}`, {
+                method: 'DELETE'
             })
                 .then(response => {
                     if (response.ok) {
-                        alert('아이템이 삭제되었습니다.');
-                        // 페이지 새로고침 혹은 리스트 업데이트 로직
-                        window.location.reload();
+                        alert('상품이 찜 목록에서 제거되었습니다.');
+                        location.reload(); // 페이지 새로고침
                     } else {
-                        alert('아이템 삭제에 실패했습니다.');
+                        alert('상품 제거에 실패했습니다.');
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('There was a problem with the delete operation:', error);
+                });
         }
     }
-
-    // 제목 검색 또는 카테고리 검색 입력 필드 토글
-    function toggleSearchInput() {
-        const searchType = document.getElementById('searchType').value;
-        document.getElementById('keywordInput').style.display = searchType === 'title' ? 'block' : 'none';
-        document.getElementById('categoryInput').style.display = searchType === 'category' ? 'block' : 'none';
-    }
-
-    // 초기 로드 시 전체 상품 목록 로드
-    window.onload = function() {
-        loadProducts(0); // 첫 페이지 로드
-    };
 </script>
 <th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
 
