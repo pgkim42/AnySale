@@ -61,8 +61,10 @@ public interface ReviewService {
     // 리뷰 검색
     List<ReviewDTO> searchReviews(String search);
 
-
     // 매너 체크 카운트 추가
     Map<String, Integer> getMannerCountBySellerId(String sellerId);
+
+    // 구매자 리뷰 리스트 호출
+    List<ReviewDTO> getReviewsByBuyerId(String buyerId);
 
 }

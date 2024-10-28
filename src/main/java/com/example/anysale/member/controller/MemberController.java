@@ -274,7 +274,7 @@ public class MemberController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "회원 삭제에 실패했습니다.");
         }
-        return "redirect:/";
+        return "redirect:/products";
     }
 
     // 아이디 찾기
