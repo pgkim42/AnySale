@@ -1,5 +1,6 @@
 package com.example.anysale.member.controller;
 
+import com.example.anysale.likeList.service.LikeListService;
 import com.example.anysale.member.dto.MemberDTO;
 import com.example.anysale.member.entity.Member;
 import com.example.anysale.member.entity.MemberRole;
@@ -30,6 +31,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,7 @@ public class MemberController {
     private final MemberUserDetailsService memberUserDetailsService;
     private final ReviewService reviewService;
     private final ReviewRepository reviewRepository;
+    private final LikeListService likeListService;
 
 
     @GetMapping("/")
@@ -54,7 +57,7 @@ public class MemberController {
 
     // 마이페이지
     @GetMapping("/member/myPage")
-    public String myPage(Model model, @RequestParam (required = false) String buyerId) {
+    public String myPage(Model model, @RequestParam (required = false) String buyerId, Principal  principal) {
         // SecurityContextHolder에서 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -84,6 +87,10 @@ public class MemberController {
 
         List<Review> reviewList = reviewRepository.findByBuyerIdAndSellerId(buyerId); // 구매자 ID로 리뷰 목록 조회
         int reviewCount = reviewList.size(); // 리뷰 건수 표시
+
+        String memberId = principal.getName();
+        List<ProductDTO> likeLists = likeListService.getLikeList(memberId);
+        model.addAttribute("likeList", likeLists);
 
         model.addAttribute("reviewCount", reviewCount);
         model.addAttribute("buyerId", buyerId);

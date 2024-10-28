@@ -181,7 +181,7 @@
         </script>
 
         <!-- 구매자 ID는 서버에서 자동으로 설정 -->
-        <input type="text" name="buyerId" th:value="${member.id}" readonly/> <!-- 예시: 로그인한 사용자 ID -->
+        <input type="hidden" name="buyerId" th:value="${member.id}" readonly/> <!-- 예시: 로그인한 사용자 ID -->
         <!--        <div class="form-group">-->
         <!--            <label for="buyerId">구매자 ID</label>-->
         <!--            <input type="text" class="form-control" id="buyerId" name="buyerId" required>-->
