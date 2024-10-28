@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +27,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/product/**").permitAll()
+                        .requestMatchers("/likeList/**").permitAll()
                         .requestMatchers("/products").permitAll() // 모든 사용자에게 /products 접근 허용
                         .requestMatchers("/member/login", "/member/register", "/css/**", "/js/**", "/review/**", "/member/**", "/assets/**").permitAll() // 로그인, 회원가입 및 정적 자원은 모두에게 허용
                         .requestMatchers("/member/adminPage").hasRole("ADMIN") // ROLE_ADMIN만 접근 가능
@@ -58,16 +58,7 @@ public class SecurityConfig {
                     rem.rememberMeParameter("remember");
                     rem.tokenValiditySeconds(60 * 60 * 24 * 7);
                     rem.userDetailsService(memberUserDetailsService);
-                })
-
-                // CSRF 설정 추가
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())  // 기본 세션 저장 방식으로 변경
-                        .ignoringRequestMatchers(
-                                "/member/check-id/**",
-                                "/member/check-email/**"
-                        )
-                );
+                });
 
         return http.build();
     }
