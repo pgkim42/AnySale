@@ -248,6 +248,7 @@
       document.getElementById('member-btn').style.display = 'flex';
       document.getElementById('sell-product-info').style.display = 'none';
       document.getElementById('review-info').style.display = 'none';
+      document.getElementById('likeList-info').style.display = 'none';
     }
 
     function showSellProductInfo() {
@@ -255,6 +256,7 @@
       document.getElementById('member-btn').style.display = 'none';
       document.getElementById('sell-product-info').style.display = 'block';
       document.getElementById('review-info').style.display = 'none';
+      document.getElementById('likeList-info').style.display = 'none';
     }
 
     function showReviewInfo() {
@@ -262,6 +264,15 @@
       document.getElementById('member-btn').style.display = 'none';
       document.getElementById('sell-product-info').style.display = 'none';
       document.getElementById('review-info').style.display = 'block';
+      document.getElementById('likeList-info').style.display = 'none';
+    }
+
+    function showLikeListInfo() {
+      document.getElementById('member-info').style.display = 'none';
+      document.getElementById('member-btn').style.display = 'none';
+      document.getElementById('sell-product-info').style.display = 'none';
+      document.getElementById('review-info').style.display = 'none';
+      document.getElementById('likeList-info').style.display = 'block';
     }
 
     function soldOut() {
@@ -419,8 +430,6 @@
         </ul>
       </div>
     </div>
-
-
   </div>
 </div>
   <th:block th:replace="~{layout/fragments/footer :: footerFragment}"></th:block>
