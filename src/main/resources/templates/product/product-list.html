@@ -180,7 +180,7 @@
     // 페이지네이션 버튼 클릭 시 Ajax로 데이터 요청
     function loadProducts(page) {
         const searchType = document.getElementById('searchType').value;
-        const keyword = document.querySelector('input[name="titleKeyword"]').value;
+        const keyword = document.getElementById('titleKeyword').value;  // 수정된 부분
 
         fetch(`/products/searchAjax?searchType=${searchType}&keyword=${keyword}&page=${page}&size=20`)
             .then(response => response.json())
