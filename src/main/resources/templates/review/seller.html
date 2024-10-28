@@ -73,14 +73,11 @@
 
 <div class="container mt-5">
     <div class="profile-header">
-<!--        <img th:src="${판매자 타임리프}" alt="판매자 프로필" style="width: 70px; height: 70px; border-radius: 50%; display: inline-block; vertical-align: middle;">-->
         <img src="https://picsum.photos/70" alt="판매자 프로필" style="width: 100px; height: 100px; border-radius: 50%; display: inline-block; vertical-align: middle;" class="profile-image">
 
         <div class="seller-info">
             <h1 th:text="${sellerId}">판매자 ID</h1>
             <div class="seller-stats">
-<!--                매너 온도: <span th:text="${매너온도 타임리프} + '36.5도'">36.5</span> |-->
-<!--                재거래 희망률: <span th:text="${재거래희망률 타임리프} + '100%'">100%</span>-->
                 매너 온도: <span>36.5도</span> |
                 재거래 희망률: <span>100%</span>
             </div>
@@ -88,9 +85,6 @@
     </div>
 
     <div class="links mb-4">
-<!--        <a th:href="@{/products/seller/{sellerId}(sellerId=${sellerId})}" class="link">판매물품</a>-->
-<!--        <a th:href="@{/review/seller/{sellerId}(sellerId=${sellerId})}" class="link">거래후기 (<span th:text="${reviewCount}"></span>건)</a>-->
-
         <a th:href="@{/review/onsale(sellerId=${sellerId})}" class="link">판매물품</a>
         <a th:href="@{/review/seller/{sellerId}(sellerId=${sellerId})}"
            class="link active-link">거래후기 (<span th:text="${reviewCount}"></span>건)
@@ -103,7 +97,6 @@
             <!-- 등록된 리뷰 항목이 동적으로 추가됩니다. -->
             <th:block th:each="review : ${list}">
                 <li class="list-group-item">
-<!--                <h5 th:text="'판매자 : ' + ${review.sellerId}">판매자: </h5>-->
                     <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
                     <strong th:text="${review.buyerId}"></strong>
                     <span th:text="${review.buyerAddress}">지역</span><br>

@@ -161,6 +161,84 @@
       background-color: #D3D3D3;
       color: #003366;
     }
+
+    /* 리뷰 섹션 스타일 */
+    #review-info {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 15px;
+    }
+
+    .profile-image {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #d1d9e6;
+    }
+
+    .buyer-info h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #495057;
+    }
+
+    .buyer-stats {
+      font-size: 0.9rem;
+      color: #868e96;
+    }
+
+    #reviewList {
+      margin-top: 20px;
+    }
+
+    .list-group-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s ease;
+    }
+
+    .list-group-item:hover {
+      background-color: #f1f3f5;
+    }
+
+    .list-group-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #d1d9e6;
+    }
+
+    .list-group-item strong {
+      color: #495057;
+      font-weight: bold;
+    }
+
+    .list-group-item .text-warning {
+      color: #ffc107;
+    }
+
+    .list-group-item .review-content {
+      flex: 1;
+      color: #343a40;
+    }
   </style>
 
 
@@ -330,7 +408,7 @@
           <th:block th:each="review : ${reviewList}">
             <li class="list-group-item">
               <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
-              <strong th:text="${review.buyerId}"></strong>
+              <strong th:text="${review.sellerId}"></strong>
               <span th:text="${review.buyerAddress}">지역</span><br>
               <div>
                 <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>

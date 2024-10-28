@@ -207,9 +207,12 @@
                         <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>
                     </div>
                     <span th:text="${review.comment}">리뷰 내용</span>
-                    <form th:action="@{/review/remove(no=${review.reviewNo})}" method="post" style="display:inline;">
-                        <button type="submit" class="btn-danger">삭제</button>
-                    </form>
+
+                    <div th:if="${review.buyerId == member.id}" class="d-inline-block ml-3">
+                        <form th:action="@{/review/remove(no=${review.reviewNo})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn-danger">삭제</button>
+                        </form>
+                    </div>
                 </li>
             </th:block>
         </ul>
