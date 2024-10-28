@@ -24,41 +24,39 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http, MemberUserDetailsService memberUserDetailsService) throws Exception {
     log.info("---------------filterChain---------------");
 
-    http
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/product/**").permitAll()
-            .requestMatchers("/likeList/**").permitAll()
-            .requestMatchers("/products").permitAll() // 모든 사용자에게 /products 접근 허용
-            .requestMatchers("/member/login", "/member/register", "/css/**", "/js/**", "/review/**", "/member/**", "/assets/**").permitAll() // 로그인, 회원가입 및 정적 자원은 모두에게 허용
-            .requestMatchers("/member/adminPage").hasRole("ADMIN") // ROLE_ADMIN만 접근 가능
-            .anyRequest().hasRole("USER")// 그 외 모든 요청은 인증 필요
-        )
-        .formLogin(form -> form
-            .loginPage("/member/login")
-            .defaultSuccessUrl("/products", true) // 로그인 성공 후 항상 products 페이지로 리다이렉트
-            .permitAll()
-            .successHandler(successHandler())
-            .failureUrl("/member/login")
-            .usernameParameter("id")
-            .passwordParameter("password")
-        )
-        .logout(logout -> logout
-            .logoutUrl("/member/logout")
-            .logoutSuccessUrl("/member/logout")
-            .permitAll()
-        )
-        .oauth2Login(oauth2 -> oauth2
-            .loginPage("/member/login")
-            .defaultSuccessUrl("/products", true)
-            .failureUrl("/member/login")
-            .successHandler(successHandler())
-        )
-        .rememberMe(rem -> {
-          rem.rememberMeParameter("remember");
-          rem.tokenValiditySeconds(60 * 60 * 24 * 7);
-          rem.userDetailsService(memberUserDetailsService);
-        });
-
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/","/products").permitAll() // 모든 사용자에게 /products 접근 허용
+                        .requestMatchers("/member/login", "/member/register", "/css/**", "/js/**","/review/list", "/member/**", "/assets/**").permitAll() // 로그인, 회원가입 및 정적 자원은 모두에게 허용
+                        .requestMatchers("/likeList/**").permitAll()
+                        .requestMatchers("/member/adminPage").hasRole("ADMIN") // ROLE_ADMIN만 접근 가능
+                        .anyRequest().hasRole("USER")// 그 외 모든 요청은 인증 필요
+                )
+                .formLogin(form -> form
+                        .loginPage("/member/login")
+                        .defaultSuccessUrl("/products", true) // 로그인 성공 후 항상 products 페이지로 리다이렉트
+                        .permitAll()
+                        .successHandler(successHandler())
+                        .failureUrl("/member/login")
+                        .usernameParameter("id")
+                        .passwordParameter("password")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/member/logout")
+                        .logoutSuccessUrl("/member/logout")
+                        .permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/member/login")
+                        .defaultSuccessUrl("/products", true)
+                        .failureUrl("/member/login")
+                        .successHandler(successHandler())
+                )
+                .rememberMe(rem -> {
+                    rem.rememberMeParameter("remember");
+                    rem.tokenValiditySeconds(60 * 60 * 24 * 7);
+                    rem.userDetailsService(memberUserDetailsService);
+                });
 
     return http.build();
   }
