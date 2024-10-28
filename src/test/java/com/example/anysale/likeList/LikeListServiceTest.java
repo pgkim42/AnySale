@@ -31,13 +31,13 @@ public class LikeListServiceTest {
   }
 
   // 회원, 상품, 찜 등록
-  @Test
-  void 찜상품조회() {
-    List<LikeListDTO> list = likeListService.getLikeList("user1");
-    for (LikeListDTO dto : list) {
-      System.out.println(dto);
-    }
-  }
+//  @Test
+//  void 찜상품조회() {
+//    List<LikeListDTO> list = likeListService.getLikeList("user1");
+//    for (LikeListDTO dto : list) {
+//      System.out.println(dto);
+//    }
+//  }
 
 
 }

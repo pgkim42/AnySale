@@ -27,28 +27,4 @@ public class LikeListDTO {
     this.itemCode = itemCode; //상품 코드 설정
     this.memberId = memberId; //멤버 아이디 설정
   }
-
-  // likelist엔티티를 기반으로 하는 생성자
-  public LikeListDTO(LikeList likeList) {
-    this.id = likeList.getId();
-    this.itemCode = likeList.getProduct().getItemCode();
-    this.memberId = likeList.getMember().getId();
-    this.title = likeList.getProduct().getTitle();
-    this.location = likeList.getProduct().getLocation();
-    this.category = likeList.getProduct().getCategory();
-    this.price = likeList.getProduct().getPrice();
-  }
-
-  @Override
-  public String toString() {
-    return "LikeListDTO{" +
-        "id=" + id +
-        ", itemCode='" + itemCode + '\'' +
-        ", title='" + title + '\'' +
-        ", location='" + location + '\'' +
-        ", category='" + category + '\'' +
-        ", price=" + price +
-        ", memberId='" + memberId + '\'' +
-        '}';
-  }
 }

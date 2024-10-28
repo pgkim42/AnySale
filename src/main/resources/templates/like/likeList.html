@@ -22,19 +22,22 @@
     <table>
         <thead>
         <tr>
-            <th>상품 코드</th>
+            <th>상품 이미지</th>
             <th>상품명</th>
-            <th>작업</th>
+            <th>카테고리</th>
+            <th>상세 설명</th>
+            <th>상품 가격</th>
         </tr>
         </thead>
         <tbody>
         <!-- 여기에 찜 목록 데이터가 동적으로 들어옵니다 -->
         <tr th:each="item : ${likeList}">
 
-            [[${item}]]
-
-            <td th:text="${item.itemCode}">상품 코드</td>
-            <td th:text="${item.title}">상품명</td> <!-- 상품명 표시 -->
+            <td><img th:src="@{/uploadfile/{imageUrl}(imageUrl=${item.imageUrl})}" alt="상품 이미지" style="width: 100px; height: auto;"></td>
+            <td th:text="${item.title}">상품명</td>
+            <td th:text="${item.category}">카테고리</td>
+            <td th:text="${item.content}">상세 설명</td>
+            <td th:text="${item.price}">상품 가격</td>
             <td>
                 <button onclick="removeLikeList(${item.id})">삭제</button>
             </td>
@@ -43,62 +46,57 @@
     </table>
 </div>
 
-<!-- 상품 정보 표시 영역 -->
-<div th:if="${product != null}">
-    <h2>상품 정보</h2>
-    <p>상품 코드: <span th:text="${product.itemCode}"></span></p>
-    <p>상품명: <span th:text="${product.title}"></span></p>
-    <p>상세 설명: <span th:text="${product.description}"></span></p> <!-- 필요에 따라 추가 -->
-</div>
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        const memberId = 'user1';  // 실제 멤버 ID로 변경-->
+<!--        fetch(`/likeList/list/${memberId}`) // 경로 수정-->
+<!--            .then(response => {-->
+<!--                if (!response.ok) {-->
+<!--                    throw new Error('Network response was not ok');-->
+<!--                }-->
+<!--                return response.json();-->
+<!--            })-->
+<!--            .then(data => {-->
+<!--                const likeListContainer = document.querySelector('#like-list-container tbody');-->
+<!--                likeListContainer.innerHTML = ''; // 기존 내용을 초기화-->
+<!--                data.forEach(item => {-->
+<!--                    const row = document.createElement('tr');-->
+<!--                    row.innerHTML = `-->
+<!--&lt;!&ndash;                        <td><img th:src="${item.imageUrl}" alt="상품 이미지" style="width: 100px; height: auto;"></td>&ndash;&gt;-->
+<!--                        <td>${item.title}</td>-->
+<!--                        <td>${item.category}</td>-->
+<!--                        <td>${item.content}</td>-->
+<!--                        <td>${item.price}</td>-->
+<!--                        <td>-->
+<!--                            <button onclick="removeLikeList(${item.id})">삭제</button>-->
+<!--                        </td>-->
+<!--                    `;-->
+<!--                    likeListContainer.appendChild(row);-->
+<!--                });-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error('There was a problem with the fetch operation:', error);-->
+<!--            });-->
+<!--    });-->
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const memberId = 'user1';  // 실제 멤버 ID로 변경
-        fetch(`/likeList/list/${memberId}`) // 경로 수정
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const likeListContainer = document.querySelector('#like-list-container tbody');
-                likeListContainer.innerHTML = ''; // 기존 내용을 초기화
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.itemCode}</td>
-                        <td>${item.title}</td>
-                        <td>
-                            <button onclick="removeLikeList(${item.id})">삭제</button>
-                        </td>
-                    `;
-                    likeListContainer.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-    });
-
-    // 찜 목록에서 상품 제거
-    function removeLikeList(likeListId) {
-        fetch(`/likeList/${likeListId}`, {
-            method: 'DELETE'
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('상품이 찜 목록에서 제거되었습니다.');
-                    location.reload(); // 페이지 새로고침
-                } else {
-                    alert('상품 제거에 실패했습니다.');
-                }
-            })
-            .catch(error => {
-                console.error('There was a problem with the delete operation:', error);
-            });
-    }
-</script>
+<!--    // 찜 목록에서 상품 제거-->
+<!--    function removeLikeList(likeListId) {-->
+<!--        fetch(`/likeList/${likeListId}`, {-->
+<!--            method: 'DELETE'-->
+<!--        })-->
+<!--            .then(response => {-->
+<!--                if (response.ok) {-->
+<!--                    alert('상품이 찜 목록에서 제거되었습니다.');-->
+<!--                    location.reload(); // 페이지 새로고침-->
+<!--                } else {-->
+<!--                    alert('상품 제거에 실패했습니다.');-->
+<!--                }-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error('There was a problem with the delete operation:', error);-->
+<!--            });-->
+<!--    }-->
+<!--</script>-->
 
 
 </body>

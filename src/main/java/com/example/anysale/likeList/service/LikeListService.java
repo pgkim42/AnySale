@@ -3,6 +3,7 @@ package com.example.anysale.likeList.service;
 import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.member.entity.Member;
+import com.example.anysale.product.dto.ProductDTO;
 import com.example.anysale.product.entity.Product;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,7 @@ public interface LikeListService {
   LikeList addLikeList(LikeList likeList);
 
   // 회원의 찜 목록 조회
-  List<LikeListDTO> getLikeList(String memberId);
+  List<ProductDTO> getLikeList(String memberId);
 
   // 찜 목록에서 특정 상품 제거
   LikeList removeLikeList(int likeListId);
