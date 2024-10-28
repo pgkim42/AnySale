@@ -288,10 +288,13 @@
             <!-- 버튼 -->
             <div class="mt-5">
                 <a href="/products" class="btn btn-outline-secondary btn-lg">목록으로 돌아가기</a>
-                <button type="button" class="btn btn-info" onclick="bookmark()">찜하기</button>
+                <button type="button" class="btn btn-info" id="likeDataBtn" data-id="user1" onclick="bookmark()">찜하기</button>
 
                 <script th:inline="javascript">
                     function bookmark() {
+                        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
                         const likeList = {
                             product: {
                                 id: [[${productDTO.itemCode}]]
@@ -301,17 +304,22 @@
                             }
                         };
 
-                        fetch('/likeList', {
+                        var code = [[${productDTO.itemCode}]];
+
+                        fetch('/likeList?itemCode='+code, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                [csrfHeader]: csrfToken // CSRF 헤더 추가
                             },
-                            body: JSON.stringify(likeList),
+                            // body: JSON.stringify(likeList),
                         })
                             .then(response => response.json())
                             .then(data => {
                                 if (data) {
                                     alert('찜 목록에 추가되었습니다.');
+                                    // UI에서 찜하기 버튼 상태 업데이트 (예: 색상 변경)
+                                    document.getElementById('likeDataBtn').classList.toggle('btn-danger');
                                 } else {
                                     alert('찜 목록 추가에 실패했습니다.');
                                 }
@@ -321,6 +329,7 @@
                                 alert('오류가 발생했습니다.');
                             });
                     }
+
                 </script>
 
                 <div th:if="${productDTO.userId == member.id}" class="d-inline-block ml-3">

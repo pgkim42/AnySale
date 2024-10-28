@@ -15,15 +15,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @Log4j2
 public class SecurityConfig {
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, MemberUserDetailsService memberUserDetailsService) throws Exception {
-        log.info("---------------filterChain---------------");
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http, MemberUserDetailsService memberUserDetailsService) throws Exception {
+    log.info("---------------filterChain---------------");
 
         http
                 .authorizeHttpRequests(auth -> auth
@@ -59,11 +58,11 @@ public class SecurityConfig {
                     rem.userDetailsService(memberUserDetailsService);
                 });
 
-        return http.build();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public LoginSuccessHandler successHandler() {
-        return new LoginSuccessHandler();
-    }
+  @Bean
+  public LoginSuccessHandler successHandler() {
+    return new LoginSuccessHandler();
+  }
 }

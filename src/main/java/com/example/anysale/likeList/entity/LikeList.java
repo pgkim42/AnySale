@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "likeList")  // 데이터베이스 테이블 이름을 "likeList"로 매핑
 @Data  //롬북을 사용하여 getter등 자동생성
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -30,13 +31,5 @@ public class LikeList extends BaseEntity {
   // referencedColumnName = "id": 'Member' 엔티티의 'id' 필드와 이 관계를 맺고, 'member_id'는 LikeList 테이블의 외래 키로 사용됨
   private Member member;  // 찜한 회원과의 연관 관계
 
-  // 순환참조 방지(ToString대신 Data사용)
-  @Override
-  public String toString() {
-    return "LikeList{" +
-        "id=" + id +
-        ", product=" + (product != null ? product.getItemCode() : "null") +
-        ", member=" + (member != null ? member.getId() : "null") +
-        "}";
-  }
+
 }

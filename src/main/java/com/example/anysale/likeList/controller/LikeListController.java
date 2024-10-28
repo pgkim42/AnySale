@@ -1,6 +1,5 @@
 package com.example.anysale.likeList.controller;
 
-import com.example.anysale.likeList.dto.LikeListDTO;
 import com.example.anysale.likeList.entity.LikeList;
 import com.example.anysale.likeList.service.LikeListService;
 import com.example.anysale.member.entity.Member;
@@ -45,59 +44,53 @@ public class LikeListController {
     return "like/likeList";  // 해당하는 HTML 페이지를 반환
   }
 
+  // ?
   // 찜하기 버튼 클릭 처리
   @PostMapping
-  public ResponseEntity<LikeListDTO> addLikeList(@RequestBody LikeListDTO likeListDTO) {
-    LikeList likeList = new LikeList();
+  public ResponseEntity<String> addToLikeList(Principal principal, @RequestParam("itemCode") String itemCode) {
+    try {
 
-    Product product = new Product();
-    product.setItemCode(likeListDTO.getItemCode());
-//    product.setItemCode(likeListDTO.getMemberId());
+      String memberId = principal.getName();
 
-    Member member = new Member();
-    member.setId(likeListDTO.getMemberId());  // 필요에 따라 설정
+      Member member = Member.builder().id(memberId).build();
 
-    likeList.setProduct(product);
-    likeList.setMember(member);
+      Product product = Product.builder().itemCode(itemCode).build();
 
-    // LikeListService의 addLikeList에 엔티티 전달
-    LikeList savedLikeList = likeListService.addLikeList(likeList);
+      LikeList likeList = LikeList.builder().member(member).product(product).build();
 
-    // 결과를 다시 DTO로 변환하여 클라이언트로 응답
-    LikeListDTO responseDTO = new LikeListDTO(savedLikeList);
-    return ResponseEntity.ok(responseDTO);
+      likeListService.addLikeList(likeList);
+      return ResponseEntity.ok("찜하기 성공");
+    } catch (Exception e) {
+      e.printStackTrace(); // 오류 로그 출력
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+    }
   }
 
   @GetMapping("/list")
   public String getLikeLists(Model model, Principal principal) {
+
+    if (principal == null) {
+      return "redirect:/login"; // 로그인 페이지로 리다이렉트
+    }
+
     String memberId = principal.getName();
-    List<LikeListDTO> likeLists = likeListService.getLikeList(memberId);
+    List<ProductDTO> likeLists = likeListService.getLikeList(memberId);
     model.addAttribute("likeList", likeLists);
+
     return "like/likeList";
 //    return ResponseEntity.ok(likeLists);
   }
 
-//
-//  // 회원의 찜목록 조회
-//  @GetMapping("/list")
-//  public List<LikeListDTO> getLikeLists(@RequestParam(value = "memberId") String memberId, Model model) {
-//    // memberId로 찜 목록을 조회하는 로직 추가 필요
-//     List<LikeListDTO> likeLists = likeListService.getLikeList(memberId);
-//    // model.addAttribute("likeLists", likeLists);
-//
-//    return likeLists;
-//  }
-//
 //  // 찜 목록에서 특정 상품 제거
-//  @DeleteMapping("/{likeListId}")
-//  public ResponseEntity<Void> removeLikeList(@PathVariable int likeListId) {
-//    LikeList removedLikeList = likeListService.removeLikeList(likeListId);
-//    if (removedLikeList != null) {
-//      return new ResponseEntity<>(HttpStatus.OK);
-//    } else {
-//      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-//  }
+  @DeleteMapping("/{likeListId}")
+  public ResponseEntity<Void> removeLikeList(@PathVariable int likeListId) {
+    LikeList removedLikeList = likeListService.removeLikeList(likeListId);
+    if (removedLikeList != null) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+  }
 //
 //  // 찜 목록에서 모든 상품 제거
 //  @DeleteMapping("/all/{memberId}")
