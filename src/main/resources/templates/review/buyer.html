@@ -6,8 +6,7 @@
     <title>구매자 리뷰 목록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <th:block th:replace="layout/fragments/header :: headerFragment">
-    </th:block>
+    <th:block th:replace="layout/fragments/header :: headerFragment"></th:block>
 
     <style>
         body {
@@ -80,14 +79,6 @@
             </div>
         </div>
     </div>
-
-    <!--  <div class="links mb-4">-->
-    <!--    <a th:href="@{/review/onsale(sellerId=${sellerId})}" class="link">판매물품</a>-->
-    <!--    <a th:href="@{/review/buyer/{buyerId}(buyerId=${buyerId})}"-->
-    <!--       class="link active-link">거래후기 (<span th:text="${reviewCount}"></span>건)-->
-    <!--    </a>-->
-    <!--    <a th:href="@{/review/manner/{buyerId}(buyerId=${buyerId})}" class="link">매너칭찬</a>-->
-    <!--  </div>-->
 
     <div id="reviewList" class="mt-3">
         <ul class="list-group">

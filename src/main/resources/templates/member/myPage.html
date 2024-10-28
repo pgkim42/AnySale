@@ -169,12 +169,21 @@
       document.getElementById('member-info').style.display = 'flex';
       document.getElementById('member-btn').style.display = 'flex';
       document.getElementById('sell-product-info').style.display = 'none';
+      document.getElementById('review-info').style.display = 'none';
     }
 
     function showSellProductInfo() {
       document.getElementById('member-info').style.display = 'none';
       document.getElementById('member-btn').style.display = 'none';
       document.getElementById('sell-product-info').style.display = 'block';
+      document.getElementById('review-info').style.display = 'none';
+    }
+
+    function showReviewInfo() {
+      document.getElementById('member-info').style.display = 'none';
+      document.getElementById('member-btn').style.display = 'none';
+      document.getElementById('sell-product-info').style.display = 'none';
+      document.getElementById('review-info').style.display = 'block';
     }
 
     function soldOut() {
@@ -191,6 +200,7 @@
       <li><a href="javascript:void(0);" onclick="showSellProductInfo()">회원 판매글 리스트</a></li>
       <li><a href="#purchase-list">회원 구매글 리스트</a></li>
       <li><a href="#like-list">좋아요 리스트</a></li>
+      <li><a href="javascript:void(0);" onclick="showReviewInfo()">내가 작성한 리뷰</a></li>
     </ul>
   </aside>
 
@@ -302,6 +312,36 @@
         </div>
       </section>
     </div>
+
+    <div class="container mt-5" id="review-info" style="display: none;" >
+      <div class="profile-header">
+        <img src="https://picsum.photos/70" alt="구매자 프로필" style="width: 100px; height: 100px; border-radius: 50%; display: inline-block; vertical-align: middle;" class="profile-image">
+
+        <div class="buyer-info">
+          <h1 th:text="${buyerId} + '님의 리뷰 목록: '">구매자 ID</h1>
+          <div class="buyer-stats">
+          </div>
+        </div>
+      </div>
+
+      <div id="reviewList" class="mt-3">
+        <ul class="list-group">
+          <!-- 등록된 리뷰 항목이 동적으로 추가됩니다. -->
+          <th:block th:each="review : ${reviewList}">
+            <li class="list-group-item">
+              <img th:src="${review.buyerProfile}" alt="구매자 프로필" style="width: 50px; height: 50px; border-radius: 50%; display: inline-block; vertical-align: middle;">
+              <strong th:text="${review.buyerId}"></strong>
+              <span th:text="${review.buyerAddress}">지역</span><br>
+              <div>
+                <span th:each="i : ${#numbers.sequence(1, review.rating)}" class="text-warning">★</span>
+              </div>
+              <span th:text="${review.comment}">리뷰 내용</span>
+            </li>
+          </th:block>
+        </ul>
+      </div>
+    </div>
+
 
   </div>
 </div>
