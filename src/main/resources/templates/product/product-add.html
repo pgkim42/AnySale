@@ -26,10 +26,15 @@
         background-color: #D3D3D3;
         color: #003366;
     }
+
+    .container.container-div {
+        margin-top: 50px;
+    }
+
 </style>
 <body>
 <!-- 상품 추가 폼 -->
-<div class="container">
+<div class="container container-div">
     <h1>상품 추가하기</h1>
     <form id="productForm" th:action="@{/products/add}" th:method="post" enctype="multipart/form-data">
         <!-- 제목 입력 필드 추가 -->
