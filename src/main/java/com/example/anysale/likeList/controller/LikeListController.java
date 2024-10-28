@@ -82,15 +82,15 @@ public class LikeListController {
   }
 
 //  // 찜 목록에서 특정 상품 제거
-//  @DeleteMapping("/{likeListId}")
-//  public ResponseEntity<Void> removeLikeList(@PathVariable int likeListId) {
-//    LikeList removedLikeList = likeListService.removeLikeList(likeListId);
-//    if (removedLikeList != null) {
-//      return new ResponseEntity<>(HttpStatus.OK);
-//    } else {
-//      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-//  }
+  @DeleteMapping("/{likeListId}")
+  public ResponseEntity<Void> removeLikeList(@PathVariable int likeListId) {
+    LikeList removedLikeList = likeListService.removeLikeList(likeListId);
+    if (removedLikeList != null) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+  }
 //
 //  // 찜 목록에서 모든 상품 제거
 //  @DeleteMapping("/all/{memberId}")
